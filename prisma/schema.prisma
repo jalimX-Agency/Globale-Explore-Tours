@@ -1,0 +1,150 @@
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// ── Tour / Excursion (day trips, city tours, activities) ──
+model Tour {
+  id                String   @id @default(cuid())
+  name              String // FR (default)
+  nameEn            String   @default("")
+  nameEs            String   @default("")
+  slug              String   @unique
+  tagline           String   @default("")
+  taglineEn         String   @default("")
+  taglineEs         String   @default("")
+  description       String   @default("")
+  descriptionEn     String   @default("")
+  descriptionEs     String   @default("")
+  longDescription   String   @default("")
+  longDescriptionEn String   @default("")
+  longDescriptionEs String   @default("")
+  price             Float    @default(0)
+  originalPrice     Float    @default(0)
+  currency          String   @default("EUR")
+  duration          String   @default("") // e.g. "1 Day", "2 Hours"
+  includes          String   @default("") // comma-separated
+  includesEn        String   @default("")
+  includesEs        String   @default("")
+  category          String   @default("") // activity | tour | multi-day | transfer
+  theme             String   @default("") // adventure | culture | relax | family
+  maxGuests         Int      @default(2)
+  departureFrom     String   @default("Agadir")
+  image             String   @default("")
+  images            String   @default("") // comma-separated URLs
+  featured          Boolean  @default(false)
+  order             Int      @default(0)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  bookings          Booking[]
+}
+
+// ── Multi-day itinerary day-by-day breakdown ──
+model ItineraryDay {
+  id          String @id @default(cuid())
+  tourId      String
+  dayNumber   Int
+  title       String @default("")
+  titleEn     String @default("")
+  titleEs     String @default("")
+  description String @default("")
+  descriptionEn String @default("")
+  descriptionEs String @default("")
+  order       Int    @default(0)
+}
+
+// ── Blog / SEO Content ──
+model BlogPost {
+  id        String   @id @default(cuid())
+  title     String
+  titleEn   String   @default("")
+  titleEs   String   @default("")
+  slug      String   @unique
+  excerpt   String   @default("")
+  excerptEn String   @default("")
+  excerptEs String   @default("")
+  content   String   @default("") // HTML
+  contentEn String   @default("")
+  contentEs String   @default("")
+  image     String   @default("")
+  category  String   @default("")
+  author    String   @default("")
+  featured  Boolean  @default(false)
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ── Gallery ──
+model GalleryImage {
+  id        String   @id @default(cuid())
+  url       String
+  alt       String   @default("")
+  altEn     String   @default("")
+  altEs     String   @default("")
+  caption   String   @default("")
+  category  String   @default("") // tours | guides | agadir | hammam ...
+  featured  Boolean  @default(false)
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+}
+
+// ── Testimonial (synced from TripAdvisor/Google or entered manually) ──
+model Testimonial {
+  id        String   @id @default(cuid())
+  quote     String
+  author    String
+  location  String   @default("")
+  rating    Int      @default(5)
+  source    String   @default("website") // website | tripadvisor | google
+  tourId    String?
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+}
+
+// ── Booking request (lead form — no online payment in scope) ──
+model Booking {
+  id          String    @id @default(cuid())
+  firstName   String
+  lastName    String
+  email       String
+  phone       String    @default("")
+  tourId      String?
+  tour        Tour?     @relation(fields: [tourId], references: [id])
+  preferredDate DateTime?
+  guests      Int       @default(1)
+  children    Int       @default(0)
+  message     String    @default("")
+  language    String    @default("fr") // fr | en | es
+  status      String    @default("pending") // pending | contacted | confirmed | cancelled
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+// ── Contact ──
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  phone     String   @default("")
+  subject   String   @default("")
+  message   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+// ── Admin User ──
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String // bcrypt hash
+  name      String   @default("")
+  role      String   @default("admin")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
