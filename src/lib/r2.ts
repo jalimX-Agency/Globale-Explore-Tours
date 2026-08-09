@@ -49,7 +49,7 @@ export async function uploadToR2(key: string, body: Buffer, contentType: string)
       "x-amz-date": amzDate,
       Authorization: authorization,
     },
-    body,
+    body: new Uint8Array(body),
   });
   if (!res.ok) throw new Error(`R2 upload failed ${res.status}`);
 }

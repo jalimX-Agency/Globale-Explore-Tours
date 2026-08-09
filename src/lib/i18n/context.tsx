@@ -1,10 +1,10 @@
 "use client";
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext } from "react";
 import { fr } from "./translations/fr";
 import { en } from "./translations/en";
 import { es } from "./translations/es";
+import type { Locale } from "./locales";
 
-export type Language = "fr" | "en" | "es";
 const translations = { fr, en, es };
 
 function getNestedValue(obj: Record<string, unknown>, key: string): string | undefined {
@@ -15,38 +15,22 @@ function getNestedValue(obj: Record<string, unknown>, key: string): string | und
 }
 
 interface LanguageContextType {
-  language: Language;
-  setLanguage: (lang: Language) => void;
+  language: Locale;
   t: (key: string) => string;
   tArray: (key: string) => string[];
 }
 
 const LanguageContext = createContext<LanguageContextType>({
   language: "fr",
-  setLanguage: () => {},
   t: (k) => k,
   tArray: () => [],
 });
 
-export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [language, setLanguageState] = useState<Language>("fr");
-
-  useEffect(() => {
-    const saved = localStorage.getItem("site-language") as Language | null;
-    if (saved && ["fr", "en", "es"].includes(saved)) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- one-time hydration of a client-only preference (localStorage), not a render-cascade
-      setLanguageState(saved);
-    }
-  }, []);
-
-  function setLanguage(lang: Language) {
-    setLanguageState(lang);
-    localStorage.setItem("site-language", lang);
-    document.documentElement.lang = lang;
-  }
-
+// The locale is the URL segment (/fr/..., /en/..., /es/...), resolved server-side by the
+// [locale] route — never guessed client-side, so search engines and first paint always agree.
+export function LanguageProvider({ locale, children }: { locale: Locale; children: React.ReactNode }) {
   function t(key: string): string {
-    const val = getNestedValue(translations[language] as Record<string, unknown>, key);
+    const val = getNestedValue(translations[locale] as Record<string, unknown>, key);
     if (!val || val === key) {
       const fallback = getNestedValue(translations.fr as Record<string, unknown>, key);
       return fallback ?? key;
@@ -55,15 +39,14 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   }
 
   function tArray(key: string): string[] {
-    const val = getNestedValue(translations[language] as unknown as Record<string, unknown>, key);
+    const val = getNestedValue(translations[locale] as unknown as Record<string, unknown>, key);
     return Array.isArray(val) ? (val as unknown as string[]) : [];
   }
 
   return (
-    <LanguageContext.Provider value={{ language, setLanguage, t, tArray }}>
-      {children}
-    </LanguageContext.Provider>
+    <LanguageContext.Provider value={{ language: locale, t, tArray }}>{children}</LanguageContext.Provider>
   );
 }
 
 export const useLanguage = () => useContext(LanguageContext);
+export type { Locale as Language };

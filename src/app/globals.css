@@ -129,20 +129,24 @@
   }
 }
 
-/* ── Brand tokens (provisional — pending final art direction sign-off) ──
-   Grounded in Agadir's dual identity: Atlantic coast (teal) + desert/kasbah clay.
-   Swap these once the client validates a direction. */
+/* ── Brand tokens ──
+   Neutral black/white/off-white system, deliberately restrained — photography and video
+   (client-supplied) carry the color, the chrome stays quiet. One bold accent — the client's
+   own logo red, not a copied competitor hue — carries every primary call to action. */
 :root {
-  --brand-teal: oklch(0.5 0.09 195);
-  --brand-teal-light: oklch(0.62 0.08 195);
-  --brand-clay: oklch(0.55 0.14 40);
-  --brand-sand: oklch(0.93 0.02 80);
-  --brand-ink: oklch(0.18 0.01 250);
+  --brand-ink: oklch(0.16 0 0);
+  --brand-ink-soft: oklch(0.4 0 0);
+  --brand-paper: oklch(0.99 0 0);
+  --brand-sand: oklch(0.97 0.003 80);
+  --brand-clay: oklch(0.58 0.15 40);
+  --brand-accent: #e93423; /* sampled from the client's own logo */
+  --brand-accent-dark: #c22318;
 }
 
 .font-display {
-  font-family: var(--font-fraunces), Georgia, serif;
-  letter-spacing: -0.01em;
+  font-family: var(--font-oswald), "Arial Narrow", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
 }
 .font-body {
   font-family: var(--font-inter), system-ui, sans-serif;
@@ -158,19 +162,19 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  background: var(--brand-teal);
-  color: white;
+  background: var(--brand-ink);
+  color: var(--brand-paper);
   font-family: var(--font-inter), sans-serif;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   font-weight: 600;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   padding: 0.85rem 2rem;
-  border-radius: 2px;
-  transition: all 0.3s ease;
+  border-radius: 3px;
+  transition: all 0.25s ease;
 }
 .btn-primary:hover {
-  background: var(--brand-teal-light);
+  background: var(--brand-ink-soft);
 }
 .btn-outline {
   display: inline-flex;
@@ -178,11 +182,34 @@
   gap: 0.5rem;
   border: 1px solid currentColor;
   font-family: var(--font-inter), sans-serif;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   font-weight: 500;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   padding: 0.85rem 2rem;
-  border-radius: 2px;
-  transition: all 0.3s ease;
+  border-radius: 3px;
+  transition: all 0.25s ease;
+}
+.btn-outline:hover {
+  opacity: 0.7;
+}
+/* The one bold accent — reserved for the persistent header booking CTA, same restraint
+   principle as Black Tomato's pink "Enquire Now", using the client's own logo red instead. */
+.btn-accent {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--brand-accent);
+  color: var(--brand-paper);
+  font-family: var(--font-inter), sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.85rem 2rem;
+  border-radius: 3px;
+  transition: all 0.25s ease;
+}
+.btn-accent:hover {
+  background: var(--brand-accent-dark);
 }

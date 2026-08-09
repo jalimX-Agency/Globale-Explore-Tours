@@ -27,12 +27,16 @@ model Tour {
   price             Float    @default(0)
   originalPrice     Float    @default(0)
   currency          String   @default("EUR")
-  duration          String   @default("") // e.g. "1 Day", "2 Hours"
+  duration          String   @default("") // e.g. "1 jour", "2 heures"
+  durationEn        String   @default("")
+  durationEs        String   @default("")
   includes          String   @default("") // comma-separated
   includesEn        String   @default("")
   includesEs        String   @default("")
   category          String   @default("") // activity | tour | multi-day | transfer
   theme             String   @default("") // adventure | culture | relax | family
+  destination       String   @default("Maroc") // country — powers the Destinations menu as the catalog grows worldwide
+  region            String   @default("Afrique") // continent grouping
   maxGuests         Int      @default(2)
   departureFrom     String   @default("Agadir")
   image             String   @default("")
