@@ -49,8 +49,6 @@ export const en = {
     photoPending: "Photo coming soon",
   },
   testimonials: {
-    eyebrow: "Verified reviews",
-    title: "What our travellers say",
     source: "reviews on TripAdvisor",
   },
   mission: {
