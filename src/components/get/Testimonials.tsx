@@ -28,66 +28,101 @@ const QUOTES = [
   },
 ] as const;
 
-const ROTATE_MS = 6000;
+const GROUP_SIZE = 4;
+const ROTATE_MS = 7000;
+
+function chunk<T>(arr: readonly T[], size: number): T[][] {
+  const groups: T[][] = [];
+  for (let i = 0; i < arr.length; i += size) groups.push(arr.slice(i, i + size));
+  return groups;
+}
 
 export function Testimonials() {
   const { t } = useLanguage();
-  const [index, setIndex] = useState(0);
+  const groups = chunk(QUOTES, GROUP_SIZE);
+  const [page, setPage] = useState(0);
 
   useEffect(() => {
-    const id = setInterval(() => setIndex((i) => (i + 1) % QUOTES.length), ROTATE_MS);
+    if (groups.length < 2) return;
+    const id = setInterval(() => setPage((p) => (p + 1) % groups.length), ROTATE_MS);
     return () => clearInterval(id);
-  }, []);
+  }, [groups.length]);
 
-  const current = QUOTES[index];
+  const current = groups[page];
 
   return (
     <section className="bg-white py-16 sm:py-20">
-      <div className="mx-auto max-w-xl px-6 text-center lg:px-10">
-        <motion.div key={index} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4 }}>
-          <CheckIcon />
-          <p className="font-body mx-auto mt-4 max-w-sm text-[13px] font-bold uppercase leading-relaxed tracking-[0.08em] text-neutral-600">
-            {current.quote}
-          </p>
-          <p className="font-body mt-3 text-[13px] font-bold uppercase tracking-[0.08em] text-[var(--brand-accent)]">
-            {current.author}
-          </p>
+      <div className="mx-auto max-w-6xl px-6 lg:px-10">
+        <motion.div
+          key={page}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.4 }}
+          className="flex flex-wrap justify-center gap-x-8 gap-y-12"
+        >
+          {current.map((item) => (
+            <div key={item.author} className="w-full text-center sm:w-[45%] lg:w-[21%]">
+              <QuoteIcon />
+              <p className="font-body mx-auto mt-4 max-w-[22rem] text-[13px] font-bold uppercase leading-relaxed tracking-[0.06em] text-neutral-600">
+                {item.quote}
+              </p>
+              <p className="font-body mt-3 text-[13px] italic text-[var(--brand-accent)]">{item.author}</p>
+            </div>
+          ))}
         </motion.div>
 
-        <div className="mt-7 flex items-center justify-center gap-2">
-          {QUOTES.map((q, i) => (
-            <button
-              key={q.author}
-              onClick={() => setIndex(i)}
-              aria-label={`${i + 1} / ${QUOTES.length}`}
-              className={`h-1.5 rounded-full transition-all ${
-                i === index ? "w-5 bg-[var(--brand-accent)]" : "w-1.5 bg-neutral-300"
-              }`}
-            />
-          ))}
-        </div>
+        <div className="mt-12 flex flex-col items-center gap-5">
+          <a
+            href="https://www.tripadvisor.com/Attraction_Review-g293731-d27487904-Reviews-Globale_Explore_Tours-Agadir_Souss_Massa.html"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-body flex flex-col items-center gap-1.5 text-neutral-500 hover:text-neutral-800"
+          >
+            <span className="flex gap-0.5 text-[var(--brand-accent)]">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <StarIcon key={i} />
+              ))}
+            </span>
+            <span className="text-xs">
+              <span className="font-semibold text-neutral-700">4.9/5</span> · 105 {t("testimonials.source")}
+            </span>
+          </a>
 
-        <a
-          href="https://www.tripadvisor.com/Attraction_Review-g293731-d27487904-Reviews-Globale_Explore_Tours-Agadir_Souss_Massa.html"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="font-body mt-6 inline-flex items-center gap-1.5 text-xs text-neutral-400 hover:text-neutral-600"
-        >
-          <span className="font-semibold text-neutral-600">4.9/5</span>
-          <span>
-            · 105 {t("testimonials.source")}
-          </span>
-        </a>
+          {groups.length > 1 && (
+            <div className="flex items-center gap-2">
+              {groups.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setPage(i)}
+                  aria-label={`${i + 1} / ${groups.length}`}
+                  className={`h-1.5 rounded-full transition-all ${
+                    i === page ? "w-5 bg-[var(--brand-accent)]" : "w-1.5 bg-neutral-300"
+                  }`}
+                />
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </section>
   );
 }
 
-function CheckIcon() {
+function QuoteIcon() {
   return (
-    <svg viewBox="0 0 20 20" fill="none" className="mx-auto h-4 w-4 text-[var(--brand-accent)]" aria-hidden="true">
-      <circle cx="10" cy="10" r="9" stroke="currentColor" strokeWidth="1.4" />
-      <path d="M6 10.2l2.6 2.6L14.2 7" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+    <svg viewBox="0 0 32 22" fill="none" className="mx-auto h-5 w-7 text-[var(--brand-accent)]" aria-hidden="true">
+      <path
+        d="M0 22V13.5C0 6.5 4 1.5 11 0l1.5 3.5C8 5 6 8 6 11.5h6V22H0Zm18 0V13.5c0-7 4-12 11-13.5L30.5 3.5C26 5 24 8 24 11.5h6V22H18Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+}
+
+function StarIcon() {
+  return (
+    <svg viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5" aria-hidden="true">
+      <path d="M10 1.5l2.6 5.6 6.1.7-4.5 4.2 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.2 6.1-.7L10 1.5z" />
     </svg>
   );
 }
