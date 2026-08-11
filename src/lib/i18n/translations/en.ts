@@ -39,7 +39,7 @@ export const en = {
     viewAll: "View all excursions",
   },
   featured: {
-    title: "Start your journey",
+    title: "Our excursions",
     subtitle: "A glimpse — every excursion can be tailored to your pace and your group.",
     all: "All",
     viewAll: "View all excursions",
@@ -50,6 +50,17 @@ export const en = {
   },
   testimonials: {
     source: "reviews on TripAdvisor",
+  },
+  travelerTypes: {
+    title: "Start your journey",
+    tab: "By Traveller",
+    photoPending: "Photo coming soon",
+    viewMore: "View more",
+    family: "Family",
+    couples: "Couples",
+    groups: "Groups",
+    honeymoon: "Honeymoon",
+    solo: "Solo",
   },
   mission: {
     title: "Every trip needs a guide, not a brochure",
