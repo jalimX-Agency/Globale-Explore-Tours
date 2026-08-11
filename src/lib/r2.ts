@@ -26,7 +26,16 @@ function amzDateNow() {
   return { amzDate, dateStamp: amzDate.slice(0, 8) };
 }
 
-export async function uploadToR2(key: string, body: Buffer, contentType: string): Promise<void> {
+export async function uploadToR2(
+  key: string,
+  body: Buffer,
+  contentType: string,
+  // Safe as "immutable" for the admin upload route, which always writes unique,
+  // content-hashed filenames — a real overwrite of an existing key (as with a manually
+  // replaced fixed-name asset like the hero video) should bump the filename instead,
+  // or this header will keep serving the old cached bytes for up to a year.
+  cacheControl: string = "public, max-age=31536000, immutable"
+): Promise<void> {
   const { amzDate, dateStamp } = amzDateNow();
   const region = "auto";
   const service = "s3";
@@ -45,6 +54,7 @@ export async function uploadToR2(key: string, body: Buffer, contentType: string)
     method: "PUT",
     headers: {
       "Content-Type": contentType,
+      "Cache-Control": cacheControl,
       "x-amz-content-sha256": payloadHash,
       "x-amz-date": amzDate,
       Authorization: authorization,
