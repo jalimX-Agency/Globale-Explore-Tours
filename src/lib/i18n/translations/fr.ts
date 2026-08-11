@@ -39,9 +39,9 @@ export const fr = {
     viewAll: "Voir toutes les excursions",
   },
   featured: {
-    eyebrow: "Sélection",
-    title: "Nos excursions les plus demandées",
+    title: "Commencez votre aventure",
     subtitle: "Un aperçu — chaque excursion peut être adaptée à votre rythme et à votre groupe.",
+    all: "Tout",
     viewAll: "Voir toutes les excursions",
     from: "à partir de",
     perPerson: "/pers.",

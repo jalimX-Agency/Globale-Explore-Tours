@@ -26,9 +26,36 @@ const QUOTES = [
     quote: "Amazing trip and amazing guide. Helped my son on the buggy. Overall the full experience was 5 star and very friendly. Will recommend 100%.",
     author: "Muhammad Z., Buggy Adventure",
   },
+  {
+    quote: "We had a great time. The buggy ride was incredible, great landscapes, a top-notch guide who didn't stop taking care of us, offering us stops to enjoy the viewpoints.",
+    author: "Adelaide R., Buggy Adventure",
+  },
+  {
+    quote: "Great time with the family. Beautiful landscapes and memories etched in our minds. Thank you Hamza for your kindness!",
+    author: "Manon B., Buggy & Quad",
+  },
+  {
+    quote: "Fantastic experience, great value for money, would definitely recommend. Great guides and lovely mint tea with biscuits to round off the afternoon.",
+    author: "Sarah W., Buggy Adventure",
+  },
+  {
+    quote: "An experience not to miss in Agadir, very fun. It's quite worth the price, as it includes transport and return to the hotel and even tea at the Berber House! We loved it!!",
+    author: "Mariana, Coimbra, Portugal",
+  },
+  {
+    quote: "Very good experience, very nice guide!",
+    author: "Rudy M., Buggy Adventure",
+  },
+  {
+    quote: "Great activities, I highly recommend them.",
+    author: "Vérane B., Buggy Adventure",
+  },
+  {
+    quote: "Great experience enjoyed with our two children, aged 5 and 8! Very nice guide who even took the time to give our children a quad ride.",
+    author: "Xav, Périgueux, France",
+  },
 ] as const;
 
-const GROUP_SIZE = 4;
 const ROTATE_MS = 7000;
 
 function chunk<T>(arr: readonly T[], size: number): T[][] {
@@ -37,10 +64,27 @@ function chunk<T>(arr: readonly T[], size: number): T[][] {
   return groups;
 }
 
+// 1 card per page on mobile, 4 on larger screens — matches Tailwind's `sm` breakpoint (640px).
+function useGroupSize() {
+  const [size, setSize] = useState(4);
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 640px)");
+    const update = () => setSize(mq.matches ? 4 : 1);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+  return size;
+}
+
 export function Testimonials() {
   const { t } = useLanguage();
-  const groups = chunk(QUOTES, GROUP_SIZE);
+  const groupSize = useGroupSize();
+  const groups = chunk(QUOTES, groupSize);
   const [page, setPage] = useState(0);
+  // Clamp instead of resetting via effect: groupSize changes on viewport resize, and the
+  // previous page index may no longer exist once the group count shrinks (e.g. 4/page -> 1/page).
+  const safePage = Math.min(page, groups.length - 1);
 
   useEffect(() => {
     if (groups.length < 2) return;
@@ -48,13 +92,13 @@ export function Testimonials() {
     return () => clearInterval(id);
   }, [groups.length]);
 
-  const current = groups[page];
+  const current = groups[safePage];
 
   return (
     <section className="bg-white py-16 sm:py-20">
       <div className="mx-auto max-w-6xl px-6 lg:px-10">
         <motion.div
-          key={page}
+          key={safePage}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.4 }}
@@ -89,14 +133,14 @@ export function Testimonials() {
           </a>
 
           {groups.length > 1 && (
-            <div className="flex items-center gap-2">
+            <div className="flex max-w-xs flex-wrap items-center justify-center gap-2">
               {groups.map((_, i) => (
                 <button
                   key={i}
                   onClick={() => setPage(i)}
                   aria-label={`${i + 1} / ${groups.length}`}
                   className={`h-1.5 rounded-full transition-all ${
-                    i === page ? "w-5 bg-[var(--brand-accent)]" : "w-1.5 bg-neutral-300"
+                    i === safePage ? "w-5 bg-[var(--brand-accent)]" : "w-1.5 bg-neutral-300"
                   }`}
                 />
               ))}
