@@ -1,16 +1,47 @@
 import type { Metadata } from "next";
+import { db } from "@/lib/db";
+import { ExcursionsClient } from "./ExcursionsClient";
 
 export const metadata: Metadata = {
-  title: "Excursions à Agadir",
+  title: "Excursions & Circuits",
 };
 
-export default function Page() {
-  return (
-    <main className="min-h-screen flex items-center justify-center px-6">
-      <div className="text-center max-w-lg">
-        <p className="label-eyebrow text-neutral-400">En construction</p>
-        <h1 className="font-display text-3xl mt-2">Excursions à Agadir</h1>
-      </div>
-    </main>
-  );
+const VALID_THEMES = ["adventure", "culture", "relax", "family"];
+const VALID_TRAVELERS = ["family", "couples", "groups", "honeymoon", "solo"];
+
+export default async function ExcursionsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ theme?: string; travelers?: string }>;
+}) {
+  const { theme, travelers } = await searchParams;
+  const activeTheme = VALID_THEMES.includes(theme ?? "") ? theme : undefined;
+  const activeTravelers = VALID_TRAVELERS.includes(travelers ?? "") ? travelers : undefined;
+
+  const tours = await db.tour.findMany({
+    where: {
+      ...(activeTheme && { theme: activeTheme }),
+      ...(activeTravelers && { travelerTypes: { contains: activeTravelers } }),
+    },
+    orderBy: [{ destinationId: "asc" }, { order: "asc" }],
+    select: {
+      slug: true,
+      name: true,
+      nameEn: true,
+      nameEs: true,
+      tagline: true,
+      taglineEn: true,
+      taglineEs: true,
+      price: true,
+      originalPrice: true,
+      currency: true,
+      duration: true,
+      durationEn: true,
+      durationEs: true,
+      theme: true,
+      image: true,
+    },
+  });
+
+  return <ExcursionsClient tours={tours} activeTheme={activeTheme} activeTravelers={activeTravelers} />;
 }

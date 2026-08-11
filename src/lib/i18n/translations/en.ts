@@ -62,6 +62,11 @@ export const en = {
     honeymoon: "Honeymoon",
     solo: "Solo",
   },
+  excursionsPage: {
+    title: "Our excursions & tours",
+    subtitle: "From Morocco to the rest of the world — every trip is built for you, not for a group.",
+    noResults: "No excursions match that filter yet.",
+  },
   mission: {
     title: "Every trip needs a guide, not a brochure",
     body1: "Morocco is everywhere online — a thousand identical itineraries, the same dune photos, the same copy-pasted reviews. The more choice there is, the harder it gets to know who to trust.",

@@ -62,6 +62,11 @@ export const es = {
     honeymoon: "Luna de miel",
     solo: "Solo",
   },
+  excursionsPage: {
+    title: "Nuestras excursiones y circuitos",
+    subtitle: "De Marruecos al resto del mundo — cada viaje está pensado para usted, no para un grupo.",
+    noResults: "Ninguna excursión coincide con este filtro por ahora.",
+  },
   mission: {
     title: "Cada viaje necesita un guía, no un folleto",
     body1: "Marruecos está en todas partes en internet — mil circuitos idénticos, las mismas fotos de dunas, las mismas opiniones copiadas. Cuanta más opción hay, más difícil es saber en quién confiar.",

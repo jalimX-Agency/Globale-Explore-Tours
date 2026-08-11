@@ -4,15 +4,16 @@ import { motion } from "framer-motion";
 import { useLanguage } from "@/lib/i18n/context";
 import { LocaleLink } from "@/components/get/LocaleLink";
 
-// No real per-category photos or curated collections yet (the client is moving from an
-// Agadir-only catalog to worldwide trips) — tiles use a neutral placeholder gradient, ready
-// to swap for real imagery via the admin once it exists, same pattern as TourCard.
+const R2 = "https://pub-6777907d6a4e4378b16e81847f00f2d2.r2.dev";
+
+// Generic mood imagery (Pexels, free/commercial-use licensed) — appropriate here since
+// these tiles are category art, not photos claiming to depict a specific paid tour.
 const TYPES = [
-  { key: "family", param: "family", gradient: "from-neutral-800 via-neutral-700 to-neutral-600" },
-  { key: "couples", param: "couples", gradient: "from-neutral-700 via-neutral-600 to-neutral-500" },
-  { key: "groups", param: "groups", gradient: "from-neutral-800 via-neutral-700 to-neutral-600" },
-  { key: "honeymoon", param: "honeymoon", gradient: "from-neutral-700 via-neutral-600 to-neutral-500" },
-  { key: "solo", param: "solo", gradient: "from-neutral-800 via-neutral-700 to-neutral-600" },
+  { key: "family", param: "family", image: `${R2}/traveler-types/family.jpg` },
+  { key: "couples", param: "couples", image: `${R2}/traveler-types/couples.jpg` },
+  { key: "groups", param: "groups", image: `${R2}/traveler-types/groups.jpg` },
+  { key: "honeymoon", param: "honeymoon", image: `${R2}/traveler-types/honeymoon.jpg` },
+  { key: "solo", param: "solo", image: `${R2}/traveler-types/solo.jpg` },
 ] as const;
 
 export function TravelerTypes() {
@@ -43,9 +44,15 @@ export function TravelerTypes() {
             >
               <LocaleLink
                 href={`/excursions?travelers=${type.param}`}
-                className={`group relative flex h-64 items-end justify-center overflow-hidden rounded-sm bg-gradient-to-br sm:h-[480px] ${type.gradient}`}
+                className="group relative flex h-64 items-end justify-center overflow-hidden rounded-sm bg-neutral-800 sm:h-[480px]"
               >
-                <span className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/0 to-black/0 transition-opacity group-hover:from-black/60" />
+                {/* eslint-disable-next-line @next/next/no-img-element -- external R2 asset, no next/image domain config needed for this fixed set */}
+                <img
+                  src={type.image}
+                  alt=""
+                  className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+                <span className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-black/0 transition-opacity group-hover:from-black/70" />
                 <span className="relative z-10 pb-6 font-display text-lg tracking-wide text-white sm:text-xl">
                   {t(`travelerTypes.${type.key}`)}
                 </span>

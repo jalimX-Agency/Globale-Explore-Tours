@@ -62,6 +62,11 @@ export const fr = {
     honeymoon: "Lune de miel",
     solo: "Solo",
   },
+  excursionsPage: {
+    title: "Nos excursions et circuits",
+    subtitle: "Du Maroc au reste du monde — chaque voyage est pensé pour vous, pas pour un groupe.",
+    noResults: "Aucune excursion ne correspond à ce filtre pour le moment.",
+  },
   mission: {
     title: "Chaque voyage a besoin d'un guide, pas d'une brochure",
     body1: "Le Maroc est partout en ligne — mille circuits identiques, les mêmes photos de dunes, les mêmes avis copiés-collés. Plus il y a de choix, plus il est difficile de savoir à qui faire confiance.",

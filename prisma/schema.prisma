@@ -8,6 +8,28 @@ generator client {
   provider = "prisma-client-js"
 }
 
+// ── Destination (country) — a tour's country/region, with its own hero content ──
+model Destination {
+  id            String   @id @default(cuid())
+  name          String // FR (default)
+  nameEn        String   @default("")
+  nameEs        String   @default("")
+  slug          String   @unique // "maroc", "japon", "islande"...
+  region        String // continent grouping, FR
+  regionEn      String   @default("")
+  regionEs      String   @default("")
+  regionSlug    String // "afrique", "asie", "europe"...
+  description   String   @default("")
+  descriptionEn String   @default("")
+  descriptionEs String   @default("")
+  heroImage     String   @default("")
+  order         Int      @default(0)
+  featured      Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  tours         Tour[]
+}
+
 // ── Tour / Excursion (day trips, city tours, activities) ──
 model Tour {
   id                String   @id @default(cuid())
@@ -35,31 +57,38 @@ model Tour {
   includesEs        String   @default("")
   category          String   @default("") // activity | tour | multi-day | transfer
   theme             String   @default("") // adventure | culture | relax | family
-  destination       String   @default("Maroc") // country — powers the Destinations menu as the catalog grows worldwide
-  region            String   @default("Afrique") // continent grouping
+  travelerTypes     String   @default("") // comma-separated: family | couples | groups | honeymoon | solo
+  destinationId     String
+  destination       Destination @relation(fields: [destinationId], references: [id])
   maxGuests         Int      @default(2)
   departureFrom     String   @default("Agadir")
   image             String   @default("")
-  images            String   @default("") // comma-separated URLs
+  images            String   @default("") // comma-separated URLs — tour gallery
   featured          Boolean  @default(false)
   order             Int      @default(0)
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
   bookings          Booking[]
+  itineraryDays     ItineraryDay[]
 }
 
 // ── Multi-day itinerary day-by-day breakdown ──
 model ItineraryDay {
-  id          String @id @default(cuid())
-  tourId      String
-  dayNumber   Int
-  title       String @default("")
-  titleEn     String @default("")
-  titleEs     String @default("")
-  description String @default("")
+  id            String @id @default(cuid())
+  tourId        String
+  tour          Tour   @relation(fields: [tourId], references: [id])
+  dayNumber     Int
+  location      String @default("") // city/stop this day belongs to, for grouping
+  locationEn    String @default("")
+  locationEs    String @default("")
+  hotel         String @default("")
+  title         String @default("")
+  titleEn       String @default("")
+  titleEs       String @default("")
+  description   String @default("")
   descriptionEn String @default("")
   descriptionEs String @default("")
-  order       Int    @default(0)
+  order         Int    @default(0)
 }
 
 // ── Blog / SEO Content ──
