@@ -54,10 +54,12 @@ export const en = {
     source: "reviews on TripAdvisor",
   },
   mission: {
-    eyebrow: "Our approach",
-    title: "Every excursion starts with a meeting",
-    body: "We don't sell tickets, we hand your day to a guide who knows Agadir like his own home. Momo, Hassane, Ahmed and the rest of the team shape every outing around you — not to fill a bus.",
-    cta: "Meet our team",
+    title: "Every trip needs a guide, not a brochure",
+    body1: "Morocco is everywhere online — a thousand identical itineraries, the same dune photos, the same copy-pasted reviews. The more choice there is, the harder it gets to know who to trust.",
+    body2: "That's not us. Globale Explore Tours designs tailor-made excursions and trips, built around you — not boxes to tick on a list. Whether you're after dune adventure, the quiet of a hammam, or a family day out, every outing carries the mark of a guide who actually knows the ground.",
+    body3: "Our guides — Momo, Hassane, Ahmed and the rest of the team — are now rated the #1 activity in Agadir on TripAdvisor, with over a hundred verified reviews. That's not a tagline — it's our travellers saying it.",
+    closing: "So let's begin. Tell us about the trip you're picturing.",
+    cta: "Get In Touch",
   },
   footer: {
     description: "Globale Explore Tours designs tailor-made excursions and tours across Agadir and Morocco, led by trusted local guides.",
