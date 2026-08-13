@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { LOCALES, DEFAULT_LOCALE, isLocale, ogLocale, type Locale } from "@/lib/i18n/locales";
 import { LanguageProvider } from "@/lib/i18n/context";
 import { SiteChrome } from "@/components/get/SiteChrome";
+import { NavigationServer } from "@/components/get/NavigationServer";
 import { SetHtmlLang } from "@/components/get/SetHtmlLang";
 
 export function generateStaticParams() {
@@ -88,7 +89,7 @@ export default async function LocaleLayout({
     <LanguageProvider locale={locale}>
       <SetHtmlLang locale={locale} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: travelAgencySchema }} />
-      <SiteChrome>{children}</SiteChrome>
+      <SiteChrome nav={<NavigationServer />}>{children}</SiteChrome>
     </LanguageProvider>
   );
 }

@@ -21,7 +21,7 @@ export function Hero() {
         playsInline
         preload="auto"
         // @ts-expect-error -- fetchPriority is valid on <video> in modern browsers, not yet in React's DOM types
-        fetchpriority="low"
+        fetchPriority="low"
         aria-hidden="true"
       />
       <div className="absolute inset-0 bg-black/35" />

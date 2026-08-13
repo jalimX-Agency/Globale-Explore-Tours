@@ -213,3 +213,12 @@
 .btn-accent:hover {
   background: var(--brand-accent-dark);
 }
+/* Hides the native scrollbar on drag-to-scroll rows (TripsShowcase) — the drag interaction
+   replaces it, so the bar is just visual clutter across browsers. */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}

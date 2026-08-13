@@ -2,19 +2,22 @@
 
 import { usePathname } from "next/navigation";
 import { useLanguage } from "@/lib/i18n/context";
-import { Navigation } from "@/components/get/Navigation";
 import { Footer } from "@/components/get/Footer";
 
-export function SiteChrome({ children }: { children: React.ReactNode }) {
+export function SiteChrome({ nav, children }: { nav: React.ReactNode; children: React.ReactNode }) {
   const pathname = usePathname();
   const { language } = useLanguage();
   const isHome = pathname === `/${language}`;
+  // Destination pages open on a full-bleed hero too, same treatment as home — no top offset,
+  // the header stays transparent over the hero until scrolled (mirrors Navigation.tsx's
+  // `hasDarkHero` check).
+  const hasDarkHero = isHome || /^\/[a-z]{2}\/destinations(\/|$)/.test(pathname ?? "");
 
   return (
     <>
-      <Navigation />
+      {nav}
       {/* Home's hero sits under the transparent header; every other page needs the offset. */}
-      <div className={isHome ? undefined : "pt-20"}>{children}</div>
+      <div className={hasDarkHero ? undefined : "pt-20"}>{children}</div>
       <Footer />
     </>
   );

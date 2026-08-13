@@ -1,4 +1,4 @@
-import { Oswald, Inter } from "next/font/google";
+import { Oswald, Cabin } from "next/font/google";
 
 export const oswald = Oswald({
   variable: "--font-oswald",
@@ -6,8 +6,10 @@ export const oswald = Oswald({
   subsets: ["latin"],
 });
 
-export const inter = Inter({
+// Cabin: the closest free/licensed match to the reference site's body typeface — their own
+// stylesheet falls back to Cabin when their paid Brandon Grotesque font isn't available.
+export const inter = Cabin({
   variable: "--font-inter",
-  weight: ["300", "400", "500", "600"],
+  weight: ["400", "500", "600"],
   subsets: ["latin"],
 });

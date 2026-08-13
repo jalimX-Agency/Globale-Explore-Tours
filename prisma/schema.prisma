@@ -10,64 +10,149 @@ generator client {
 
 // ── Destination (country) — a tour's country/region, with its own hero content ──
 model Destination {
-  id            String   @id @default(cuid())
-  name          String // FR (default)
-  nameEn        String   @default("")
-  nameEs        String   @default("")
-  slug          String   @unique // "maroc", "japon", "islande"...
-  region        String // continent grouping, FR
-  regionEn      String   @default("")
-  regionEs      String   @default("")
-  regionSlug    String // "afrique", "asie", "europe"...
-  description   String   @default("")
-  descriptionEn String   @default("")
-  descriptionEs String   @default("")
-  heroImage     String   @default("")
-  order         Int      @default(0)
-  featured      Boolean  @default(false)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  tours         Tour[]
+  id                String         @id @default(cuid())
+  name              String // FR (default)
+  nameEn            String         @default("")
+  nameEs            String         @default("")
+  slug              String         @unique // "maroc", "japon", "islande"...
+  region            String // continent grouping, FR
+  regionEn          String         @default("")
+  regionEs          String         @default("")
+  regionSlug        String // "afrique", "asie", "europe"...
+  description       String         @default("")
+  descriptionEn     String         @default("")
+  descriptionEs     String         @default("")
+  overviewHeading   String         @default("") // bold "Tailor-Made Travel in X" style heading above the intro
+  overviewHeadingEn String         @default("")
+  overviewHeadingEs String         @default("")
+  descriptionMore   String         @default("") // second paragraph, revealed by "Read more"
+  descriptionMoreEn String         @default("")
+  descriptionMoreEs String         @default("")
+  heroImage         String         @default("")
+  order             Int            @default(0)
+  featured          Boolean        @default(false)
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+  tours             Tour[]
+  contentBlocks     ContentBlock[]
+  faqs              Faq[]
+  team              TeamMember[]
+}
+
+// ── Region — page content for /destinations/[region] (grouping key: Destination.regionSlug) ──
+model Region {
+  id          String         @id @default(cuid())
+  slug        String         @unique // matches Destination.regionSlug: "afrique", "asie"...
+  heroImage   String         @default("")
+  heading     String         @default("") // bold "Tailor-Made Travel in X" style heading above the intro
+  headingEn   String         @default("")
+  headingEs   String         @default("")
+  intro       String         @default("")
+  introEn     String         @default("")
+  introEs     String         @default("")
+  introMore   String         @default("") // second paragraph, revealed by "Read more"
+  introMoreEn String         @default("")
+  introMoreEs String         @default("")
+  order       Int            @default(0)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  blocks      ContentBlock[]
+  faqs        Faq[]
+  team        TeamMember[]
+}
+
+// ── ContentBlock — "What to see and do" / "Best of X" / "Experiences clients loved",
+//    attached to exactly one of Region or Destination ──
+model ContentBlock {
+  id            String       @id @default(cuid())
+  section       String // "seeAndDo" | "bestOf" | "clientLoved"
+  title         String
+  titleEn       String       @default("")
+  titleEs       String       @default("")
+  description   String       @default("")
+  descriptionEn String       @default("")
+  descriptionEs String       @default("")
+  image         String       @default("")
+  ctaLabel      String       @default("")
+  ctaLabelEn    String       @default("")
+  ctaLabelEs    String       @default("")
+  ctaHref       String       @default("")
+  order         Int          @default(0)
+  regionId      String?
+  region        Region?      @relation(fields: [regionId], references: [id])
+  destinationId String?
+  destination   Destination? @relation(fields: [destinationId], references: [id])
+}
+
+// ── TeamMember — destination specialists, attached to exactly one of Region or Destination ──
+model TeamMember {
+  id            String       @id @default(cuid())
+  name          String
+  role          String       @default("")
+  roleEn        String       @default("")
+  roleEs        String       @default("")
+  photo         String       @default("")
+  order         Int          @default(0)
+  regionId      String?
+  region        Region?      @relation(fields: [regionId], references: [id])
+  destinationId String?
+  destination   Destination? @relation(fields: [destinationId], references: [id])
+}
+
+// ── Faq — attached to exactly one of Region or Destination ──
+model Faq {
+  id            String       @id @default(cuid())
+  question      String
+  questionEn    String       @default("")
+  questionEs    String       @default("")
+  answer        String       @default("")
+  answerEn      String       @default("")
+  answerEs      String       @default("")
+  order         Int          @default(0)
+  regionId      String?
+  region        Region?      @relation(fields: [regionId], references: [id])
+  destinationId String?
+  destination   Destination? @relation(fields: [destinationId], references: [id])
 }
 
 // ── Tour / Excursion (day trips, city tours, activities) ──
 model Tour {
-  id                String   @id @default(cuid())
+  id                String         @id @default(cuid())
   name              String // FR (default)
-  nameEn            String   @default("")
-  nameEs            String   @default("")
-  slug              String   @unique
-  tagline           String   @default("")
-  taglineEn         String   @default("")
-  taglineEs         String   @default("")
-  description       String   @default("")
-  descriptionEn     String   @default("")
-  descriptionEs     String   @default("")
-  longDescription   String   @default("")
-  longDescriptionEn String   @default("")
-  longDescriptionEs String   @default("")
-  price             Float    @default(0)
-  originalPrice     Float    @default(0)
-  currency          String   @default("EUR")
-  duration          String   @default("") // e.g. "1 jour", "2 heures"
-  durationEn        String   @default("")
-  durationEs        String   @default("")
-  includes          String   @default("") // comma-separated
-  includesEn        String   @default("")
-  includesEs        String   @default("")
-  category          String   @default("") // activity | tour | multi-day | transfer
-  theme             String   @default("") // adventure | culture | relax | family
-  travelerTypes     String   @default("") // comma-separated: family | couples | groups | honeymoon | solo
+  nameEn            String         @default("")
+  nameEs            String         @default("")
+  slug              String         @unique
+  tagline           String         @default("")
+  taglineEn         String         @default("")
+  taglineEs         String         @default("")
+  description       String         @default("")
+  descriptionEn     String         @default("")
+  descriptionEs     String         @default("")
+  longDescription   String         @default("")
+  longDescriptionEn String         @default("")
+  longDescriptionEs String         @default("")
+  price             Float          @default(0)
+  originalPrice     Float          @default(0)
+  currency          String         @default("EUR")
+  duration          String         @default("") // e.g. "1 jour", "2 heures"
+  durationEn        String         @default("")
+  durationEs        String         @default("")
+  includes          String         @default("") // comma-separated
+  includesEn        String         @default("")
+  includesEs        String         @default("")
+  category          String         @default("") // activity | tour | multi-day | transfer
+  theme             String         @default("") // adventure | culture | relax | family
+  travelerTypes     String         @default("") // comma-separated: family | couples | groups | honeymoon | solo
   destinationId     String
-  destination       Destination @relation(fields: [destinationId], references: [id])
-  maxGuests         Int      @default(2)
-  departureFrom     String   @default("Agadir")
-  image             String   @default("")
-  images            String   @default("") // comma-separated URLs — tour gallery
-  featured          Boolean  @default(false)
-  order             Int      @default(0)
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  destination       Destination    @relation(fields: [destinationId], references: [id])
+  maxGuests         Int            @default(2)
+  departureFrom     String         @default("Agadir")
+  image             String         @default("")
+  images            String         @default("") // comma-separated URLs — tour gallery
+  featured          Boolean        @default(false)
+  order             Int            @default(0)
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
   bookings          Booking[]
   itineraryDays     ItineraryDay[]
 }
@@ -142,21 +227,21 @@ model Testimonial {
 
 // ── Booking request (lead form — no online payment in scope) ──
 model Booking {
-  id          String    @id @default(cuid())
-  firstName   String
-  lastName    String
-  email       String
-  phone       String    @default("")
-  tourId      String?
-  tour        Tour?     @relation(fields: [tourId], references: [id])
+  id            String    @id @default(cuid())
+  firstName     String
+  lastName      String
+  email         String
+  phone         String    @default("")
+  tourId        String?
+  tour          Tour?     @relation(fields: [tourId], references: [id])
   preferredDate DateTime?
-  guests      Int       @default(1)
-  children    Int       @default(0)
-  message     String    @default("")
-  language    String    @default("fr") // fr | en | es
-  status      String    @default("pending") // pending | contacted | confirmed | cancelled
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  guests        Int       @default(1)
+  children      Int       @default(0)
+  message       String    @default("")
+  language      String    @default("fr") // fr | en | es
+  status        String    @default("pending") // pending | contacted | confirmed | cancelled
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
 }
 
 // ── Contact ──

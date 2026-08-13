@@ -11,7 +11,11 @@ référencement, voir commit "add real i18n routing").
 ```
 /                              Accueil — vidéo hero, histoire (Mission), avis, "Start your Journey"
                                 (par type de voyageur), excursions vedettes
-/excursions                    Catalogue complet — filtrable par ?theme= et ?travelers=
+/destinations/[region]         Page région (style Black Tomato) — hero, pays, circuits vedettes,
+                                contenu éditorial, FAQ, autres régions
+/destinations/[region]/[pays]  Page destination — hero, circuits, équipe, contenu éditorial, FAQ
+/excursions                    Catalogue complet — filtrable par ?theme=, ?travelers=,
+                                ?destination= et ?region=
 /excursions/[slug]             Fiche excursion — galerie, description, inclus, avis, formulaire
 /sejours-multi-jours           Circuits multi-jours (Merzouga, etc.)
 /sejours-multi-jours/[slug]    Fiche circuit — itinéraire jour par jour
@@ -57,6 +61,26 @@ simples chaînes de texte sur `Tour`. Voir `prisma/schema.prisma`.
 - Aucun faux avis n'a été créé pour ces 5 destinations — les seuls témoignages du site restent les
   12 vrais avis TripAdvisor d'Agadir.
 
+## Pages `/destinations/[region]` et `/destinations/[region]/[pays]`
+
+Pages région et destination façon Black Tomato (hero, pays/circuits, blocs éditoriaux "à voir et
+à faire" / "le meilleur de X" / "expériences que nos voyageurs ont adorées", équipe, FAQ, autres
+destinations). Alimentées par trois nouveaux modèles additifs : `Region` (contenu de page région,
+clé = `Destination.regionSlug`), `ContentBlock` (blocs éditoriaux, rattachés à une région OU une
+destination) et `TeamMember` (spécialistes destination), plus `Faq` (questions/réponses par page).
+
+**Tout le contenu de ces trois modèles est du contenu d'exemple/placeholder**, écrit dans le
+style éditorial de Black Tomato mais jamais copié, en attendant que le client le remplace via le
+futur tableau de bord admin — même logique que les 5 destinations exemple ci-dessus. Seule
+exception : l'équipe de la page Maroc utilise les vrais noms déjà présents ailleurs sur le site
+(Momo, Hassane, Ahmed), sans photo associée (avatar par initiales) pour ne jamais associer une
+photo à une personne réelle qui n'est pas la sienne. Les autres pages utilisent des noms et
+photos de stock clairement provisoires.
+
+Le lien "Destinations" de la nav pointe désormais vers ces pages (plus vers
+`/excursions?destination=`/`?region=`, qui restent disponibles comme filtres mais ne sont plus
+la cible du menu).
+
 ## Page `/excursions` — catalogue filtrable
 
 Server component qui lit `?theme=` (adventure/culture/relax/family) et `?travelers=`
@@ -77,6 +101,8 @@ jamais de photos scrapées depuis blacktomato.com. Stockées sur Cloudflare R2.
 - [x] `sitemap.ts` à jour, routing i18n réel (`/fr`, `/en`, `/es`)
 - [x] Modèle `Destination` + catalogue Maroc (réel) + 5 destinations exemple (contenu original, prix indicatifs)
 - [x] Photos réelles (Pexels) pour tout le catalogue actuel — plus de "Photo à venir" sur les tours seedés
+- [x] Pages `/destinations/[region]` et `/destinations/[region]/[pays]` — contenu placeholder,
+      en attente d'édition via le futur dashboard admin
 - [ ] Dashboard admin (CRUD) — pas encore construit, tout le contenu passe par `src/lib/seed.ts`
 - [ ] Validation client des prix/itinéraires des 5 destinations exemple avant mise en vente réelle
 - [ ] Décision sur nomadsoultrips.com (toujours en attente depuis l'audit initial)

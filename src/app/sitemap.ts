@@ -23,9 +23,11 @@ function withLocales(
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [tours, blogPosts] = await Promise.all([
+  const [tours, blogPosts, regions, destinations] = await Promise.all([
     db.tour.findMany({ select: { slug: true, updatedAt: true } }),
     db.blogPost.findMany({ select: { slug: true, updatedAt: true } }),
+    db.region.findMany({ select: { slug: true, updatedAt: true } }),
+    db.destination.findMany({ select: { slug: true, regionSlug: true, updatedAt: true } }),
   ]);
 
   const now = new Date();
@@ -49,5 +51,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const blogRoutes = blogPosts.flatMap((p) => withLocales(`/blog/${p.slug}`, p.updatedAt, "weekly", 0.75));
 
-  return [...staticRoutes, ...tourRoutes, ...blogRoutes];
+  const regionRoutes = regions.flatMap((r) => withLocales(`/destinations/${r.slug}`, r.updatedAt, "weekly", 0.85));
+  const destinationRoutes = destinations.flatMap((d) =>
+    withLocales(`/destinations/${d.regionSlug}/${d.slug}`, d.updatedAt, "weekly", 0.85)
+  );
+
+  return [...staticRoutes, ...tourRoutes, ...blogRoutes, ...regionRoutes, ...destinationRoutes];
 }
