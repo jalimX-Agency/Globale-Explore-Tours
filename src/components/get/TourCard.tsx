@@ -24,6 +24,16 @@ export interface TourCardData {
   durationEs: string;
   theme: string;
   image: string;
+  format?: string;
+  destinationSlug?: string;
+  regionSlug?: string;
+}
+
+export function tourHref(tour: Pick<TourCardData, "slug" | "format" | "destinationSlug" | "regionSlug">) {
+  if (tour.destinationSlug && tour.regionSlug) {
+    return `/destinations/${tour.regionSlug}/${tour.destinationSlug}/${tour.slug}`;
+  }
+  return `/excursions/${tour.slug}`;
 }
 
 function localized(language: string, fr: string, en: string, es: string) {
@@ -45,7 +55,7 @@ export function TourCard({ tour, index = 0 }: { tour: TourCardData; index?: numb
       viewport={{ once: true, margin: "-60px" }}
       transition={{ duration: 0.6, delay: (index % 3) * 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
     >
-      <LocaleLink href={`/excursions/${tour.slug}`} className="group block">
+      <LocaleLink href={tourHref(tour)} className="group block">
         <div className={`relative aspect-[4/3] overflow-hidden rounded-sm bg-gradient-to-br ${PLACEHOLDER_GRADIENT}`}>
           {tour.image ? (
             // eslint-disable-next-line @next/next/no-img-element -- placeholder path until real photos are supplied

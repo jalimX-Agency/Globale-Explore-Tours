@@ -42,7 +42,7 @@ export function Footer() {
             </div>
             <p className="font-body mt-4 max-w-sm text-sm leading-relaxed text-white/60">{t("footer.description")}</p>
             <div className="mt-6 flex items-center gap-4">
-              <a href="https://wa.me/212706259077" aria-label="WhatsApp" className="text-white/70 hover:text-white">
+              <a href="https://wa.me/33667586462" aria-label="WhatsApp" className="text-white/70 hover:text-white">
                 <MessageCircle className="h-5 w-5" />
               </a>
               <a href="https://www.instagram.com/globaleexploretours/" aria-label="Instagram" className="text-white/70 hover:text-white">
@@ -84,17 +84,17 @@ export function Footer() {
             <p className="label-eyebrow text-white/40">{t("footer.contact")}</p>
             <ul className="mt-4 space-y-2.5 font-body text-sm text-white/75">
               <li>
-                <a href="tel:+212706259077" className="hover:text-white">+212 706 259 077</a>
+                <a href="tel:+33667586462" className="hover:text-white">+33 6 67 58 64 62</a>
               </li>
               <li>
-                <a href="tel:+33667586462" className="hover:text-white">+33 667 586 462</a>
+                <a href="tel:+33984338182" className="hover:text-white">+33 9 84 33 81 82</a>
               </li>
               <li>
                 <a href="mailto:contac@globaleexploretours.com" className="hover:text-white">
                   contac@globaleexploretours.com
                 </a>
               </li>
-              <li className="text-white/50">Agadir, Maroc</li>
+              <li className="text-white/50">5 Avenue du Sénateur Girard, 59300 Valenciennes, France</li>
             </ul>
           </div>
         </div>

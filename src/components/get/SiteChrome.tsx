@@ -8,10 +8,11 @@ export function SiteChrome({ nav, children }: { nav: React.ReactNode; children: 
   const pathname = usePathname();
   const { language } = useLanguage();
   const isHome = pathname === `/${language}`;
-  // Destination pages open on a full-bleed hero too, same treatment as home — no top offset,
-  // the header stays transparent over the hero until scrolled (mirrors Navigation.tsx's
-  // `hasDarkHero` check).
-  const hasDarkHero = isHome || /^\/[a-z]{2}\/destinations(\/|$)/.test(pathname ?? "");
+  // Destination hub pages (region/country) open on a full-bleed hero too, same treatment as
+  // home — no top offset, the header stays transparent over the hero until scrolled (mirrors
+  // Navigation.tsx's `hasDarkHero` check, including the 2-segment cap that excludes the
+  // trip-detail route one level deeper, which has no hero on the standard trip template).
+  const hasDarkHero = isHome || /^\/[a-z]{2}\/destinations(\/[^/]+){0,2}\/?$/.test(pathname ?? "");
 
   return (
     <>

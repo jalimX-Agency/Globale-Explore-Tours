@@ -1,0 +1,125 @@
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { db } from "@/lib/db";
+import { isLocale, DEFAULT_LOCALE, type Locale } from "@/lib/i18n/locales";
+import { fr } from "@/lib/i18n/translations/fr";
+import { en } from "@/lib/i18n/translations/en";
+import { es } from "@/lib/i18n/translations/es";
+import { JourneyTripPageClient } from "./JourneyTripPageClient";
+import { StandardTripPageClient } from "@/components/get/StandardTripPageClient";
+
+const NAV_DESTINATIONS = { fr: fr.nav.destinations, en: en.nav.destinations, es: es.nav.destinations };
+
+function pick(locale: Locale, frText: string, enText: string, esText: string) {
+  if (locale === "en") return enText || frText;
+  if (locale === "es") return esText || frText;
+  return frText;
+}
+
+const TOUR_CARD_SELECT = {
+  slug: true,
+  name: true,
+  nameEn: true,
+  nameEs: true,
+  tagline: true,
+  taglineEn: true,
+  taglineEs: true,
+  price: true,
+  originalPrice: true,
+  currency: true,
+  duration: true,
+  durationEn: true,
+  durationEs: true,
+  theme: true,
+  image: true,
+  format: true,
+} as const;
+
+async function getTour(slug: string) {
+  return db.tour.findUnique({
+    where: { slug },
+    include: {
+      destination: true,
+      chapters: {
+        orderBy: { order: "asc" },
+        include: { days: { orderBy: { order: "asc" } } },
+      },
+      sections: { orderBy: { order: "asc" } },
+      hotels: { orderBy: { order: "asc" } },
+    },
+  });
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string; slug: string }>;
+}): Promise<Metadata> {
+  const { locale: rawLocale, slug } = await params;
+  const locale = isLocale(rawLocale) ? rawLocale : DEFAULT_LOCALE;
+  const tour = await getTour(slug);
+  if (!tour) return { title: "Trip" };
+  return { title: pick(locale, tour.name, tour.nameEn, tour.nameEs) };
+}
+
+export default async function TripPage({
+  params,
+}: {
+  params: Promise<{ locale: string; region: string; country: string; slug: string }>;
+}) {
+  const { locale: rawLocale, region: regionSlug, country, slug } = await params;
+  const locale = isLocale(rawLocale) ? rawLocale : DEFAULT_LOCALE;
+
+  const tour = await getTour(slug);
+  if (!tour || tour.destination.slug !== country || tour.destination.regionSlug !== regionSlug) {
+    notFound();
+  }
+
+  const similarTours = await db.tour.findMany({
+    where: { destinationId: tour.destinationId, id: { not: tour.id } },
+    orderBy: [{ featured: "desc" }, { order: "asc" }],
+    take: 6,
+    select: TOUR_CARD_SELECT,
+  });
+
+  const regionLabel = pick(locale, tour.destination.region, tour.destination.regionEn, tour.destination.regionEs);
+  const countryLabel = pick(locale, tour.destination.name, tour.destination.nameEn, tour.destination.nameEs);
+  const tripLabel = pick(locale, tour.name, tour.nameEn, tour.nameEs);
+  const destinationsLabel = pick(locale, NAV_DESTINATIONS.fr, NAV_DESTINATIONS.en, NAV_DESTINATIONS.es);
+
+  const similarToursWithHref = similarTours.map((t) => ({
+    ...t,
+    destinationSlug: tour.destination.slug,
+    regionSlug: tour.destination.regionSlug,
+  }));
+
+  const breadcrumb = [
+    { label: destinationsLabel },
+    { label: regionLabel, href: `/destinations/${regionSlug}` },
+    { label: countryLabel, href: `/destinations/${regionSlug}/${country}` },
+    { label: tripLabel },
+  ];
+
+  if (tour.format === "journey") {
+    return (
+      <JourneyTripPageClient
+        tour={tour}
+        countryLabel={countryLabel}
+        chapters={tour.chapters}
+        similarTours={similarToursWithHref}
+        breadcrumb={breadcrumb}
+      />
+    );
+  }
+
+  return (
+    <StandardTripPageClient
+      tour={tour}
+      countryLabel={countryLabel}
+      sections={tour.sections}
+      hotels={tour.hotels}
+      similarTours={similarToursWithHref}
+      breadcrumb={breadcrumb}
+    />
+  );
+}

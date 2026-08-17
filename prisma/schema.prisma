@@ -151,29 +151,88 @@ model Tour {
   images            String         @default("") // comma-separated URLs — tour gallery
   featured          Boolean        @default(false)
   order             Int            @default(0)
+  format            String         @default("standard") // "standard" | "journey" — picks the trip-detail page template
+  mapImage          String         @default("") // journey-format only: illustrated route-map background
+  whenLabel         String         @default("") // journey-format stats row, e.g. "March to June | Sept to Nov"
+  whenLabelEn       String         @default("")
+  whenLabelEs       String         @default("")
   createdAt         DateTime       @default(now())
   updatedAt         DateTime       @updatedAt
   bookings          Booking[]
   itineraryDays     ItineraryDay[]
+  chapters          JourneyChapter[]
+  sections          TourSection[]
+  hotels            TourHotel[]
+}
+
+// ── Narrative section — heading + prose block within a standard-format trip's long-form body ──
+model TourSection {
+  id        String @id @default(cuid())
+  tourId    String
+  tour      Tour   @relation(fields: [tourId], references: [id], onDelete: Cascade)
+  heading   String
+  headingEn String @default("")
+  headingEs String @default("")
+  body      String
+  bodyEn    String @default("")
+  bodyEs    String @default("")
+  order     Int    @default(0)
+}
+
+// ── Hotel highlight — "Where to rest your head" cards on a standard-format trip page ──
+model TourHotel {
+  id            String @id @default(cuid())
+  tourId        String
+  tour          Tour   @relation(fields: [tourId], references: [id], onDelete: Cascade)
+  name          String
+  nameEn        String @default("")
+  nameEs        String @default("")
+  description   String @default("")
+  descriptionEn String @default("")
+  descriptionEs String @default("")
+  image         String @default("")
+  order         Int    @default(0)
+}
+
+// ── Journey chapter — one location-stop within a "Journey into X" (format: "journey") trip ──
+model JourneyChapter {
+  id            String         @id @default(cuid())
+  tourId        String
+  tour          Tour           @relation(fields: [tourId], references: [id], onDelete: Cascade)
+  title         String
+  titleEn       String         @default("")
+  titleEs       String         @default("")
+  intro         String         @default("")
+  introEn       String         @default("")
+  introEs       String         @default("")
+  galleryImages String         @default("") // comma-separated URLs, same convention as Tour.images
+  mapMarkerX    Float          @default(0) // 0-100, position on Tour.mapImage
+  mapMarkerY    Float          @default(0)
+  order         Int            @default(0)
+  days          ItineraryDay[]
 }
 
 // ── Multi-day itinerary day-by-day breakdown ──
 model ItineraryDay {
-  id            String @id @default(cuid())
+  id            String          @id @default(cuid())
   tourId        String
-  tour          Tour   @relation(fields: [tourId], references: [id])
+  tour          Tour            @relation(fields: [tourId], references: [id])
   dayNumber     Int
-  location      String @default("") // city/stop this day belongs to, for grouping
-  locationEn    String @default("")
-  locationEs    String @default("")
-  hotel         String @default("")
-  title         String @default("")
-  titleEn       String @default("")
-  titleEs       String @default("")
-  description   String @default("")
-  descriptionEn String @default("")
-  descriptionEs String @default("")
-  order         Int    @default(0)
+  location      String          @default("") // city/stop this day belongs to, for grouping
+  locationEn    String          @default("")
+  locationEs    String          @default("")
+  hotel         String          @default("")
+  title         String          @default("")
+  titleEn       String          @default("")
+  titleEs       String          @default("")
+  description   String          @default("")
+  descriptionEn String          @default("")
+  descriptionEs String          @default("")
+  image         String          @default("")
+  images        String          @default("") // comma-separated URLs — day photo carousel (journey format)
+  chapterId     String?
+  chapter       JourneyChapter? @relation(fields: [chapterId], references: [id], onDelete: SetNull)
+  order         Int             @default(0)
 }
 
 // ── Blog / SEO Content ──

@@ -12,19 +12,19 @@ export function generateStaticParams() {
 
 const META_BY_LOCALE: Record<Locale, { title: string; description: string }> = {
   fr: {
-    title: "Globale Explore Tours | Excursions & Circuits sur-mesure à Agadir",
+    title: "Globale Explore Tours | Voyages & Circuits sur-mesure dans le monde",
     description:
-      "Excursions et circuits sur-mesure à Agadir avec des guides locaux reconnus — désert, océan, médina. Noté 4.9/5 sur TripAdvisor, #1 des activités à Agadir.",
+      "Voyages et circuits sur-mesure dans le monde entier, des excursions à Agadir aux destinations les plus lointaines, avec des guides locaux reconnus. Noté 4.9/5 sur TripAdvisor, #1 des activités à Agadir.",
   },
   en: {
-    title: "Globale Explore Tours | Tailor-made Excursions & Tours in Agadir",
+    title: "Globale Explore Tours | Tailor-made Trips & Tours Worldwide",
     description:
-      "Tailor-made excursions and tours in Agadir with trusted local guides — desert, ocean, medina. Rated 4.9/5 on TripAdvisor, #1 activity in Agadir.",
+      "Tailor-made trips and tours worldwide, from excursions in Agadir to destinations further afield, with trusted local guides. Rated 4.9/5 on TripAdvisor, #1 activity in Agadir.",
   },
   es: {
-    title: "Globale Explore Tours | Excursiones y circuitos a medida en Agadir",
+    title: "Globale Explore Tours | Viajes y circuitos a medida en todo el mundo",
     description:
-      "Excursiones y circuitos a medida en Agadir con guías locales de confianza — desierto, océano, medina. Valorado 4.9/5 en TripAdvisor, N.º 1 en Agadir.",
+      "Viajes y circuitos a medida en todo el mundo, desde excursiones en Agadir hasta los destinos más lejanos, con guías locales de confianza. Valorado 4.9/5 en TripAdvisor, N.º 1 en Agadir.",
   },
 };
 
@@ -73,12 +73,18 @@ export default async function LocaleLayout({
     "@context": "https://schema.org",
     "@type": "TravelAgency",
     name: "Globale Explore Tours",
-    description: "Agence d'excursions et de circuits sur-mesure basée à Agadir, Maroc.",
+    description: "Agence de voyages sur-mesure basée à Valenciennes, France, proposant des excursions à Agadir et des circuits dans le monde entier.",
     url: "https://www.globaleexploretours.com",
-    telephone: "+212706259077",
+    telephone: "+33667586462",
     email: "contac@globaleexploretours.com",
-    address: { "@type": "PostalAddress", addressLocality: "Agadir", addressCountry: "MA" },
-    areaServed: "Agadir, Morocco",
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: "5 Avenue du Sénateur Girard",
+      postalCode: "59300",
+      addressLocality: "Valenciennes",
+      addressCountry: "FR",
+    },
+    areaServed: ["Agadir, Morocco", "Worldwide"],
     aggregateRating: { "@type": "AggregateRating", ratingValue: "4.9", reviewCount: "105", bestRating: "5" },
     sameAs: [
       "https://www.tripadvisor.com/Attraction_Review-g293731-d27487904-Reviews-Globale_Explore_Tours-Agadir_Souss_Massa.html",

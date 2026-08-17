@@ -31,6 +31,8 @@ const TOUR_CARD_SELECT = {
   durationEs: true,
   theme: true,
   image: true,
+  format: true,
+  destination: { select: { slug: true, regionSlug: true } },
 } as const;
 
 export async function generateMetadata({
@@ -82,6 +84,12 @@ export default async function RegionPage({
     db.region.findMany({ where: { slug: { not: regionSlug } }, orderBy: { order: "asc" } }),
   ]);
 
+  const toursWithHref = tours.map((tour) => ({
+    ...tour,
+    destinationSlug: tour.destination.slug,
+    regionSlug: tour.destination.regionSlug,
+  }));
+
   const regionLabelBySlug = new Map(allOtherDestinations.map((d) => [d.regionSlug, d]));
   const otherRegionItems = otherRegions
     .map((r) => {
@@ -110,7 +118,7 @@ export default async function RegionPage({
       blocks={blocks}
       faqs={faqs}
       team={team}
-      tours={tours}
+      tours={toursWithHref}
       otherRegions={otherRegionItems}
     />
   );

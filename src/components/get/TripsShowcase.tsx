@@ -4,7 +4,7 @@ import { useRef } from "react";
 import Image from "next/image";
 import { useLanguage } from "@/lib/i18n/context";
 import { LocaleLink } from "@/components/get/LocaleLink";
-import type { TourCardData } from "@/components/get/TourCard";
+import { tourHref, type TourCardData } from "@/components/get/TourCard";
 
 const BG_IMAGE = "https://pub-6777907d6a4e4378b16e81847f00f2d2.r2.dev/backgrounds/bg-swirl-dark.jpg";
 
@@ -17,24 +17,30 @@ function localized(language: string, fr: string, en: string, es: string) {
 export function TripsShowcase({ heading, blurb, tours }: { heading: string; blurb: string; tours: TourCardData[] }) {
   const { language, t } = useLanguage();
   const trackRef = useRef<HTMLDivElement>(null);
-  const drag = useRef({ active: false, startX: 0, startScrollLeft: 0, moved: false });
+  const drag = useRef({ active: false, startX: 0, startScrollLeft: 0, moved: false, captured: false });
 
   if (tours.length === 0) return null;
 
   const onPointerDown = (e: React.PointerEvent) => {
     const track = trackRef.current;
     if (!track) return;
-    drag.current = { active: true, startX: e.clientX, startScrollLeft: track.scrollLeft, moved: false };
-    track.setPointerCapture(e.pointerId);
-    track.classList.add("cursor-grabbing");
+    // Do NOT setPointerCapture here: capturing on pointerdown retargets the subsequent click
+    // event to the track element, so a plain click never reaches the anchor and navigation
+    // breaks. We only capture once an actual drag starts (in onPointerMove).
+    drag.current = { active: true, startX: e.clientX, startScrollLeft: track.scrollLeft, moved: false, captured: false };
   };
 
   const onPointerMove = (e: React.PointerEvent) => {
     const track = trackRef.current;
     if (!track || !drag.current.active) return;
     const delta = e.clientX - drag.current.startX;
-    if (Math.abs(delta) > 4) drag.current.moved = true;
-    track.scrollLeft = drag.current.startScrollLeft - delta;
+    if (Math.abs(delta) > 4 && !drag.current.moved) {
+      drag.current.moved = true;
+      track.setPointerCapture(e.pointerId);
+      drag.current.captured = true;
+      track.classList.add("cursor-grabbing");
+    }
+    if (drag.current.moved) track.scrollLeft = drag.current.startScrollLeft - delta;
   };
 
   const endDrag = (e: React.PointerEvent) => {
@@ -42,7 +48,8 @@ export function TripsShowcase({ heading, blurb, tours }: { heading: string; blur
     if (!track) return;
     drag.current.active = false;
     track.classList.remove("cursor-grabbing");
-    if (track.hasPointerCapture(e.pointerId)) track.releasePointerCapture(e.pointerId);
+    if (drag.current.captured && track.hasPointerCapture(e.pointerId)) track.releasePointerCapture(e.pointerId);
+    drag.current.captured = false;
   };
 
   const onClickCapture = (e: React.MouseEvent) => {
@@ -81,7 +88,7 @@ export function TripsShowcase({ heading, blurb, tours }: { heading: string; blur
             return (
               <LocaleLink
                 key={tour.slug}
-                href={`/excursions/${tour.slug}`}
+                href={tourHref(tour)}
                 draggable={false}
                 className="group relative w-[70%] flex-shrink-0 overflow-hidden rounded-sm sm:w-[42%] lg:w-[26%]"
               >

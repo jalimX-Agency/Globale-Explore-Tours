@@ -22,10 +22,18 @@ export async function FeaturedTours() {
       durationEs: true,
       theme: true,
       image: true,
+      format: true,
+      destination: { select: { slug: true, regionSlug: true } },
     },
   });
 
   if (tours.length === 0) return null;
 
-  return <FeaturedToursClient tours={tours} />;
+  const toursWithHref = tours.map(({ destination, ...t }) => ({
+    ...t,
+    destinationSlug: destination.slug,
+    regionSlug: destination.regionSlug,
+  }));
+
+  return <FeaturedToursClient tours={toursWithHref} />;
 }

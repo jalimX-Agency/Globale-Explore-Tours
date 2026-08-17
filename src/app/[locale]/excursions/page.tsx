@@ -47,8 +47,16 @@ export default async function ExcursionsPage({
       durationEs: true,
       theme: true,
       image: true,
+      format: true,
+      destination: { select: { slug: true, regionSlug: true } },
     },
   });
 
-  return <ExcursionsClient tours={tours} activeTheme={activeTheme} activeTravelers={activeTravelers} />;
+  const toursWithHref = tours.map(({ destination, ...t }) => ({
+    ...t,
+    destinationSlug: destination.slug,
+    regionSlug: destination.regionSlug,
+  }));
+
+  return <ExcursionsClient tours={toursWithHref} activeTheme={activeTheme} activeTravelers={activeTravelers} />;
 }

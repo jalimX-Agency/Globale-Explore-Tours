@@ -31,6 +31,7 @@ const TOUR_CARD_SELECT = {
   durationEs: true,
   theme: true,
   image: true,
+  format: true,
 } as const;
 
 export async function generateMetadata({
@@ -77,6 +78,12 @@ export default async function CountryPage({
   const countryLabel = pick(locale, destination.name, destination.nameEn, destination.nameEs);
   const destinationsLabel = pick(locale, NAV_DESTINATIONS.fr, NAV_DESTINATIONS.en, NAV_DESTINATIONS.es);
 
+  const toursWithHref = tours.map((tour) => ({
+    ...tour,
+    destinationSlug: destination.slug,
+    regionSlug: destination.regionSlug,
+  }));
+
   const otherDestinations = siblingDestinations.map((d) => ({
     key: d.slug,
     href: `/destinations/${d.regionSlug}/${d.slug}`,
@@ -98,7 +105,7 @@ export default async function CountryPage({
       blocks={blocks}
       faqs={faqs}
       team={team}
-      tours={tours}
+      tours={toursWithHref}
       otherDestinations={otherDestinations}
     />
   );

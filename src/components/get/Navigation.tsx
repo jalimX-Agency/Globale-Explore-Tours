@@ -68,9 +68,12 @@ export function Navigation({ destinations }: { destinations: DestinationLite[] }
   const pathWithoutLocale = usePathWithoutLocale();
 
   const isHome = pathname === `/${language}`;
-  // Destination pages (region/country) open on a full-bleed hero image, same as home — the
-  // header should start transparent there too, not just on "/".
-  const hasDarkHero = isHome || /^\/[a-z]{2}\/destinations(\/|$)/.test(pathname ?? "");
+  // Destination hub pages (region/country) open on a full-bleed hero image, same as home — the
+  // header should start transparent there too, not just on "/". Capped at 2 segments after
+  // "destinations" so it matches /destinations/[region] and /destinations/[region]/[country]
+  // but NOT the trip-detail route one level deeper (/destinations/[region]/[country]/[slug]),
+  // which usually opens on a plain white page with no hero to give the transparent header contrast.
+  const hasDarkHero = isHome || /^\/[a-z]{2}\/destinations(\/[^/]+){0,2}\/?$/.test(pathname ?? "");
   const solid = scrolled || !hasDarkHero; // pages without a dark hero always get the solid header
 
   const regionGroups = useMemo(() => {
@@ -234,9 +237,9 @@ export function Navigation({ destinations }: { destinations: DestinationLite[] }
             )}
           </div>
 
-          <a href="tel:+212706259077" className={`hidden items-center gap-1.5 text-sm xl:flex ${textColor}`}>
+          <a href="tel:+33667586462" className={`hidden items-center gap-1.5 text-sm xl:flex ${textColor}`}>
             <Phone className="h-3.5 w-3.5" />
-            +212 706 259 077
+            +33 6 67 58 64 62
           </a>
 
           <LocaleLink href="/reserver" className="btn-accent hidden lg:inline-flex text-xs px-5 py-2.5">
