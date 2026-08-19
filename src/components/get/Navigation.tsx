@@ -4,18 +4,11 @@ import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
-import { Menu, X, ChevronDown, Phone } from "lucide-react";
+import { Menu, X, Phone } from "lucide-react";
 import { useLanguage } from "@/lib/i18n/context";
 import { LOCALES } from "@/lib/i18n/locales";
 import { usePathWithoutLocale } from "@/lib/i18n/useLocalizedPath";
 import { LocaleLink } from "@/components/get/LocaleLink";
-
-const THEME_LINKS = [
-  { key: "adventure", href: "/excursions?theme=adventure" },
-  { key: "culture", href: "/excursions?theme=culture" },
-  { key: "relax", href: "/excursions?theme=relax" },
-  { key: "family", href: "/excursions?theme=family" },
-] as const;
 
 // Everything that isn't Excursions / Expériences / About lives behind the hamburger — mirrors
 // Black Tomato's own header, which only ever surfaces 3 top-level links.
@@ -27,6 +20,8 @@ const MORE_LINKS = [
 ] as const;
 
 const LANG_LABELS: Record<string, string> = { fr: "FR", en: "EN", es: "ES" };
+
+const R2 = "https://pub-6777907d6a4e4378b16e81847f00f2d2.r2.dev";
 
 type DestinationLite = {
   slug: string;
@@ -58,11 +53,12 @@ function localizedRegion(d: DestinationLite, language: Language) {
 
 export function Navigation({ destinations }: { destinations: DestinationLite[] }) {
   const [scrolled, setScrolled] = useState(false);
-  const [experiencesOpen, setExperiencesOpen] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [destinationsOpen, setDestinationsOpen] = useState(false);
   const [activeRegionSlug, setActiveRegionSlug] = useState<string | null>(null);
+  const [experiencesOpen, setExperiencesOpen] = useState(false);
+  const [activeExperienceTab, setActiveExperienceTab] = useState<"who" | "what">("who");
   const { language, t } = useLanguage();
   const pathname = usePathname();
   const pathWithoutLocale = usePathWithoutLocale();
@@ -73,8 +69,15 @@ export function Navigation({ destinations }: { destinations: DestinationLite[] }
   // "destinations" so it matches /destinations/[region] and /destinations/[region]/[country]
   // but NOT the trip-detail route one level deeper (/destinations/[region]/[country]/[slug]),
   // which usually opens on a plain white page with no hero to give the transparent header contrast.
-  const hasDarkHero = isHome || /^\/[a-z]{2}\/destinations(\/[^/]+){0,2}\/?$/.test(pathname ?? "");
-  const solid = scrolled || !hasDarkHero; // pages without a dark hero always get the solid header
+  // Same treatment for /experience-types and its traveler-type / family sub-pages, which all
+  // open on their own full-bleed hero image.
+  const hasDarkHero =
+    isHome ||
+    /^\/[a-z]{2}\/destinations(\/[^/]+){0,2}\/?$/.test(pathname ?? "") ||
+    /^\/[a-z]{2}\/experience-types(\/[^/]+){0,2}\/?$/.test(pathname ?? "");
+  // Also force the solid header whenever a full-screen mega-menu is open — its own background
+  // is white, so a transparent header floating over it would be unreadable.
+  const solid = scrolled || !hasDarkHero || destinationsOpen || experiencesOpen;
 
   const regionGroups = useMemo(() => {
     const groups = new Map<string, { slug: string; label: string; order: number; items: DestinationLite[] }>();
@@ -96,6 +99,30 @@ export function Navigation({ destinations }: { destinations: DestinationLite[] }
 
   const activeGroup = regionGroups.find((g) => g.slug === activeRegionSlug) ?? regionGroups[0];
 
+  // Reused by both the Destinations and Experiences mega-menus below — a compact grid of image
+  // cards, same visual language as the "Not Where But Who/What" rows on /experience-types.
+  const whoCards = [
+    { key: "family", image: `${R2}/traveler-types/family.jpg`, title: t("travelerTypes.family"), desc: t("experienceTypes.whoFamilyDesc"), href: "/experience-types/family-holidays" },
+    { key: "couples", image: `${R2}/traveler-types/couples.jpg`, title: t("travelerTypes.couples"), desc: t("experienceTypes.whoCouplesDesc"), href: "/experience-types/couples-holidays" },
+    { key: "groups", image: `${R2}/traveler-types/groups.jpg`, title: t("travelerTypes.groups"), desc: t("experienceTypes.whoGroupsDesc"), href: "/experience-types/luxury-group-holidays" },
+    { key: "honeymoon", image: `${R2}/traveler-types/honeymoon.jpg`, title: t("travelerTypes.honeymoon"), desc: t("experienceTypes.whoHoneymoonDesc"), href: "/experience-types/luxury-honeymoons" },
+    { key: "solo", image: `${R2}/traveler-types/solo.jpg`, title: t("travelerTypes.solo"), desc: t("experienceTypes.whoSoloDesc"), href: "/experience-types/solo-holidays" },
+  ];
+
+  const whatCards = [
+    { key: "adventure", image: `${R2}/experiences/what-adventure.jpg`, title: t("menu.adventure"), desc: t("menu.adventureDesc"), href: "/experience-types/adventure-holidays" },
+    { key: "culture", image: `${R2}/experiences/what-culture.jpg`, title: t("menu.culture"), desc: t("menu.cultureDesc"), href: "/experience-types/cultural-holidays" },
+    { key: "relax", image: `${R2}/experiences/what-relax.jpg`, title: t("menu.relax"), desc: t("menu.relaxDesc"), href: "/experience-types/wellness-holidays" },
+    { key: "family", image: `${R2}/experiences/what-family.jpg`, title: t("menu.family"), desc: t("menu.familyDesc"), href: "/experience-types/family-experiences" },
+    { key: "multiDay", image: `${R2}/experiences/what-multiday.jpg`, title: t("experienceTypes.whatMultiDay"), desc: t("experienceTypes.whatMultiDayDesc"), href: "/sejours-multi-jours" },
+    { key: "safari", image: `${R2}/destinations/kenya.jpg`, title: t("experienceTypes.whatSafari"), desc: t("experienceTypes.whatSafariDesc"), href: "/experience-types/safari-holidays" },
+    { key: "trains", image: `${R2}/destinations/suisse-hero.jpg`, title: t("experienceTypes.whatTrains"), desc: t("experienceTypes.whatTrainsDesc"), href: "/experience-types/train-journeys" },
+    { key: "desert", image: `${R2}/destinations/maroc.jpg`, title: t("experienceTypes.whatDesert"), desc: t("experienceTypes.whatDesertDesc"), href: "/experience-types/desert-holidays" },
+    { key: "islands", image: `${R2}/destinations/maldives.jpg`, title: t("experienceTypes.whatIslands"), desc: t("experienceTypes.whatIslandsDesc"), href: "/experience-types/island-holidays" },
+  ];
+
+  const activeExperienceCards = activeExperienceTab === "who" ? whoCards : whatCards;
+
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 40);
     handler();
@@ -104,20 +131,23 @@ export function Navigation({ destinations }: { destinations: DestinationLite[] }
   }, []);
 
   useEffect(() => {
-    document.body.style.overflow = mobileOpen || destinationsOpen ? "hidden" : "";
+    document.body.style.overflow = mobileOpen || destinationsOpen || experiencesOpen ? "hidden" : "";
     return () => {
       document.body.style.overflow = "";
     };
-  }, [mobileOpen, destinationsOpen]);
+  }, [mobileOpen, destinationsOpen, experiencesOpen]);
 
   useEffect(() => {
-    if (!destinationsOpen) return;
+    if (!destinationsOpen && !experiencesOpen) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setDestinationsOpen(false);
+      if (e.key === "Escape") {
+        setDestinationsOpen(false);
+        setExperiencesOpen(false);
+      }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [destinationsOpen]);
+  }, [destinationsOpen, experiencesOpen]);
 
   const textColor = solid ? "text-neutral-900" : "text-white";
 
@@ -156,38 +186,15 @@ export function Navigation({ destinations }: { destinations: DestinationLite[] }
             </button>
           )}
 
-          <div
-            className="relative"
+          {/* Opens on hover, closes only via the panel's own close button (or Escape) — not on
+              mouse-leave, so moving off the trigger to browse the panel doesn't dismiss it. */}
+          <LocaleLink
+            href="/experience-types"
             onMouseEnter={() => setExperiencesOpen(true)}
-            onMouseLeave={() => setExperiencesOpen(false)}
+            className="label-eyebrow hover:opacity-70"
           >
-            <button className="label-eyebrow flex items-center gap-1 py-8">
-              {t("nav.experiences")}
-              <ChevronDown className="h-3 w-3" />
-            </button>
-            {experiencesOpen && (
-              <motion.div
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.18 }}
-                className="absolute left-1/2 top-full w-[480px] -translate-x-1/2 rounded-sm border border-neutral-100 bg-white p-8 text-neutral-900 shadow-xl"
-              >
-                <div className="grid grid-cols-2 gap-x-8 gap-y-6">
-                  {THEME_LINKS.map(({ key, href }) => (
-                    <LocaleLink
-                      key={key}
-                      href={href}
-                      className="group block"
-                      onClick={() => setExperiencesOpen(false)}
-                    >
-                      <p className="font-display text-lg group-hover:opacity-60">{t(`menu.${key}`)}</p>
-                      <p className="font-body mt-1 text-sm text-neutral-500">{t(`menu.${key}Desc`)}</p>
-                    </LocaleLink>
-                  ))}
-                </div>
-              </motion.div>
-            )}
-          </div>
+            {t("nav.experiences")}
+          </LocaleLink>
 
           <LocaleLink href="/a-propos" className="label-eyebrow hover:opacity-70">
             {t("nav.about")}
@@ -299,19 +306,19 @@ export function Navigation({ destinations }: { destinations: DestinationLite[] }
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="fixed inset-0 z-[60] flex flex-col bg-white"
+            transition={{ duration: 0.18 }}
+            className="fixed left-0 right-0 top-20 z-40 flex h-[calc(100vh-5rem)] flex-col overflow-y-auto border-t border-neutral-100 bg-white shadow-xl"
           >
-            <div className="flex h-20 items-center justify-between px-6 lg:px-10">
-              <LocaleLink href="/" aria-label="Globale Explore Tours" onClick={() => setDestinationsOpen(false)}>
-                <Image src="/logo.png" alt="Globale Explore Tours" width={52} height={35} className="object-contain" />
-              </LocaleLink>
-              <button onClick={() => setDestinationsOpen(false)} aria-label={t("nav.closeOverlay")}>
-                <X className="h-6 w-6" />
-              </button>
-            </div>
+            <button
+              onClick={() => setDestinationsOpen(false)}
+              aria-label={t("nav.closeOverlay")}
+              className="absolute right-6 top-6 text-neutral-500 hover:text-neutral-900 lg:right-10"
+            >
+              <X className="h-6 w-6" />
+            </button>
 
-            <div className="mx-auto flex w-full max-w-7xl flex-1 flex-col overflow-y-auto px-6 pb-10 lg:flex-row lg:px-10">
-              <div className="flex flex-col gap-1 py-6 lg:w-1/4 lg:py-10">
+            <div className="mx-auto flex w-full max-w-7xl flex-col px-6 pb-10 pt-10 lg:flex-row lg:px-10">
+              <div className="flex flex-col gap-1 py-6 lg:w-1/4 lg:py-0">
                 {regionGroups.map((group) => (
                   <button
                     key={group.slug}
@@ -326,7 +333,7 @@ export function Navigation({ destinations }: { destinations: DestinationLite[] }
                 ))}
               </div>
 
-              <div className="flex flex-col gap-3 py-6 lg:w-1/4 lg:border-l lg:border-neutral-100 lg:py-10 lg:pl-10">
+              <div className="flex flex-col gap-3 py-6 lg:w-1/4 lg:border-l lg:border-neutral-100 lg:py-0 lg:pl-10">
                 {activeGroup.items.map((d) => (
                   <LocaleLink
                     key={d.slug}
@@ -346,8 +353,8 @@ export function Navigation({ destinations }: { destinations: DestinationLite[] }
                 </LocaleLink>
               </div>
 
-              <div className="relative hidden overflow-hidden rounded-sm lg:block lg:w-1/2 lg:py-10 lg:pl-10">
-                <div className="relative h-full min-h-[420px] w-full">
+              <div className="relative hidden overflow-hidden rounded-sm lg:block lg:w-1/2 lg:py-0 lg:pl-10">
+                <div className="relative h-full min-h-[380px] w-full">
                   {(() => {
                     const photo = activeGroup.items.find((d) => d.featured)?.heroImage ?? activeGroup.items[0]?.heroImage;
                     return photo ? (
@@ -355,6 +362,77 @@ export function Navigation({ destinations }: { destinations: DestinationLite[] }
                     ) : null;
                   })()}
                 </div>
+              </div>
+            </div>
+          </motion.div>
+      )}
+
+      {experiencesOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.18 }}
+            className="fixed left-0 right-0 top-20 z-40 flex h-[calc(100vh-5rem)] flex-col overflow-y-auto border-t border-neutral-100 bg-white shadow-xl"
+          >
+            <button
+              onClick={() => setExperiencesOpen(false)}
+              aria-label={t("nav.closeOverlay")}
+              className="absolute right-6 top-6 text-neutral-500 hover:text-neutral-900 lg:right-10"
+            >
+              <X className="h-6 w-6" />
+            </button>
+
+            <div className="mx-auto flex w-full max-w-7xl flex-col px-6 pb-10 pt-10 lg:flex-row lg:px-10">
+              <div className="flex flex-shrink-0 gap-6 py-6 lg:w-1/5 lg:flex-col lg:gap-1 lg:py-0">
+                <button
+                  onMouseEnter={() => setActiveExperienceTab("who")}
+                  onClick={() => setActiveExperienceTab("who")}
+                  className={`font-display text-left text-2xl py-2 transition-colors ${
+                    activeExperienceTab === "who" ? "text-[var(--brand-accent)]" : "text-neutral-800 hover:text-neutral-500"
+                  }`}
+                >
+                  {t("experienceTypes.subnavWho")}
+                </button>
+                <button
+                  onMouseEnter={() => setActiveExperienceTab("what")}
+                  onClick={() => setActiveExperienceTab("what")}
+                  className={`font-display text-left text-2xl py-2 transition-colors ${
+                    activeExperienceTab === "what" ? "text-[var(--brand-accent)]" : "text-neutral-800 hover:text-neutral-500"
+                  }`}
+                >
+                  {t("experienceTypes.subnavWhat")}
+                </button>
+              </div>
+
+              <div className="grid grid-cols-2 gap-5 py-6 sm:grid-cols-3 lg:w-4/5 lg:grid-cols-4 lg:border-l lg:border-neutral-100 lg:py-0 lg:pl-10">
+                {activeExperienceCards.map((card) => (
+                  <LocaleLink
+                    key={card.key}
+                    href={card.href}
+                    onClick={() => setExperiencesOpen(false)}
+                    className="group relative aspect-[3/4] overflow-hidden rounded-sm"
+                  >
+                    <Image
+                      src={card.image}
+                      alt={card.title}
+                      fill
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      sizes="(min-width: 1024px) 280px, (min-width: 640px) 33vw, 50vw"
+                    />
+                    <div className="absolute inset-0 bg-black/35 transition-colors duration-300 group-hover:bg-black/75" />
+
+                    <div className="absolute inset-0 flex items-center justify-center p-4 text-center transition-opacity duration-300 group-hover:opacity-0">
+                      <p className="label-eyebrow text-white" style={{ textShadow: "1px 1px 3px rgba(0,0,0,0.4)" }}>
+                        {card.title}
+                      </p>
+                    </div>
+
+                    <div className="absolute inset-0 flex flex-col items-center justify-center p-5 text-center opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                      <p className="label-eyebrow mb-3 text-white/70">{card.title}</p>
+                      <p className="font-body text-sm leading-relaxed text-white/95">{card.desc}</p>
+                    </div>
+                  </LocaleLink>
+                ))}
               </div>
             </div>
           </motion.div>

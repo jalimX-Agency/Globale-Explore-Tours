@@ -14,20 +14,60 @@ function localized(language: string, fr: string, en: string, es: string) {
   return fr;
 }
 
-export function TripsShowcase({ heading, blurb, tours }: { heading: string; blurb: string; tours: TourCardData[] }) {
+export function TripsShowcase({
+  heading,
+  blurb,
+  ctaLabel,
+  ctaHref,
+  tours,
+}: {
+  heading?: string;
+  blurb?: string;
+  ctaLabel?: string;
+  ctaHref?: string;
+  tours: TourCardData[];
+}) {
   const { language, t } = useLanguage();
   const trackRef = useRef<HTMLDivElement>(null);
-  const drag = useRef({ active: false, startX: 0, startScrollLeft: 0, moved: false, captured: false });
+  const drag = useRef({
+    active: false,
+    startX: 0,
+    startScrollLeft: 0,
+    moved: false,
+    captured: false,
+    lastX: 0,
+    lastT: 0,
+    velocity: 0, // px/ms, smoothed
+  });
+  const momentumId = useRef<number | null>(null);
 
   if (tours.length === 0) return null;
+
+  const stopMomentum = () => {
+    if (momentumId.current !== null) {
+      cancelAnimationFrame(momentumId.current);
+      momentumId.current = null;
+    }
+  };
 
   const onPointerDown = (e: React.PointerEvent) => {
     const track = trackRef.current;
     if (!track) return;
+    stopMomentum();
     // Do NOT setPointerCapture here: capturing on pointerdown retargets the subsequent click
     // event to the track element, so a plain click never reaches the anchor and navigation
     // breaks. We only capture once an actual drag starts (in onPointerMove).
-    drag.current = { active: true, startX: e.clientX, startScrollLeft: track.scrollLeft, moved: false, captured: false };
+    const now = performance.now();
+    drag.current = {
+      active: true,
+      startX: e.clientX,
+      startScrollLeft: track.scrollLeft,
+      moved: false,
+      captured: false,
+      lastX: e.clientX,
+      lastT: now,
+      velocity: 0,
+    };
   };
 
   const onPointerMove = (e: React.PointerEvent) => {
@@ -40,16 +80,50 @@ export function TripsShowcase({ heading, blurb, tours }: { heading: string; blur
       drag.current.captured = true;
       track.classList.add("cursor-grabbing");
     }
-    if (drag.current.moved) track.scrollLeft = drag.current.startScrollLeft - delta;
+    if (drag.current.moved) {
+      track.scrollLeft = drag.current.startScrollLeft - delta;
+      const now = performance.now();
+      const dt = now - drag.current.lastT;
+      if (dt > 0) {
+        const instant = (e.clientX - drag.current.lastX) / dt;
+        drag.current.velocity = drag.current.velocity * 0.7 + instant * 0.3;
+      }
+      drag.current.lastX = e.clientX;
+      drag.current.lastT = now;
+    }
   };
 
   const endDrag = (e: React.PointerEvent) => {
     const track = trackRef.current;
     if (!track) return;
+    const wasDrag = drag.current.moved;
+    const velocity = drag.current.velocity;
     drag.current.active = false;
     track.classList.remove("cursor-grabbing");
     if (drag.current.captured && track.hasPointerCapture(e.pointerId)) track.releasePointerCapture(e.pointerId);
     drag.current.captured = false;
+
+    if (!wasDrag) return;
+
+    // Momentum coast on release — a flick keeps gliding and decelerates smoothly instead of
+    // stopping dead where the pointer let go, matching a native carousel's inertia.
+    let speed = -velocity * 16;
+    if (Math.abs(speed) < 0.5) return;
+    const step = () => {
+      const el = trackRef.current;
+      if (!el) return;
+      speed *= 0.94;
+      const max = el.scrollWidth - el.clientWidth;
+      const next = el.scrollLeft + speed;
+      if (next <= 0 || next >= max) {
+        el.scrollLeft = Math.max(0, Math.min(max, next));
+        momentumId.current = null;
+        return;
+      }
+      el.scrollLeft = next;
+      momentumId.current = Math.abs(speed) > 0.4 ? requestAnimationFrame(step) : null;
+    };
+    momentumId.current = requestAnimationFrame(step);
   };
 
   const onClickCapture = (e: React.MouseEvent) => {
@@ -66,10 +140,17 @@ export function TripsShowcase({ heading, blurb, tours }: { heading: string; blur
       <div className="absolute inset-0 bg-black/55" />
 
       <div className="relative z-10 flex flex-col gap-10 pl-6 lg:flex-row lg:items-center lg:pl-[max(2.5rem,calc((100vw-1280px)/2+2.5rem))]">
-        <div className="pr-6 lg:w-1/4 lg:flex-shrink-0 lg:pr-10">
-          <h2 className="font-display text-2xl text-white sm:text-3xl">{heading}</h2>
-          <p className="font-body mt-4 text-sm text-white/70">{blurb}</p>
-        </div>
+        {heading && (
+          <div className="pr-6 lg:w-1/4 lg:flex-shrink-0 lg:pr-10">
+            <h2 className="font-display text-2xl text-white sm:text-3xl">{heading}</h2>
+            <p className="font-body mt-4 text-sm text-white/70">{blurb}</p>
+            {ctaLabel && ctaHref && (
+              <LocaleLink href={ctaHref} className="btn-primary mt-6 inline-flex">
+                {ctaLabel}
+              </LocaleLink>
+            )}
+          </div>
+        )}
 
         <div className="relative lg:flex-1">
           <div

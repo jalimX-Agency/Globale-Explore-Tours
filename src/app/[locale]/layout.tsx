@@ -76,7 +76,7 @@ export default async function LocaleLayout({
     description: "Agence de voyages sur-mesure basée à Valenciennes, France, proposant des excursions à Agadir et des circuits dans le monde entier.",
     url: "https://www.globaleexploretours.com",
     telephone: "+33667586462",
-    email: "contac@globaleexploretours.com",
+    email: "contact@globaleexploretours.com",
     address: {
       "@type": "PostalAddress",
       streetAddress: "5 Avenue du Sénateur Girard",

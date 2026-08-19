@@ -2,7 +2,7 @@ import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 const FROM = "noreply@globaleexploretours.com";
-const ADMIN_EMAIL = "contac@globaleexploretours.com";
+const ADMIN_EMAIL = "contact@globaleexploretours.com";
 
 const COPY = {
   fr: {

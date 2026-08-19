@@ -90,8 +90,8 @@ export function Footer() {
                 <a href="tel:+33984338182" className="hover:text-white">+33 9 84 33 81 82</a>
               </li>
               <li>
-                <a href="mailto:contac@globaleexploretours.com" className="hover:text-white">
-                  contac@globaleexploretours.com
+                <a href="mailto:contact@globaleexploretours.com" className="hover:text-white">
+                  contact@globaleexploretours.com
                 </a>
               </li>
               <li className="text-white/50">5 Avenue du Sénateur Girard, 59300 Valenciennes, France</li>

@@ -1,6 +1,9 @@
 import { db } from "@/lib/db";
 import { MetadataRoute } from "next";
 import { LOCALES } from "@/lib/i18n/locales";
+import { TRAVELER_TYPE_PAGES } from "@/lib/experienceTypesData";
+import { FAMILY_SUB_PAGES } from "@/lib/familySubPagesData";
+import { WHAT_TYPE_PAGES } from "@/lib/whatTypesData";
 
 const BASE = "https://www.globaleexploretours.com";
 
@@ -36,6 +39,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticRoutes = [
     { path: "", priority: 1.0 },
     { path: "/excursions", priority: 0.9 },
+    { path: "/experience-types", priority: 0.8 },
     { path: "/sejours-multi-jours", priority: 0.8 },
     { path: "/transferts-aeroport", priority: 0.6 },
     { path: "/a-propos", priority: 0.7 },
@@ -58,5 +62,24 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     withLocales(`/destinations/${d.regionSlug}/${d.slug}`, d.updatedAt, "weekly", 0.85)
   );
 
-  return [...staticRoutes, ...tourRoutes, ...blogRoutes, ...regionRoutes, ...destinationRoutes];
+  const travelerTypeRoutes = TRAVELER_TYPE_PAGES.flatMap((p) =>
+    withLocales(`/experience-types/${p.slug}`, now, "monthly", 0.75)
+  );
+
+  const familySubPageRoutes = FAMILY_SUB_PAGES.flatMap((p) =>
+    withLocales(`/experience-types/family-holidays/${p.slug}`, now, "monthly", 0.6)
+  );
+
+  const whatTypeRoutes = WHAT_TYPE_PAGES.flatMap((p) => withLocales(`/experience-types/${p.slug}`, now, "monthly", 0.7));
+
+  return [
+    ...staticRoutes,
+    ...tourRoutes,
+    ...blogRoutes,
+    ...regionRoutes,
+    ...destinationRoutes,
+    ...travelerTypeRoutes,
+    ...familySubPageRoutes,
+    ...whatTypeRoutes,
+  ];
 }
