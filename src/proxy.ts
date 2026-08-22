@@ -10,6 +10,15 @@ function detectLocale(request: NextRequest): string {
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  // The matcher below is meant to already exclude these, but Next.js 16.3's Turbopack
+  // production build has been observed to leave the proxy matcher unregistered on Vercel
+  // (empty middleware-manifest.json despite a compiled bundle), which makes Vercel fall
+  // back to invoking this function on every request. Checking again here means admin/api/
+  // asset routes stay untouched even if the matcher itself never gets applied.
+  if (pathname.startsWith("/admin") || pathname.startsWith("/api") || pathname.startsWith("/_next") || /\.[^/]+$/.test(pathname)) {
+    return NextResponse.next();
+  }
+
   const hasLocale = LOCALES.some((l) => pathname === `/${l}` || pathname.startsWith(`/${l}/`));
   if (hasLocale) return NextResponse.next();
 
