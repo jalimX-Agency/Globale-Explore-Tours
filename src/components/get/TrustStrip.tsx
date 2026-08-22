@@ -1,29 +1,42 @@
 "use client";
 
+import { Star, ShieldCheck, UserCheck, Headphones, Car } from "lucide-react";
 import { useLanguage } from "@/lib/i18n/context";
+
+const ITEMS = [
+  { key: "rating", icon: Star, labelKey: "trust.ratingLabel", descKey: "trust.ratingDesc" },
+  { key: "fees", icon: ShieldCheck, labelKey: "trust.noHiddenFees", descKey: "trust.noHiddenFeesDesc" },
+  { key: "guides", icon: UserCheck, labelKey: "trust.localGuides", descKey: "trust.localGuidesDesc" },
+  { key: "support", icon: Headphones, labelKey: "trust.support", descKey: "trust.supportDesc" },
+  { key: "pickup", icon: Car, labelKey: "trust.pickup", descKey: "trust.pickupDesc" },
+] as const;
 
 export function TrustStrip() {
   const { t } = useLanguage();
 
   return (
-    <div className="border-b border-neutral-100 bg-white">
-      <div className="font-body mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-x-8 gap-y-2 px-6 py-4 text-xs text-neutral-600 sm:text-sm">
-        <span className="flex items-center gap-1.5">
-          <StarIcon /> {t("trust.ratingLabel")}
-        </span>
-        <span className="hidden h-1 w-1 rounded-full bg-neutral-300 sm:inline-block" />
-        <span>{t("trust.pickup")}</span>
-        <span className="hidden h-1 w-1 rounded-full bg-neutral-300 sm:inline-block" />
-        <span>{t("trust.noHiddenFees")}</span>
-      </div>
-    </div>
-  );
-}
+    <section className="border-t border-neutral-100 bg-white py-16 sm:py-20">
+      <div className="mx-auto max-w-7xl px-6 text-center lg:px-10">
+        <h2
+          className="font-display text-3xl font-normal tracking-wide text-neutral-800 sm:text-4xl lg:text-[45px]"
+          style={{ textWrap: "balance" }}
+        >
+          {t("trust.title")}
+        </h2>
+        <p className="label-eyebrow mt-4 inline-block border-b-2 border-[var(--brand-accent)] pb-2 text-neutral-800">
+          {t("trust.tab")}
+        </p>
 
-function StarIcon() {
-  return (
-    <svg viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5 text-[var(--brand-accent)]" aria-hidden="true">
-      <path d="M10 1.5l2.6 5.6 6.1.7-4.5 4.2 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.2 6.1-.7L10 1.5z" />
-    </svg>
+        <div className="mt-12 grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-5">
+          {ITEMS.map(({ key, icon: Icon, labelKey, descKey }) => (
+            <div key={key} className="flex flex-col items-center text-center">
+              <Icon className="h-7 w-7 text-[var(--brand-accent)]" strokeWidth={1.5} />
+              <p className="font-display mt-4 text-base text-neutral-900">{t(labelKey)}</p>
+              <p className="font-body mt-2 text-sm leading-relaxed text-neutral-500">{t(descKey)}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }

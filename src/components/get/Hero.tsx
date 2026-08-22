@@ -44,7 +44,7 @@ export function Hero() {
             <LocaleLink href="/excursions" className="btn-outline text-white hover:border-white/70">
               {t("hero.cta")}
             </LocaleLink>
-            <LocaleLink href="/reserver" className="btn-primary">
+            <LocaleLink href="/faire-une-demande" className="btn-primary">
               {t("hero.bookCta")}
             </LocaleLink>
           </div>

@@ -9,11 +9,11 @@ const R2 = "https://pub-6777907d6a4e4378b16e81847f00f2d2.r2.dev";
 // Generic mood imagery (Pexels, free/commercial-use licensed) — appropriate here since
 // these tiles are category art, not photos claiming to depict a specific paid tour.
 const TYPES = [
-  { key: "family", param: "family", image: `${R2}/traveler-types/family.jpg` },
-  { key: "couples", param: "couples", image: `${R2}/traveler-types/couples.jpg` },
-  { key: "groups", param: "groups", image: `${R2}/traveler-types/groups.jpg` },
-  { key: "honeymoon", param: "honeymoon", image: `${R2}/traveler-types/honeymoon.jpg` },
-  { key: "solo", param: "solo", image: `${R2}/traveler-types/solo.jpg` },
+  { key: "family", href: "/experience-types/family-holidays", image: `${R2}/traveler-types/family.jpg` },
+  { key: "couples", href: "/experience-types/couples-holidays", image: `${R2}/traveler-types/couples.jpg` },
+  { key: "groups", href: "/experience-types/luxury-group-holidays", image: `${R2}/traveler-types/groups.jpg` },
+  { key: "honeymoon", href: "/experience-types/luxury-honeymoons", image: `${R2}/traveler-types/honeymoon.jpg` },
+  { key: "solo", href: "/experience-types/solo-holidays", image: `${R2}/traveler-types/solo.jpg` },
 ] as const;
 
 export function TravelerTypes() {
@@ -43,7 +43,7 @@ export function TravelerTypes() {
               className="flex-1"
             >
               <LocaleLink
-                href={`/excursions?travelers=${type.param}`}
+                href={type.href}
                 className="group relative flex h-64 items-end justify-center overflow-hidden rounded-sm bg-neutral-800 sm:h-[480px]"
               >
                 {/* eslint-disable-next-line @next/next/no-img-element -- external R2 asset, no next/image domain config needed for this fixed set */}
@@ -61,7 +61,7 @@ export function TravelerTypes() {
           ))}
         </div>
 
-        <LocaleLink href="/excursions" className="btn-primary mt-10 inline-flex">
+        <LocaleLink href="/experience-types" className="btn-primary mt-10 inline-flex">
           {t("travelerTypes.viewMore")}
         </LocaleLink>
       </div>

@@ -186,7 +186,7 @@ export function ExcursionsClient({
                   <TourCard tour={tour} index={i} />
                   <div className="mt-4 flex items-center justify-between border-t border-neutral-100 pt-4">
                     <LocaleLink 
-                      href={`/reserver?tour=${tour.slug}`}
+                      href={`/faire-une-demande?tour=${tour.slug}`}
                       className="font-body text-xs font-semibold uppercase tracking-wider text-[var(--brand-accent)] hover:text-[var(--brand-accent-dark)] flex items-center gap-1"
                     >
                       {t("destinationsPage.enquire")}

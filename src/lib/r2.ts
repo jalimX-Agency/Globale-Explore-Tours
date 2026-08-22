@@ -85,6 +85,41 @@ export async function deleteFromR2(key: string): Promise<void> {
   });
 }
 
+// Videos can be far larger than the 3MB cap enforced on the buffered /api/admin/upload
+// route, and Next.js API routes have body-size/duration limits on serverless hosts — so
+// large files get a presigned PUT URL instead and upload directly from the browser to R2,
+// never passing through our server.
+export async function getPresignedUploadUrl(
+  key: string,
+  expiresInSeconds: number = 300
+): Promise<string> {
+  const { amzDate, dateStamp } = amzDateNow();
+  const region = "auto";
+  const service = "s3";
+  const host = `${ACCOUNT_ID}.r2.cloudflarestorage.com`;
+  const credentialScope = `${dateStamp}/${region}/${service}/aws4_request`;
+  const signedHeaders = "host";
+  const queryParams: [string, string][] = [
+    ["X-Amz-Algorithm", "AWS4-HMAC-SHA256"],
+    ["X-Amz-Credential", `${ACCESS_KEY}/${credentialScope}`],
+    ["X-Amz-Date", amzDate],
+    ["X-Amz-Expires", String(expiresInSeconds)],
+    ["X-Amz-SignedHeaders", signedHeaders],
+  ];
+  const canonicalQueryString = queryParams
+    .map(([k, v]) => [encodeURIComponent(k), encodeURIComponent(v)])
+    .sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0))
+    .map(([k, v]) => `${k}=${v}`)
+    .join("&");
+  const canonicalHeaders = `host:${host}\n`;
+  const canonicalRequest = `PUT\n/${BUCKET}/${key}\n${canonicalQueryString}\n${canonicalHeaders}\n${signedHeaders}\nUNSIGNED-PAYLOAD`;
+  const stringToSign = `AWS4-HMAC-SHA256\n${amzDate}\n${credentialScope}\n${sha256hex(canonicalRequest)}`;
+  const signingKey = getSigningKey(SECRET_KEY, dateStamp, region, service);
+  const signature = hmacSha256(signingKey, stringToSign).toString("hex");
+
+  return `${ENDPOINT}/${BUCKET}/${key}?${canonicalQueryString}&X-Amz-Signature=${signature}`;
+}
+
 export async function deleteR2Urls(urls: string): Promise<void> {
   const list = urls.split(",").map((u) => u.trim()).filter(Boolean);
   for (const url of list) {

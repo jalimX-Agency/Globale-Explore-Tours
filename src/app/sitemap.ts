@@ -45,7 +45,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { path: "/a-propos", priority: 0.7 },
     { path: "/blog", priority: 0.7 },
     { path: "/contact", priority: 0.6 },
-    { path: "/reserver", priority: 0.6 },
+    { path: "/faire-une-demande", priority: 0.6 },
     { path: "/mentions-legales", priority: 0.2 },
     { path: "/politique-de-confidentialite", priority: 0.2 },
     { path: "/conditions-de-reservation", priority: 0.2 },

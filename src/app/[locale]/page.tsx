@@ -2,8 +2,10 @@ import { Hero } from "@/components/get/Hero";
 import { Mission } from "@/components/get/Mission";
 import { Testimonials } from "@/components/get/Testimonials";
 import { TravelerTypes } from "@/components/get/TravelerTypes";
-import { TrustStrip } from "@/components/get/TrustStrip";
 import { FeaturedTours } from "@/components/get/FeaturedTours";
+import { OurApproach } from "@/components/get/OurApproach";
+import { TrustStrip } from "@/components/get/TrustStrip";
+import { ClosingCta } from "@/components/get/ClosingCta";
 
 export default function Home() {
   return (
@@ -12,8 +14,10 @@ export default function Home() {
       <Mission />
       <Testimonials />
       <TravelerTypes />
-      <TrustStrip />
       <FeaturedTours />
+      <OurApproach />
+      <TrustStrip />
+      <ClosingCta />
     </main>
   );
 }

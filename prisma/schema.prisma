@@ -296,6 +296,10 @@ model Booking {
   preferredDate DateTime?
   guests        Int       @default(1)
   children      Int       @default(0)
+  duration      String    @default("") // free text, "how long for?" — e.g. "2 semaines"
+  budget        String    @default("") // free text range per person, e.g. "1000-2500 EUR"
+  destinationsInterest String @default("") // comma-separated region names — "where would you like to go?"
+  hearAboutUs   String    @default("")
   message       String    @default("")
   language      String    @default("fr") // fr | en | es
   status        String    @default("pending") // pending | contacted | confirmed | cancelled

@@ -9,7 +9,7 @@ export function JourneyCtaBanner() {
   return (
     <div className="relative left-1/2 right-1/2 -mx-[50vw] w-screen bg-[var(--brand-ink)] py-16 text-center text-white">
       <h2 className="font-display text-2xl sm:text-3xl">{t("tripDetailPage.readyToStart")}</h2>
-      <LocaleLink href="/reserver" className="btn-accent mt-6 inline-flex text-xs px-6 py-3">
+      <LocaleLink href="/faire-une-demande" className="btn-accent mt-6 inline-flex text-xs px-6 py-3">
         {t("tripDetailPage.startPlanning")}
       </LocaleLink>
     </div>

@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
-import { Menu, X, Phone } from "lucide-react";
+import { Menu, X, Phone, ChevronDown } from "lucide-react";
 import { useLanguage } from "@/lib/i18n/context";
 import { LOCALES } from "@/lib/i18n/locales";
 import { usePathWithoutLocale } from "@/lib/i18n/useLocalizedPath";
@@ -59,6 +59,7 @@ export function Navigation({ destinations }: { destinations: DestinationLite[] }
   const [activeRegionSlug, setActiveRegionSlug] = useState<string | null>(null);
   const [experiencesOpen, setExperiencesOpen] = useState(false);
   const [activeExperienceTab, setActiveExperienceTab] = useState<"who" | "what">("who");
+  const [mobileSection, setMobileSection] = useState<null | "destinations" | "experiences">(null);
   const { language, t } = useLanguage();
   const pathname = usePathname();
   const pathWithoutLocale = usePathWithoutLocale();
@@ -153,7 +154,15 @@ export function Navigation({ destinations }: { destinations: DestinationLite[] }
 
   const openDestinations = () => {
     setActiveRegionSlug(regionGroups[0]?.slug ?? null);
+    // Both mega-menus share the same fixed slot below the header — leaving the other one open
+    // means it renders behind (or fights with) this one, so only ever show one at a time.
+    setExperiencesOpen(false);
     setDestinationsOpen(true);
+  };
+
+  const openExperiences = () => {
+    setDestinationsOpen(false);
+    setExperiencesOpen(true);
   };
 
   return (
@@ -190,7 +199,7 @@ export function Navigation({ destinations }: { destinations: DestinationLite[] }
               mouse-leave, so moving off the trigger to browse the panel doesn't dismiss it. */}
           <LocaleLink
             href="/experience-types"
-            onMouseEnter={() => setExperiencesOpen(true)}
+            onMouseEnter={openExperiences}
             className="label-eyebrow hover:opacity-70"
           >
             {t("nav.experiences")}
@@ -249,7 +258,7 @@ export function Navigation({ destinations }: { destinations: DestinationLite[] }
             +33 6 67 58 64 62
           </a>
 
-          <LocaleLink href="/reserver" className="btn-accent hidden lg:inline-flex text-xs px-5 py-2.5">
+          <LocaleLink href="/faire-une-demande" className="btn-accent hidden lg:inline-flex text-xs px-5 py-2.5">
             {t("nav.bookNow")}
           </LocaleLink>
 
@@ -266,28 +275,144 @@ export function Navigation({ destinations }: { destinations: DestinationLite[] }
             animate={{ opacity: 1 }}
             className="fixed inset-0 z-50 flex flex-col bg-white lg:hidden"
           >
-            <div className="flex h-20 items-center justify-between px-6">
+            <div className="flex h-20 flex-shrink-0 items-center justify-between px-6">
               <Image src="/logo.png" alt="Globale Explore Tours" width={44} height={30} className="object-contain" />
-              <button onClick={() => setMobileOpen(false)} aria-label={t("nav.closeOverlay")}>
+              <button
+                onClick={() => {
+                  setMobileOpen(false);
+                  setMobileSection(null);
+                }}
+                aria-label={t("nav.closeOverlay")}
+              >
                 <X className="h-6 w-6" />
               </button>
             </div>
-            <div className="flex flex-1 flex-col items-center justify-center gap-7 overflow-y-auto py-10">
-              <LocaleLink href="/excursions" onClick={() => setMobileOpen(false)} className="font-display text-3xl">
-                {t("nav.destinations")}
-              </LocaleLink>
-              <LocaleLink href="/a-propos" onClick={() => setMobileOpen(false)} className="font-display text-3xl">
+
+            <div className="flex flex-1 flex-col overflow-y-auto px-6 pb-10">
+              {/* ── Destinations accordion ── */}
+              <div className="border-b border-neutral-100">
+                <button
+                  onClick={() => setMobileSection(mobileSection === "destinations" ? null : "destinations")}
+                  className="flex w-full items-center justify-between py-5 font-display text-2xl"
+                  aria-expanded={mobileSection === "destinations"}
+                >
+                  {t("nav.destinations")}
+                  <ChevronDown
+                    className={`h-5 w-5 transition-transform ${mobileSection === "destinations" ? "rotate-180" : ""}`}
+                  />
+                </button>
+                {mobileSection === "destinations" && (
+                  <div className="flex flex-col gap-6 pb-6">
+                    {regionGroups.map((group) => (
+                      <div key={group.slug}>
+                        <p className="label-eyebrow mb-2 text-neutral-500">{group.label}</p>
+                        <div className="flex flex-col gap-3">
+                          {group.items.map((d) => (
+                            <LocaleLink
+                              key={d.slug}
+                              href={`/destinations/${d.regionSlug}/${d.slug}`}
+                              onClick={() => setMobileOpen(false)}
+                              className="font-body text-base text-neutral-700"
+                            >
+                              {localizedName(d, language)}
+                            </LocaleLink>
+                          ))}
+                          <LocaleLink
+                            href={`/destinations/${group.slug}`}
+                            onClick={() => setMobileOpen(false)}
+                            className="font-body text-sm font-semibold text-neutral-900"
+                          >
+                            {t("nav.browseAll")} {group.label.toUpperCase()}
+                          </LocaleLink>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* ── Experiences accordion ── */}
+              <div className="border-b border-neutral-100">
+                <button
+                  onClick={() => setMobileSection(mobileSection === "experiences" ? null : "experiences")}
+                  className="flex w-full items-center justify-between py-5 font-display text-2xl"
+                  aria-expanded={mobileSection === "experiences"}
+                >
+                  {t("nav.experiences")}
+                  <ChevronDown
+                    className={`h-5 w-5 transition-transform ${mobileSection === "experiences" ? "rotate-180" : ""}`}
+                  />
+                </button>
+                {mobileSection === "experiences" && (
+                  <div className="pb-6">
+                    <div className="mb-4 flex gap-6">
+                      <button
+                        onClick={() => setActiveExperienceTab("who")}
+                        className={`label-eyebrow ${activeExperienceTab === "who" ? "text-[var(--brand-accent)]" : "text-neutral-500"}`}
+                      >
+                        {t("experienceTypes.subnavWho")}
+                      </button>
+                      <button
+                        onClick={() => setActiveExperienceTab("what")}
+                        className={`label-eyebrow ${activeExperienceTab === "what" ? "text-[var(--brand-accent)]" : "text-neutral-500"}`}
+                      >
+                        {t("experienceTypes.subnavWhat")}
+                      </button>
+                    </div>
+                    <div className="flex flex-col gap-4">
+                      {activeExperienceCards.map((card) => (
+                        <LocaleLink
+                          key={card.key}
+                          href={card.href}
+                          onClick={() => setMobileOpen(false)}
+                          className="flex items-center gap-4"
+                        >
+                          <span className="relative h-14 w-14 flex-shrink-0 overflow-hidden rounded-sm">
+                            <Image src={card.image} alt={card.title} fill className="object-cover" sizes="56px" />
+                          </span>
+                          <span className="font-body text-base text-neutral-800">{card.title}</span>
+                        </LocaleLink>
+                      ))}
+                      <LocaleLink
+                        href="/experience-types"
+                        onClick={() => setMobileOpen(false)}
+                        className="font-body text-sm font-semibold text-neutral-900"
+                      >
+                        {t("nav.browseAll")} {t("nav.experiences").toUpperCase()}
+                      </LocaleLink>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <LocaleLink
+                href="/a-propos"
+                onClick={() => setMobileOpen(false)}
+                className="border-b border-neutral-100 py-5 font-display text-2xl"
+              >
                 {t("nav.about")}
               </LocaleLink>
               {MORE_LINKS.map(({ labelKey, href }) => (
-                <LocaleLink key={href} href={href} onClick={() => setMobileOpen(false)} className="font-display text-3xl">
+                <LocaleLink
+                  key={href}
+                  href={href}
+                  onClick={() => setMobileOpen(false)}
+                  className="border-b border-neutral-100 py-5 font-display text-2xl"
+                >
                   {t(labelKey)}
                 </LocaleLink>
               ))}
-              <LocaleLink href="/reserver" onClick={() => setMobileOpen(false)} className="btn-accent mt-4">
+
+              <LocaleLink href="/faire-une-demande" onClick={() => setMobileOpen(false)} className="btn-accent mt-8 justify-center">
                 {t("nav.bookNow")}
               </LocaleLink>
-              <div className="mt-6 flex items-center gap-3 text-sm">
+
+              <a href="tel:+33667586462" className="mt-6 flex items-center justify-center gap-1.5 text-sm text-neutral-600">
+                <Phone className="h-3.5 w-3.5" />
+                +33 6 67 58 64 62
+              </a>
+
+              <div className="mt-6 flex items-center justify-center gap-3 text-sm">
                 {LOCALES.map((code) => (
                   <a
                     key={code}

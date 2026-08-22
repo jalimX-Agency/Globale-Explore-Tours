@@ -1,11 +1,11 @@
 import { db } from "@/lib/db";
-import { FeaturedToursClient } from "./FeaturedToursClient";
+import { FeaturedToursShowcase } from "./FeaturedToursShowcase";
 
 export async function FeaturedTours() {
   const tours = await db.tour.findMany({
     where: { featured: true },
     orderBy: { order: "asc" },
-    take: 6,
+    take: 10,
     select: {
       slug: true,
       name: true,
@@ -35,5 +35,5 @@ export async function FeaturedTours() {
     regionSlug: destination.regionSlug,
   }));
 
-  return <FeaturedToursClient tours={toursWithHref} />;
+  return <FeaturedToursShowcase tours={toursWithHref} />;
 }

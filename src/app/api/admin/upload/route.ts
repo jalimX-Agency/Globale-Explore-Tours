@@ -2,7 +2,18 @@ import { NextRequest, NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/admin-auth";
 import { uploadToR2, deleteFromR2, R2_PUBLIC_URL } from "@/lib/r2";
 
-const VALID_FOLDERS = ["tours", "gallery", "blog", "guides", "logo"];
+const VALID_FOLDERS = [
+  "tours",
+  "gallery",
+  "blog",
+  "guides",
+  "logo",
+  "destinations",
+  "regions",
+  "team",
+  "content-blocks",
+  "testimonials",
+];
 
 export async function POST(request: NextRequest) {
   const deny = await requireAdmin();

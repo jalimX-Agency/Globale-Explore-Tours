@@ -46,7 +46,7 @@ export function ContentBlockSection({ title, blocks }: { title: string; blocks: 
             >
               <p className="font-display text-xl text-neutral-900 sm:text-2xl">{blockTitle}</p>
               <p className="font-body mt-4 text-base leading-relaxed text-neutral-600 sm:text-lg">{description}</p>
-              <LocaleLink href="/reserver" className="btn-primary mt-6 inline-flex w-fit text-xs">
+              <LocaleLink href="/faire-une-demande" className="btn-primary mt-6 inline-flex w-fit text-xs">
                 {t("destinationsPage.enquire")}
               </LocaleLink>
             </div>

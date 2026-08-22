@@ -12,7 +12,7 @@ export function TripCtaBox() {
         <p className="font-display text-xl sm:text-2xl">{t("tripDetailPage.makeItYours")}</p>
         <p className="font-body mt-2 max-w-md text-sm text-white/85">{t("tripDetailPage.makeItYoursBody")}</p>
       </div>
-      <LocaleLink href="/reserver" className="btn-primary flex-shrink-0 text-xs">
+      <LocaleLink href="/faire-une-demande" className="btn-primary flex-shrink-0 text-xs">
         {t("destinationsPage.enquire")}
       </LocaleLink>
     </div>

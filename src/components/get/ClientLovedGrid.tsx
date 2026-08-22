@@ -54,7 +54,7 @@ function ClientLovedCard({ block }: { block: ClientLovedData }) {
         >
           {isExpanded ? t("destinationsPage.readLess") : ctaLabel}
         </button>
-        <LocaleLink href="/reserver" className="btn-accent text-xs px-4 py-2">
+        <LocaleLink href="/faire-une-demande" className="btn-accent text-xs px-4 py-2">
           {t("nav.bookNow")}
         </LocaleLink>
       </div>

@@ -13,6 +13,14 @@ const nextConfig: NextConfig = {
   },
   typescript: { ignoreBuildErrors: true },
   reactStrictMode: false,
+  // /reserver was renamed to /faire-une-demande; content seeded via seed.ts still has real
+  // ContentBlock.ctaHref rows pointing at the old path, and external backlinks may too.
+  async redirects() {
+    return [
+      { source: "/:locale/reserver", destination: "/:locale/faire-une-demande", permanent: true },
+      { source: "/:locale/reserver/:path*", destination: "/:locale/faire-une-demande/:path*", permanent: true },
+    ];
+  },
 };
 
 export default nextConfig;

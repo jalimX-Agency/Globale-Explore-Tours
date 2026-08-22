@@ -4,58 +4,6 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/lib/i18n/context";
 
-// Real, public TripAdvisor reviews of Globale Explore Tours — used as testimonials with attribution.
-const QUOTES = [
-  {
-    quote: "My daughter and I had a great day during our 4x4 jeep safari. Momo was a friendly and knowledgeable guide who went out of his way to make sure that we had a nice time.",
-    author: "Andrea L., Croatia",
-  },
-  {
-    quote: "Throughout the experience everyone was so warm and friendly, and the experience itself is amazing driving through the dunes to the beach. Would highly recommend to anyone.",
-    author: "Jonathan D., Buggy Adventure",
-  },
-  {
-    quote: "Merci beaucoup pour ce tour, de la prise en charge à l'hôtel aux différents lieux visités, il nous a permis de découvrir Agadir en toute sérénité. Momo est charmant !",
-    author: "Fabienne C., Agadir City Tour",
-  },
-  {
-    quote: "Wonderful experience. Hassane and Ahmed were our rays of sunshine — ask for them. Magical landscapes.",
-    author: "Florence O., Buggy Adventure",
-  },
-  {
-    quote: "Amazing trip and amazing guide. Helped my son on the buggy. Overall the full experience was 5 star and very friendly. Will recommend 100%.",
-    author: "Muhammad Z., Buggy Adventure",
-  },
-  {
-    quote: "We had a great time. The buggy ride was incredible, great landscapes, a top-notch guide who didn't stop taking care of us, offering us stops to enjoy the viewpoints.",
-    author: "Adelaide R., Buggy Adventure",
-  },
-  {
-    quote: "Great time with the family. Beautiful landscapes and memories etched in our minds. Thank you Hamza for your kindness!",
-    author: "Manon B., Buggy & Quad",
-  },
-  {
-    quote: "Fantastic experience, great value for money, would definitely recommend. Great guides and lovely mint tea with biscuits to round off the afternoon.",
-    author: "Sarah W., Buggy Adventure",
-  },
-  {
-    quote: "An experience not to miss in Agadir, very fun. It's quite worth the price, as it includes transport and return to the hotel and even tea at the Berber House! We loved it!!",
-    author: "Mariana, Coimbra, Portugal",
-  },
-  {
-    quote: "Very good experience, very nice guide!",
-    author: "Rudy M., Buggy Adventure",
-  },
-  {
-    quote: "Great activities, I highly recommend them.",
-    author: "Vérane B., Buggy Adventure",
-  },
-  {
-    quote: "Great experience enjoyed with our two children, aged 5 and 8! Very nice guide who even took the time to give our children a quad ride.",
-    author: "Xav, Périgueux, France",
-  },
-] as const;
-
 const ROTATE_MS = 7000;
 
 function chunk<T>(arr: readonly T[], size: number): T[][] {
@@ -77,10 +25,30 @@ function useGroupSize() {
   return size;
 }
 
+// Testimonials are fully managed from /admin/testimonials — this section simply reflects
+// whatever is published there, in order.
+function useTestimonialItems() {
+  const [items, setItems] = useState<readonly { quote: string; author: string }[]>([]);
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/testimonials")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (!cancelled && data?.items) setItems(data.items);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+  return items;
+}
+
 export function Testimonials() {
   const { t } = useLanguage();
   const groupSize = useGroupSize();
-  const groups = chunk(QUOTES, groupSize);
+  const items = useTestimonialItems();
+  const groups = chunk(items, groupSize);
   const [page, setPage] = useState(0);
   // Clamp instead of resetting via effect: groupSize changes on viewport resize, and the
   // previous page index may no longer exist once the group count shrinks (e.g. 4/page -> 1/page).
@@ -92,6 +60,7 @@ export function Testimonials() {
     return () => clearInterval(id);
   }, [groups.length]);
 
+  if (items.length === 0) return null;
   const current = groups[safePage];
 
   return (

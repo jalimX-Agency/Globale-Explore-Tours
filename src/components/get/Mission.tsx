@@ -49,7 +49,7 @@ export function Mission() {
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.3 }}
         >
-          <LocaleLink href="/reserver" className="btn-primary mt-8 inline-flex">
+          <LocaleLink href="/faire-une-demande" className="btn-primary mt-8 inline-flex">
             {t("mission.cta")}
           </LocaleLink>
         </motion.div>

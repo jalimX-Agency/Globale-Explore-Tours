@@ -87,7 +87,7 @@ export function WhatTypePageClient({
       <section className="bg-[var(--brand-accent)] py-14 text-white">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-6 px-6 sm:flex-row">
           <h2 className="font-display text-2xl text-white sm:text-3xl">{t("experienceTypes.ctaBandTitle")}</h2>
-          <LocaleLink href="/reserver" className="btn-primary bg-white text-neutral-900 hover:bg-neutral-100">
+          <LocaleLink href="/faire-une-demande" className="btn-primary bg-white text-neutral-900 hover:bg-neutral-100">
             {t("experienceTypes.ctaBandCta")}
           </LocaleLink>
         </div>

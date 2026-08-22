@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 import { useLanguage } from "@/lib/i18n/context";
 import { Footer } from "@/components/get/Footer";
+import { Toaster } from "@/components/ui/sonner";
 
 export function SiteChrome({ nav, children }: { nav: React.ReactNode; children: React.ReactNode }) {
   const pathname = usePathname();
@@ -24,6 +25,7 @@ export function SiteChrome({ nav, children }: { nav: React.ReactNode; children: 
       {/* Home's hero sits under the transparent header; every other page needs the offset. */}
       <div className={hasDarkHero ? undefined : "pt-20"}>{children}</div>
       <Footer />
+      <Toaster richColors position="top-center" />
     </>
   );
 }
