@@ -8,7 +8,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
 
   // The login page has its own standalone layout (no sidebar) — this branch only
   // renders for it because layout.tsx wraps every /admin/* route including /admin/login.
-  // middleware.ts already redirects unauthenticated users away from every other /admin
+  // proxy.ts already redirects unauthenticated users away from every other /admin
   // route, so by the time we get here with no session, we must be on /admin/login.
   if (!session) {
     return (
