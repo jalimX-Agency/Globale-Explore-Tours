@@ -5,7 +5,9 @@ const db = new PrismaClient();
 const R2 = "https://pub-6777907d6a4e4378b16e81847f00f2d2.r2.dev";
 
 // ── Destinations ──────────────────────────────────────────────────────────
-// Morocco is the real, live destination (12 real Agadir tours below).
+// Morocco is the real, live destination — its catalog is now 7 multi-day journey-format
+// trips (see journeyTrips below), mirroring Black Tomato's own Morocco lineup, after the
+// original single-day Agadir excursions were retired.
 // The other five are example/starter world trips for the new worldwide catalog —
 // original itineraries in Black Tomato's structural style, not verified bookable
 // packages: prices are placeholder ranges pending real ground-operator quotes.
@@ -20,15 +22,15 @@ const destinations = [
     regionEn: "Africa",
     regionEs: "África",
     regionSlug: "afrique",
-    description: "Là où tout a commencé — nos excursions et circuits à Agadir, conçus par des guides qui connaissent vraiment le terrain.",
-    descriptionEn: "Where it all started — our excursions and tours around Agadir, designed by guides who actually know the ground.",
-    descriptionEs: "Donde todo empezó — nuestras excursiones y circuitos por Agadir, diseñados por guías que realmente conocen el terreno.",
+    description: "Des souks de Marrakech aux dunes du Sahara, en passant par les sommets du Haut Atlas et le vent salé d'Essaouira — un pays aux visages multiples, à explorer sans se presser.",
+    descriptionEn: "From Marrakech's souks to the dunes of the Sahara, by way of the High Atlas peaks and Essaouira's salty wind — a country of many faces, best explored without rushing.",
+    descriptionEs: "De los zocos de Marrakech a las dunas del Sahara, pasando por las cumbres del Alto Atlas y el viento salado de Essaouira — un país de múltiples caras, para explorar sin prisa.",
     overviewHeading: "Pourquoi choisir Globale Explore Tours pour votre voyage au Maroc",
     overviewHeadingEn: "Why Choose Globale Explore Tours for Your Morocco Trip",
     overviewHeadingEs: "Por qué elegir Globale Explore Tours para su viaje a Marruecos",
-    descriptionMore: "Nos guides locaux — Momo, Hassane, Ahmed et le reste de l'équipe — sont aujourd'hui classés #1 des activités à Agadir sur TripAdvisor, avec plus de cent avis vérifiés. Chaque excursion est pensée autour de vous, pas d'un itinéraire figé.",
-    descriptionMoreEn: "Our local guides — Momo, Hassane, Ahmed and the rest of the team — are now rated the #1 activity in Agadir on TripAdvisor, with over a hundred verified reviews. Every excursion is built around you, not a fixed itinerary.",
-    descriptionMoreEs: "Nuestros guías locales — Momo, Hassane, Ahmed y el resto del equipo — están hoy clasificados como la actividad N.º 1 en Agadir en TripAdvisor, con más de cien opiniones verificadas. Cada excursión está pensada en torno a usted, no según un itinerario fijo.",
+    descriptionMore: "Du désert d'Agafay aux médinas du nord, nous construisons chaque itinéraire autour de vos envies — jamais un circuit figé, toujours pensé pour vous.",
+    descriptionMoreEn: "From the Agafay desert to the northern medinas, we build every itinerary around what you're after — never a fixed circuit, always designed around you.",
+    descriptionMoreEs: "Del desierto de Agafay a las medinas del norte, construimos cada itinerario en torno a sus deseos — nunca un circuito fijo, siempre pensado para ustedes.",
     heroImage: `${R2}/destinations/maroc.jpg`,
     order: 1,
     featured: true,
@@ -12063,7 +12065,7 @@ const worldTrips: Array<{
 // ── "Journey into X" trips (format: "journey") — chaptered by location, with a per-chapter photo
 // gallery and an illustrated route map, matching the reference page design. Original content,
 // not copied from any reference site. First example: Greece. ──
-const journeyTrips: Array<{
+export const journeyTrips: Array<{
   destinationSlug: string;
   tour: Record<string, unknown>;
   chapters: Array<{
@@ -12312,6 +12314,1748 @@ const journeyTrips: Array<{
               "Última mañana en la playa de arena negra de Perissa, al pie del antiguo volcán de Mesa Vouno — un contraste sorprendente con las habituales playas blancas de las Cícladas, y un agua que se mantiene sorprendentemente cálida gracias a la actividad volcánica residual. Un último café en una terraza frente al mar, tiempo suficiente para repasar un viaje que atravesó cuatro islas, mil años de historia y otras tantas tonalidades de azul, antes del traslado al aeropuerto para el vuelo de regreso.",
             image: `${R2}/journeys/grece-santorini-day3.jpg`,
             images: `${R2}/journeys/grece-santorini-day3-b.jpg,${R2}/journeys/grece-santorini-day3-c.jpg`,
+          },
+        ],
+      },
+    ],
+  },
+  {
+    destinationSlug: "maroc",
+    tour: {
+      name: "Voyage au Maroc : Marrakech, désert d'Agafay et Haut Atlas",
+      nameEn: "A Journey into Morocco: Marrakech, the Agafay Desert & the High Atlas",
+      nameEs: "Un viaje a Marruecos: Marrakech, el desierto de Agafay y el Alto Atlas",
+      slug: "voyage-au-maroc-marrakech-agafay-haut-atlas",
+      tagline: "Montagnes, médinas et camps sous les étoiles",
+      taglineEn: "Mountains, medinas, and camps under the stars",
+      taglineEs: "Montañas, medinas y campamentos bajo las estrellas",
+      description:
+        "Aux portes de l'Afrique, le Maroc porte les marques de sa longue histoire — empires almoravides, protectorat français, routes caravanières et cafés bohèmes. Ce voyage vous mène des souks parfumés de Marrakech aux dunes rouges du désert d'Agafay, puis vers les sommets enneigés du Haut Atlas, guidés à chaque étape par ceux qui connaissent le pays le mieux.",
+      descriptionEn:
+        "At the gateway to Africa, Morocco carries the marks of its long history — Almoravid empires, the French protectorate, caravan routes and bohemian cafés. This journey takes you from Marrakech's fragrant souks to the red dunes of the Agafay desert, then up into the snow-capped peaks of the High Atlas, guided at every step by those who know the country best.",
+      descriptionEs:
+        "A las puertas de África, Marruecos lleva las marcas de su larga historia — imperios almorávides, el protectorado francés, rutas de caravanas y cafés bohemios. Este viaje les lleva desde los zocos perfumados de Marrakech hasta las dunas rojas del desierto de Agafay, y después hacia las cumbres nevadas del Alto Atlas, guiados en cada etapa por quienes mejor conocen el país.",
+      price: 8200,
+      originalPrice: 0,
+      currency: "EUR",
+      duration: "7 nuits",
+      durationEn: "7 nights",
+      durationEs: "7 noches",
+      whenLabel: "Mars à juin | Sept à nov",
+      whenLabelEn: "March to June | Sept to Nov",
+      whenLabelEs: "Marzo a junio | Sept a nov",
+      category: "multi-day",
+      theme: "adventure",
+      travelerTypes: "couples,honeymoon,groups",
+      maxGuests: 4,
+      image: `${R2}/tours/marrakech-depuis-agadir.jpg`,
+      format: "journey",
+      mapImage: "",
+      featured: true,
+      order: 1,
+    },
+    chapters: [
+      {
+        title: "Marrakech",
+        titleEn: "Marrakech",
+        titleEs: "Marrakech",
+        intro:
+          "Tout commence à Marrakech, la ville ocre — capitale almoravide, médina classée à l'UNESCO, souks débordants d'épices et de cuir. Marchands sénégalais, princes andalous et esprits bohèmes y ont tous laissé leur empreinte. À vous d'écrire la suite.",
+        introEn:
+          "It all begins in Marrakech, the ochre city — Almoravid capital, UNESCO-listed medina, souks overflowing with spice and leather. Senegalese traders, Andalusian princes and wandering bohemians have all left their mark here. Now it's your turn.",
+        introEs:
+          "Todo comienza en Marrakech, la ciudad ocre — capital almorávide, medina declarada Patrimonio de la Humanidad, zocos desbordantes de especias y cuero. Comerciantes senegaleses, príncipes andaluces y espíritus bohemios han dejado aquí su huella. Ahora les toca a ustedes.",
+        galleryImages: `${R2}/tours/marrakech-depuis-agadir-gallery-1.jpg,${R2}/tours/marrakech-depuis-agadir-gallery-2.jpg,${R2}/tours/marrakech-depuis-agadir-gallery-3.jpg,${R2}/tours/marrakech-depuis-agadir-gallery-4.jpg,${R2}/blocks/maroc-bestof-marrakech.jpg`,
+        mapMarkerX: 0,
+        mapMarkerY: 0,
+        days: [
+          {
+            dayNumber: 1,
+            title: "Arrivée dans la ville ocre",
+            titleEn: "Arrival in the ochre city",
+            titleEs: "Llegada a la ciudad ocre",
+            description:
+              "À l'atterrissage à l'aéroport de Marrakech-Ménara, un chauffeur privé vous attend pour vous conduire au cœur de la médina, jusqu'à un riad du XIXe siècle transformé en adresse confidentielle — bassin ombragé de bananiers, patio à ciel ouvert, chambres aux tadelakt patinés. Le reste de la journée se passe en douceur : un premier hammam dans le spa de la maison, puis un dîner aux chandelles servi sur la terrasse, pendant que la ville s'endort derrière les murs de la médina.",
+            descriptionEn:
+              "Landing at Marrakech-Menara airport, a private driver is waiting to take you into the heart of the medina, to a 19th-century riad turned discreet address — a pool shaded by banana palms, an open-air courtyard, rooms finished in weathered tadelakt plaster. The rest of the day unfolds gently: a first hammam session in the house spa, then a candlelit dinner served on the terrace as the city settles down behind the medina walls.",
+            descriptionEs:
+              "Al aterrizar en el aeropuerto de Marrakech-Menara, un chófer privado les espera para llevarlos al corazón de la medina, hasta un riad del siglo XIX convertido en una dirección confidencial — una piscina a la sombra de bananeros, un patio a cielo abierto, habitaciones acabadas en tadelakt envejecido. El resto del día transcurre con calma: una primera sesión de hammam en el spa de la casa, y después una cena a la luz de las velas servida en la terraza, mientras la ciudad se adormece tras los muros de la medina.",
+            image: `${R2}/blocks/maroc-medina.jpg`,
+            images: "",
+          },
+          {
+            dayNumber: 2,
+            title: "En side-car dans les souks",
+            titleEn: "Souks and sidecars",
+            titleEs: "Zocos y sidecares",
+            description:
+              "Le meilleur moyen de comprendre Marrakech, c'est encore le side-car vintage. Votre guide-pilote vous emmène à travers la vieille ville, l'oasis de palmiers de la Palmeraie et le quartier art déco de Gueliz, avant de replonger dans le dédale de la médina pour une tournée gourmande hors des sentiers touristiques — un stand de brochettes ici, une pâtisserie tenue par la même famille depuis trois générations là, et les meilleures adresses que seuls les habitants connaissent.",
+            descriptionEn:
+              "The best way to get to grips with Marrakech is still by vintage sidecar. Your guide-driver takes you through the old city, the palm oasis of the Palmeraie, and the art-deco quarter of Gueliz, before plunging back into the medina's maze for a food tour off the tourist trail — a skewer stand here, a pastry shop run by the same family for three generations there, and the addresses only locals know.",
+            descriptionEs:
+              "La mejor forma de entender Marrakech sigue siendo el sidecar vintage. Su guía-conductor los lleva por la ciudad vieja, el oasis de palmeras de la Palmeraie y el barrio art déco de Gueliz, antes de volver a sumergirse en el laberinto de la medina para una ruta gastronómica lejos de los circuitos turísticos — un puesto de pinchos aquí, una pastelería regentada por la misma familia desde hace tres generaciones allí, y las direcciones que solo conocen los vecinos.",
+            image: `${R2}/tours/marrakech-depuis-agadir-gallery-1.jpg`,
+            images: "",
+          },
+          {
+            dayNumber: 3,
+            title: "Cuisine et parfums",
+            titleEn: "Cooking and scent",
+            titleEs: "Cocina y perfume",
+            description:
+              "La matinée s'ouvre sur le marché, aux côtés d'une cuisinière traditionnelle qui vous apprend à reconnaître les bonnes épices — safran, ras el-hanout, gingembre frais. De retour dans un riad tranquille, place à l'atelier : préparation d'un tajine et d'un pain cuit au four à bois, partagés ensuite dans une cour ombragée. L'après-midi se termine chez une parfumeuse de la médina, pour un atelier olfactif où vous composez, senteur par senteur, un parfum qui n'appartient qu'à vous.",
+            descriptionEn:
+              "The morning opens at the market, alongside a traditional cook who teaches you to recognise the right spices — saffron, ras el hanout, fresh ginger. Back in a quiet riad, it's time for the workshop: preparing a tagine and a wood-fired bread, shared afterwards in a shaded courtyard. The afternoon closes at a perfumer's studio in the medina, for a scent workshop where you build, note by note, a fragrance that's entirely your own.",
+            descriptionEs:
+              "La mañana comienza en el mercado, junto a una cocinera tradicional que les enseña a reconocer las especias adecuadas — azafrán, ras el hanout, jengibre fresco. De vuelta en un riad tranquilo, llega el taller: preparación de un tajine y un pan cocido en horno de leña, compartidos después en un patio en sombra. La tarde termina en el estudio de una perfumista de la medina, para un taller olfativo donde componen, nota a nota, un perfume que es solo suyo.",
+            image: `${R2}/tours/marrakech-depuis-agadir-gallery-2.jpg`,
+            images: "",
+          },
+        ],
+      },
+      {
+        title: "Le désert d'Agafay",
+        titleEn: "The Agafay Desert",
+        titleEs: "El desierto de Agafay",
+        intro:
+          "À seulement 30 kilomètres de Marrakech, le désert rocailleux d'Agafay déploie ses étendues arides face aux sommets enneigés de l'Atlas — un décor presque martien, terrain de jeu pour les amateurs de sensations et de ciels étoilés.",
+        introEn:
+          "Only 30 kilometres from Marrakech, the rocky Agafay desert unfurls its arid expanses facing the snow-capped peaks of the Atlas — an almost Martian backdrop, a playground for thrill-seekers and stargazers alike.",
+        introEs:
+          "A solo 30 kilómetros de Marrakech, el desierto rocoso de Agafay despliega sus extensiones áridas frente a las cumbres nevadas del Atlas — un decorado casi marciano, terreno de juego para los amantes de las emociones y de los cielos estrellados.",
+        galleryImages: `${R2}/tours/camel-ride-barbecue-gallery-1.jpg,${R2}/tours/camel-ride-barbecue-gallery-2.jpg,${R2}/tours/safari-desert-dejeuner-gallery-1.jpg,${R2}/blocks/maroc-sahara.jpg`,
+        mapMarkerX: 0,
+        mapMarkerY: 0,
+        days: [
+          {
+            dayNumber: 4,
+            title: "Dans le désert d'Agafay",
+            titleEn: "Into the Agafay desert",
+            titleEs: "Rumbo al desierto de Agafay",
+            description:
+              "En quittant Marrakech, direction le désert d'Agafay pour une excursion en buggy à travers pistes reculées, lits de rivières asséchées et oasis de palmiers, avec une halte déjeuner dans un camp niché au cœur de l'aridité. Une fois la poussière retombée, place à un campement privé rien que pour vous : tentes garnies de tapis, de coussins et de lanternes, dîner sous la tente puis soirée au coin du feu, sous un ciel que ne perturbe aucune lumière artificielle.",
+            descriptionEn:
+              "Leaving Marrakech behind, head into the Agafay desert for a buggy excursion across remote tracks, dry riverbeds and palm-shaded oases, with a lunch stop at a camp tucked into the arid heart of the desert. Once the dust settles, a private camp awaits, just for you: tents dressed with carpets, cushions and lanterns, dinner under canvas, then an evening by the fire beneath a sky untouched by artificial light.",
+            descriptionEs:
+              "Al dejar Marrakech, rumbo al desierto de Agafay para una excursión en buggy por pistas remotas, cauces de ríos secos y oasis de palmeras, con una parada para almorzar en un campamento instalado en pleno corazón árido. Una vez asentado el polvo, les espera un campamento privado solo para ustedes: jaimas vestidas con alfombras, cojines y faroles, cena bajo la lona y velada junto al fuego, bajo un cielo sin ninguna luz artificial.",
+            image: `${R2}/tours/camel-ride-barbecue.jpg`,
+            images: `${R2}/tours/safari-desert-dejeuner-gallery-2.jpg`,
+          },
+        ],
+      },
+      {
+        title: "Le Haut Atlas",
+        titleEn: "The High Atlas",
+        titleEs: "El Alto Atlas",
+        intro:
+          "Le Haut Atlas déploie ses crêtes enneigées sur tout le Maghreb, dominé par le massif du Toubkal. Depuis des siècles, ces montagnes de fer et de neige abritent le peuple berbère — et une vie foisonnante qui se découvre au rythme de la marche.",
+        introEn:
+          "The High Atlas unfurls its snow-capped ridges across the Maghreb, dominated by the Toubkal massif. For centuries, these mountains of iron and snow have been home to the Berber people — and to a teeming life best discovered on foot.",
+        introEs:
+          "El Alto Atlas despliega sus crestas nevadas por todo el Magreb, dominado por el macizo del Toubkal. Desde hace siglos, estas montañas de hierro y nieve son el hogar del pueblo bereber — y de una vida abundante que se descubre mejor caminando.",
+        galleryImages: `${R2}/tours/paradise-valley-gallery-1.jpg,${R2}/tours/paradise-valley-gallery-2.jpg,${R2}/tours/paradise-valley-gallery-3.jpg,${R2}/blocks/maroc-bestof-atlas.jpg`,
+        mapMarkerX: 0,
+        mapMarkerY: 0,
+        days: [
+          {
+            dayNumber: 5,
+            title: "Vers les hauteurs de l'Atlas",
+            titleEn: "Into the High Atlas",
+            titleEs: "Rumbo a las alturas del Atlas",
+            description:
+              "Réveil au lever du soleil, quand la lumière du matin s'étire sur le désert. Après un petit-déjeuner pris sous tente, cap sur le Haut Atlas : crêtes calcaires, vallées cultivées, hauts plateaux, et un écosystème qui abrite magots de Barbarie et cèdres centenaires. En fin de journée, arrivée dans un lodge de montagne où vous passerez les trois prochaines nuits — spa, tennis, ou simplement le temps de souffler face aux sommets.",
+            descriptionEn:
+              "Waking at sunrise as the morning light stretches across the desert. After a breakfast taken under canvas, head for the High Atlas: limestone ridges, cultivated valleys, high plateaus, and an ecosystem sheltering Barbary macaques and centuries-old cedars. By evening, arrival at a mountain lodge where you'll spend the next three nights — spa, tennis, or simply time to breathe facing the peaks.",
+            descriptionEs:
+              "Despertar al amanecer, cuando la luz de la mañana se extiende sobre el desierto. Tras un desayuno bajo la lona, rumbo al Alto Atlas: crestas calizas, valles cultivados, altiplanos y un ecosistema que alberga macacos de Berbería y cedros centenarios. Al caer la tarde, llegada a un lodge de montaña donde pasarán las tres próximas noches — spa, tenis, o simplemente tiempo para respirar frente a las cumbres.",
+            image: `${R2}/tours/paradise-valley.jpg`,
+            images: `${R2}/tours/paradise-valley-gallery-4.jpg`,
+          },
+          {
+            dayNumber: 6,
+            title: "Randonnée vers le Toubkal",
+            titleEn: "Trekking toward Toubkal",
+            titleEs: "Trekking hacia el Toubkal",
+            description:
+              "Direction le pied du plus haut sommet du Maroc : le Toubkal, qui culmine à 4 167 mètres. Accompagnés d'un guide de montagne, vous cheminez entre villages berbères et vallées encaissées. Dans le petit village de Tamatert, une halte s'impose pour un déjeuner de tajine cuisiné maison, servi entre pics acérés et ciel dégagé — la juste récompense d'une marche qui donne soif.",
+            descriptionEn:
+              "Head for the foot of Morocco's highest peak: Toubkal, rising to 4,167 metres. Accompanied by a mountain guide, you weave between Berber villages and steep-sided valleys. In the small village of Tamatert, a stop is in order for a home-cooked tagine lunch, served between jagged peaks and open sky — fair reward for a hike that works up an appetite.",
+            descriptionEs:
+              "Rumbo a los pies del pico más alto de Marruecos: el Toubkal, que culmina a 4.167 metros. Acompañados por un guía de montaña, avanzan entre pueblos bereberes y valles escarpados. En el pequeño pueblo de Tamatert, una parada obligada para un almuerzo de tajine casero, servido entre picos afilados y cielo despejado — la justa recompensa de una caminata que abre el apetito.",
+            image: `${R2}/tours/excursion-tafraout.jpg`,
+            images: `${R2}/tours/excursion-tafraout-gallery-1.jpg`,
+          },
+        ],
+      },
+      {
+        title: "Un dernier au revoir",
+        titleEn: "A fond farewell",
+        titleEs: "Una despedida entrañable",
+        intro:
+          "Les derniers jours se vivent au rythme qui vous convient — entre détente, ateliers artisanaux et le trajet du retour vers Marrakech, quand vient l'heure de dire au revoir aux montagnes.",
+        introEn:
+          "The last days unfold at whatever pace suits you — between relaxation, artisan workshops, and the road back to Marrakech, when it's time to bid the mountains farewell.",
+        introEs:
+          "Los últimos días transcurren al ritmo que prefieran — entre descanso, talleres artesanales y el camino de regreso a Marrakech, cuando llega la hora de despedirse de las montañas.",
+        galleryImages: `${R2}/tours/excursion-tafraout-gallery-2.jpg,${R2}/tours/excursion-tafraout-gallery-3.jpg,${R2}/blocks/maroc-bestof-atlas.jpg`,
+        mapMarkerX: 0,
+        mapMarkerY: 0,
+        days: [
+          {
+            dayNumber: 7,
+            title: "Une montagne pour terrain de jeu",
+            titleEn: "A mountain for a playground",
+            titleEs: "Una montaña como terreno de juego",
+            description:
+              "Cet avant-dernier jour se façonne à votre rythme : piscine à débordement face aux sommets, séance de cuisine avec les chefs du lodge pour apprendre quelques classiques marocains, randonnée, vélo ou tennis. Vous pouvez aussi rendre visite aux ateliers d'une fondation locale qui soutient les artisans de la région — tissage, travail du bois — et préserve des savoir-faire transmis de génération en génération.",
+            descriptionEn:
+              "This penultimate day shapes itself around you: an infinity pool facing the peaks, a cooking session with the lodge's chefs to learn a few Moroccan classics, hiking, biking, or tennis. You can also visit the workshops of a local foundation supporting the region's artisans — weaving, woodwork — preserving skills passed down through generations.",
+            descriptionEs:
+              "Este penúltimo día se moldea a su ritmo: piscina infinita frente a las cumbres, sesión de cocina con los chefs del lodge para aprender algunos clásicos marroquíes, senderismo, bicicleta o tenis. También pueden visitar los talleres de una fundación local que apoya a los artesanos de la región — tejido, trabajo de la madera — preservando saberes transmitidos de generación en generación.",
+            image: `${R2}/tours/excursion-tafraout-gallery-4.jpg`,
+            images: "",
+          },
+          {
+            dayNumber: 8,
+            title: "Un dernier au revoir",
+            titleEn: "A fond farewell",
+            titleEs: "Una despedida entrañable",
+            description:
+              "Partir n'est jamais simple. Mais en traversant une dernière fois les pentes ensoleillées du Haut Atlas pour rejoindre Marrakech, difficile de ne pas se dire qu'on reviendra — et bientôt.",
+            descriptionEn:
+              "Leaving is never easy. But crossing the sunlit slopes of the High Atlas one last time on the way back to Marrakech, it's hard not to think you'll be back — and soon.",
+            descriptionEs:
+              "Partir nunca es fácil. Pero al cruzar una última vez las laderas soleadas del Alto Atlas de regreso a Marrakech, es difícil no pensar que volverán — y pronto.",
+            image: `${R2}/destinations/maroc.jpg`,
+            images: "",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    destinationSlug: "maroc",
+    tour: {
+      name: "Maroc en profondeur : villes impériales, Sahara et vallée des roses",
+      nameEn: "Exploring Morocco: Imperial Cities, the Sahara & the Valley of Roses",
+      nameEs: "Marruecos en profundidad: ciudades imperiales, Sahara y valle de las rosas",
+      slug: "maroc-en-profondeur-villes-imperiales-sahara",
+      tagline: "Le grand tour, du nord bleuté aux dunes du sud",
+      taglineEn: "The grand tour, from the blue north to the southern dunes",
+      taglineEs: "El gran recorrido, del norte azulado a las dunas del sur",
+      description:
+        "Le Maroc dans toute son étendue : les ruelles indigo de Chefchaouen, la médina savante de Fès, une nuit dans les dunes du Sahara, l'oasis de Skoura et ses kasbahs, puis Marrakech et le Haut Atlas pour refermer la boucle. Un voyage complet, pensé pour ceux qui veulent tout voir sans jamais se presser.",
+      descriptionEn:
+        "Morocco in full — Chefchaouen's indigo lanes, the scholarly medina of Fez, a night in the Sahara's dunes, the oasis of Skoura and its kasbahs, then Marrakech and the High Atlas to close the loop. A complete journey, built for those who want to see it all without ever rushing.",
+      descriptionEs:
+        "Marruecos en toda su extensión: las calles añil de Chefchaouen, la sabia medina de Fez, una noche en las dunas del Sahara, el oasis de Skoura y sus kasbahs, y después Marrakech y el Alto Atlas para cerrar el círculo. Un viaje completo, pensado para quienes quieren verlo todo sin prisa.",
+      price: 19800,
+      originalPrice: 0,
+      currency: "EUR",
+      duration: "13 nuits",
+      durationEn: "13 nights",
+      durationEs: "13 noches",
+      whenLabel: "Mars à juin | Sept à nov",
+      whenLabelEn: "March to June | Sept to Nov",
+      whenLabelEs: "Marzo a junio | Sept a nov",
+      category: "multi-day",
+      theme: "culture",
+      travelerTypes: "couples,groups,honeymoon",
+      maxGuests: 6,
+      image: `${R2}/blocks/maroc-medina.jpg`,
+      format: "journey",
+      mapImage: "",
+      featured: true,
+      order: 2,
+    },
+    chapters: [
+      {
+        title: "Chefchaouen",
+        titleEn: "Chefchaouen",
+        titleEs: "Chefchaouen",
+        intro:
+          "Nichée dans les contreforts du Rif, Chefchaouen déroule ses ruelles peintes de bleu depuis les années 1930 — un camaïeu qui change de nuance à chaque heure du jour et qui a fait de la « perle bleue » l'une des villes les plus photographiées du pays.",
+        introEn:
+          "Tucked into the foothills of the Rif, Chefchaouen has been painting its lanes blue since the 1930s — a palette that shifts with every hour of daylight, and one that's made the \"blue pearl\" one of the country's most photographed towns.",
+        introEs:
+          "Encajada en las estribaciones del Rif, Chefchaouen pinta sus callejuelas de azul desde los años 30 — una gama que cambia con cada hora del día, y que ha convertido a la \"perla azul\" en una de las ciudades más fotografiadas del país.",
+        galleryImages: `${R2}/tours/decouverte-taghazout-gallery-1.jpg,${R2}/tours/decouverte-taghazout-gallery-2.jpg,${R2}/blocks/maroc-medina.jpg`,
+        mapMarkerX: 0,
+        mapMarkerY: 0,
+        days: [
+          {
+            dayNumber: 1,
+            title: "Cap sur le nord",
+            titleEn: "Heading north",
+            titleEs: "Rumbo al norte",
+            description:
+              "Après l'atterrissage à Casablanca, la route grimpe vers le Rif et la perle bleue. Installation dans une maison d'hôtes aux murs indigo, puis premier hammam pour se remettre du voyage avant une soirée tranquille, bercée par le bruit d'une fontaine dans le patio.",
+            descriptionEn:
+              "After landing in Casablanca, the road climbs toward the Rif and the blue pearl. Check-in at a guesthouse with indigo walls, then a first hammam to shake off the journey before a quiet evening, lulled by the sound of a fountain in the courtyard.",
+            descriptionEs:
+              "Tras aterrizar en Casablanca, la carretera sube hacia el Rif y la perla azul. Alojamiento en una casa de huéspedes de muros añil, y primer hammam para reponerse del viaje antes de una velada tranquila, arrullados por el sonido de una fuente en el patio.",
+            image: `${R2}/tours/decouverte-taghazout.jpg`,
+            images: "",
+          },
+          {
+            dayNumber: 2,
+            title: "Dans les ruelles indigo",
+            titleEn: "Through the indigo lanes",
+            titleEs: "Por las callejuelas añil",
+            description:
+              "Une matinée entière avec un guide-photographe pour explorer les escaliers bleutés, les portes cloutées et les terrasses fleuries de la médina, avant l'heure où les cars de tourisme envahissent les lieux. Déjeuner dans un café perché, spécialités locales et vue sur les toits bleus à perte de vue.",
+            descriptionEn:
+              "A full morning with a photographer-guide to explore the medina's blue stairways, studded doors, and flower-draped terraces, before the tour buses arrive. Lunch at a perched café, local specialities and a view over blue rooftops as far as the eye can see.",
+            descriptionEs:
+              "Una mañana entera con un guía-fotógrafo para explorar las escaleras azuladas, las puertas claveteadas y las terrazas floridas de la medina, antes de que lleguen los autobuses turísticos. Almuerzo en un café encaramado, especialidades locales y vistas de tejados azules hasta donde alcanza la vista.",
+            image: `${R2}/tours/decouverte-taghazout-gallery-3.jpg`,
+            images: "",
+          },
+        ],
+      },
+      {
+        title: "Fès",
+        titleEn: "Fez",
+        titleEs: "Fez",
+        intro:
+          "Plus ancienne des villes impériales, Fès abrite la plus vieille université du monde encore en activité et une médina si dense qu'elle se visite à pied, guide en tête — tanneries, écoles coraniques et échoppes d'artisans à chaque coin de rue.",
+        introEn:
+          "The oldest of the imperial cities, Fez is home to the world's oldest still-operating university and a medina so dense it can only be explored on foot, guide leading the way — tanneries, Quranic schools, and artisan stalls around every corner.",
+        introEs:
+          "La más antigua de las ciudades imperiales, Fez alberga la universidad en funcionamiento más antigua del mundo y una medina tan densa que solo se recorre a pie, guía por delante — tenerías, escuelas coránicas y talleres de artesanos en cada esquina.",
+        galleryImages: `${R2}/tours/cours-cuisine-berbere-gallery-1.jpg,${R2}/tours/cours-cuisine-berbere-gallery-2.jpg,${R2}/blocks/maroc-medina.jpg`,
+        mapMarkerX: 0,
+        mapMarkerY: 0,
+        days: [
+          {
+            dayNumber: 3,
+            title: "Volubilis et l'arrivée à Fès",
+            titleEn: "Volubilis and arrival in Fez",
+            titleEs: "Volubilis y la llegada a Fez",
+            description:
+              "En chemin vers Fès, halte aux ruines romaines de Volubilis, mosaïques encore intactes sous le grand ciel du Moyen Atlas, puis à Moulay Idriss, ville sainte perchée sur deux collines. Pique-nique en chemin avant l'arrivée en fin de journée dans un riad du cœur de la médina fassie.",
+            descriptionEn:
+              "On the way to Fez, a stop at the Roman ruins of Volubilis, mosaics still intact under the wide sky of the Middle Atlas, then Moulay Idriss, a holy town perched across two hills. A picnic along the way before arriving, late afternoon, at a riad in the heart of the Fez medina.",
+            descriptionEs:
+              "De camino a Fez, parada en las ruinas romanas de Volubilis, mosaicos aún intactos bajo el amplio cielo del Atlas Medio, y en Moulay Idriss, ciudad santa encaramada entre dos colinas. Picnic en el camino antes de llegar, al final de la tarde, a un riad en el corazón de la medina de Fez.",
+            image: `${R2}/blocks/maroc-medina.jpg`,
+            images: "",
+          },
+          {
+            dayNumber: 4,
+            title: "La médina savante",
+            titleEn: "The scholarly medina",
+            titleEs: "La medina sabia",
+            description:
+              "Journée guidée dans le plus grand espace piéton du monde : la mosquée-université Al Quaraouiyine vue de l'extérieur, le fondouk Nejjarine et son musée du bois, puis les tanneries à ciel ouvert, brin de menthe à la main pour couvrir l'odeur. L'après-midi se termine par une tournée de dégustation dans les souks — pâtisseries au miel, olives, épices.",
+            descriptionEn:
+              "A guided day through the largest car-free urban space in the world: the Al Quaraouiyine mosque-university seen from outside, the Nejjarine fondouk and its museum of woodwork, then the open-air tanneries, a sprig of mint in hand to cover the smell. The afternoon ends with a tasting tour through the souks — honey pastries, olives, spices.",
+            descriptionEs:
+              "Jornada guiada por el mayor espacio peatonal del mundo: la mezquita-universidad de Al Qarawiyyin vista desde fuera, el fondouk Nejjarine y su museo de la madera, y después las tenerías al aire libre, una ramita de menta en la mano para cubrir el olor. La tarde termina con una ruta de degustación por los zocos — pasteles de miel, aceitunas, especias.",
+            image: `${R2}/tours/cours-cuisine-berbere.jpg`,
+            images: "",
+          },
+          {
+            dayNumber: 5,
+            title: "Sefrou, Bhalil et farniente",
+            titleEn: "Sefrou, Bhalil and downtime",
+            titleEs: "Sefrou, Bhalil y tiempo libre",
+            description:
+              "Excursion vers les villages de Sefrou et Bhalil, connus pour leurs maisons troglodytes et une tradition artisanale préservée du tourisme de masse. Retour au riad en milieu d'après-midi pour profiter du patio et de la piscine — le rythme ralentit, à dessein, avant de reprendre la route vers le désert.",
+            descriptionEn:
+              "An excursion to the villages of Sefrou and Bhalil, known for their cave houses and a craft tradition kept largely untouched by mass tourism. Back at the riad by mid-afternoon to enjoy the courtyard and the pool — the pace slows, deliberately, before the road turns toward the desert.",
+            descriptionEs:
+              "Excursión a los pueblos de Sefrou y Bhalil, conocidos por sus casas trogloditas y una tradición artesanal poco tocada por el turismo de masas. Vuelta al riad a media tarde para disfrutar del patio y la piscina — el ritmo se ralentiza, a propósito, antes de retomar la ruta hacia el desierto.",
+            image: `${R2}/tours/cours-cuisine-berbere-gallery-3.jpg`,
+            images: "",
+          },
+        ],
+      },
+      {
+        title: "Le désert du Sahara",
+        titleEn: "The Sahara Desert",
+        titleEs: "El desierto del Sahara",
+        intro:
+          "Une seule nuit, mais elle suffit à tout changer : les dunes de l'Erg Chebbi, hautes et dorées, offrent une déconnexion totale — plus aucun réseau, plus aucune lumière, seulement le vent sur le sable et un ciel saturé d'étoiles.",
+        introEn:
+          "Just one night, but it's enough to change everything: the tall golden dunes of the Erg Chebbi offer total disconnection — no signal, no light, nothing but wind on sand and a sky thick with stars.",
+        introEs:
+          "Una sola noche, pero basta para cambiarlo todo: las dunas altas y doradas del Erg Chebbi ofrecen una desconexión total — sin cobertura, sin luz, solo el viento sobre la arena y un cielo cuajado de estrellas.",
+        galleryImages: `${R2}/tours/merzouga-3-jours-gallery-1.jpg,${R2}/tours/merzouga-3-jours-gallery-2.jpg,${R2}/tours/merzouga-3-jours-gallery-3.jpg,${R2}/blocks/maroc-sahara.jpg`,
+        mapMarkerX: 0,
+        mapMarkerY: 0,
+        days: [
+          {
+            dayNumber: 6,
+            title: "Une nuit dans l'Erg Chebbi",
+            titleEn: "A night in the Erg Chebbi",
+            titleEs: "Una noche en el Erg Chebbi",
+            description:
+              "La route traverse le Moyen Atlas puis les gorges du Ziz avant de rejoindre les portes du désert. En fin d'après-midi, transfert à dos de dromadaire jusqu'à un campement privé niché entre les dunes — dîner traditionnel sous tente, puis un silence que seul le désert sait offrir, sous un ciel constellé du Sahara.",
+            descriptionEn:
+              "The road crosses the Middle Atlas, then the Ziz Gorges, before reaching the desert's edge. Late afternoon, a camel transfer to a private camp tucked among the dunes — a traditional dinner under canvas, then a silence only the desert can offer, beneath a sky thick with Saharan stars.",
+            descriptionEs:
+              "La carretera cruza el Atlas Medio, y después las gargantas del Ziz, antes de llegar a las puertas del desierto. Al final de la tarde, traslado en dromedario hasta un campamento privado entre las dunas — cena tradicional bajo la jaima, y después un silencio que solo el desierto sabe ofrecer, bajo un cielo cuajado de estrellas del Sahara.",
+            image: `${R2}/tours/merzouga-3-jours.jpg`,
+            images: `${R2}/tours/merzouga-3-jours-gallery-4.jpg`,
+          },
+        ],
+      },
+      {
+        title: "Skoura",
+        titleEn: "Skoura",
+        titleEs: "Skoura",
+        intro:
+          "À la sortie du désert, l'oasis de Skoura déploie une immense palmeraie ponctuée de kasbahs de terre — un contraste saisissant avec les dunes de la veille, et le point de départ idéal pour explorer la vallée des roses.",
+        introEn:
+          "On the way out of the desert, the oasis of Skoura unfurls a vast palm grove dotted with earthen kasbahs — a striking contrast to the previous day's dunes, and the ideal base for exploring the Valley of Roses.",
+        introEs:
+          "A la salida del desierto, el oasis de Skoura despliega un inmenso palmeral salpicado de kasbahs de tierra — un contraste sorprendente con las dunas del día anterior, y el punto de partida ideal para explorar el valle de las rosas.",
+        galleryImages: `${R2}/tours/paradise-valley-gallery-1.jpg,${R2}/tours/paradise-valley-gallery-2.jpg,${R2}/blocks/maroc-sahara.jpg`,
+        mapMarkerX: 0,
+        mapMarkerY: 0,
+        days: [
+          {
+            dayNumber: 7,
+            title: "Lever de soleil sur les dunes",
+            titleEn: "Sunrise over the dunes",
+            titleEs: "Amanecer sobre las dunas",
+            description:
+              "Réveil avant l'aube pour grimper une dernière dune et regarder le soleil se lever sur l'Erg Chebbi. La route vers Skoura suit ensuite les gorges du Todra, murs de roche rouge qui se resserrent parfois à moins de dix mètres de large, avant de s'ouvrir sur la palmeraie et ses kasbahs.",
+            descriptionEn:
+              "Waking before dawn to climb one last dune and watch the sun rise over the Erg Chebbi. The road to Skoura then follows the Todra Gorges, red rock walls that narrow at points to barely ten metres wide, before opening onto the palm grove and its kasbahs.",
+            descriptionEs:
+              "Despertar antes del amanecer para subir una última duna y ver salir el sol sobre el Erg Chebbi. La carretera hacia Skoura sigue después las gargantas del Todra, muros de roca roja que en algunos puntos se estrechan a apenas diez metros, antes de abrirse al palmeral y sus kasbahs.",
+            image: `${R2}/tours/paradise-valley.jpg`,
+            images: "",
+          },
+          {
+            dayNumber: 8,
+            title: "Kasbahs et vallée des roses",
+            titleEn: "Kasbahs and the Valley of Roses",
+            titleEs: "Kasbahs y el valle de las rosas",
+            description:
+              "Une journée à explorer les kasbahs de terre ocre disséminées dans la palmeraie, certaines encore habitées, d'autres restaurées en résidences privées. Selon la saison, une excursion en 4x4 rejoint la vallée des roses de Kelaa M'Gouna, en pleine récolte au printemps — sinon, pique-nique au bord du lac de barrage voisin.",
+            descriptionEn:
+              "A day exploring the ochre-earth kasbahs scattered through the palm grove, some still inhabited, others restored into private residences. Depending on the season, a 4x4 excursion reaches the Valley of Roses at Kelaa M'Gouna, in full harvest come spring — otherwise, a picnic by the nearby reservoir lake.",
+            descriptionEs:
+              "Un día explorando las kasbahs de tierra ocre repartidas por el palmeral, algunas todavía habitadas, otras restauradas como residencias privadas. Según la temporada, una excursión en todoterreno llega hasta el valle de las rosas de Kelaa M'Gouna, en plena cosecha en primavera — si no, picnic junto al cercano lago de la presa.",
+            image: `${R2}/tours/paradise-valley-gallery-3.jpg`,
+            images: "",
+          },
+        ],
+      },
+      {
+        title: "Marrakech",
+        titleEn: "Marrakech",
+        titleEs: "Marrakech",
+        intro:
+          "Après le calme du désert et des oasis, Marrakech referme le voyage sur un tout autre tempo — souks animés, place Jemaa el-Fna et sa faune nocturne, et un dernier vol en montgolfière pour prendre de la hauteur avant de repartir.",
+        introEn:
+          "After the calm of the desert and the oases, Marrakech closes the trip on an entirely different tempo — bustling souks, the nightly theatre of Jemaa el-Fna square, and one last hot-air balloon flight to rise above it all before heading home.",
+        introEs:
+          "Tras la calma del desierto y los oasis, Marrakech cierra el viaje con un ritmo completamente distinto — zocos animados, el teatro nocturno de la plaza Jemaa el-Fna, y un último vuelo en globo aerostático para tomar altura antes de partir.",
+        galleryImages: `${R2}/tours/marrakech-depuis-agadir-gallery-1.jpg,${R2}/tours/marrakech-depuis-agadir-gallery-2.jpg,${R2}/blocks/maroc-bestof-marrakech.jpg`,
+        mapMarkerX: 0,
+        mapMarkerY: 0,
+        days: [
+          {
+            dayNumber: 9,
+            title: "La route par Aït Ben Haddou",
+            titleEn: "The road via Aït Ben Haddou",
+            titleEs: "La ruta por Aït Ben Haddou",
+            description:
+              "Route panoramique vers Marrakech, avec une halte à Aït Ben Haddou, ksar de terre classé à l'UNESCO qui a servi de décor à de nombreux films et séries. Installation en fin de journée dans un riad du cœur de la médina, cour intérieure fleurie et fontaine en fond sonore.",
+            descriptionEn:
+              "A scenic road to Marrakech, with a stop at Aït Ben Haddou, a UNESCO-listed earthen ksar that has served as the backdrop for numerous films and TV series. Check-in later in the day at a riad in the heart of the medina, a flower-filled courtyard and a fountain for background music.",
+            descriptionEs:
+              "Carretera panorámica hacia Marrakech, con parada en Aït Ben Haddou, un ksar de tierra declarado Patrimonio de la Humanidad que ha servido de escenario a numerosas películas y series. Alojamiento al final del día en un riad del corazón de la medina, un patio florido y una fuente de fondo sonoro.",
+            image: `${R2}/tours/marrakech-depuis-agadir.jpg`,
+            images: "",
+          },
+          {
+            dayNumber: 10,
+            title: "Side-car et rue de la nuit",
+            titleEn: "Sidecar and the night street",
+            titleEs: "Sidecar y la calle nocturna",
+            description:
+              "Tour de la ville en side-car vintage, quartiers hors des sentiers battus compris, puis une soirée consacrée à la cuisine de rue : brochettes, escargots en bouillon épicé, jus d'orange pressé et pâtisseries, dégustés stand après stand sur la place Jemaa el-Fna à la tombée de la nuit.",
+            descriptionEn:
+              "A vintage sidecar tour of the city, off-the-beaten-path quarters included, then an evening devoted to street food: skewers, snails in spiced broth, fresh-pressed orange juice and pastries, tasted stall by stall on Jemaa el-Fna square as night falls.",
+            descriptionEs:
+              "Recorrido por la ciudad en sidecar vintage, incluyendo barrios lejos de los circuitos habituales, y después una velada dedicada a la comida callejera: pinchos, caracoles en caldo especiado, zumo de naranja recién exprimido y pasteles, degustados puesto a puesto en la plaza Jemaa el-Fna al caer la noche.",
+            image: `${R2}/tours/marrakech-depuis-agadir-gallery-3.jpg`,
+            images: "",
+          },
+          {
+            dayNumber: 11,
+            title: "Montgolfière et atelier cuisine",
+            titleEn: "Balloon flight and a cooking class",
+            titleEs: "Globo aerostático y clase de cocina",
+            description:
+              "Lever avant l'aube pour un vol en montgolfière au-dessus de la plaine du Haouz, Atlas enneigé en toile de fond, suivi d'un petit-déjeuner servi à l'atterrissage. L'après-midi, marché avec un chef puis atelier privé de cuisine marocaine — la meilleure façon de rapporter un peu du Maroc à la maison.",
+            descriptionEn:
+              "Waking before dawn for a hot-air balloon flight over the Haouz plain, the snow-capped Atlas in the background, followed by breakfast served on landing. In the afternoon, a market visit with a chef, then a private Moroccan cooking class — the best way to bring a little of Morocco back home.",
+            descriptionEs:
+              "Despertar antes del amanecer para un vuelo en globo aerostático sobre la llanura del Haouz, con el Atlas nevado de fondo, seguido de un desayuno servido al aterrizar. Por la tarde, mercado con un chef y después clase privada de cocina marroquí — la mejor forma de llevarse un poco de Marruecos a casa.",
+            image: `${R2}/tours/marrakech-depuis-agadir-gallery-4.jpg`,
+            images: "",
+          },
+        ],
+      },
+      {
+        title: "Le Haut Atlas",
+        titleEn: "The High Atlas",
+        titleEs: "El Alto Atlas",
+        intro:
+          "Le voyage se referme dans les contreforts de l'Atlas, à Imlil, porte d'entrée vers le Toubkal — un dernier changement de rythme, entre villages berbères suspendus et vue imprenable sur les sommets.",
+        introEn:
+          "The journey closes in the foothills of the Atlas, at Imlil, gateway to Toubkal — one last change of pace, between suspended Berber villages and an unbeatable view of the peaks.",
+        introEs:
+          "El viaje se cierra en las estribaciones del Atlas, en Imlil, puerta de entrada al Toubkal — un último cambio de ritmo, entre pueblos bereberes suspendidos y una vista inmejorable de las cumbres.",
+        galleryImages: `${R2}/tours/souss-massa-4x4-gallery-1.jpg,${R2}/tours/souss-massa-4x4-gallery-2.jpg,${R2}/blocks/maroc-bestof-atlas.jpg`,
+        mapMarkerX: 0,
+        mapMarkerY: 0,
+        days: [
+          {
+            dayNumber: 12,
+            title: "Imlil et les villages suspendus",
+            titleEn: "Imlil and the suspended villages",
+            titleEs: "Imlil y los pueblos suspendidos",
+            description:
+              "Montée en 4x4 jusqu'à Imlil, village de montagne où commencent la plupart des treks vers le Toubkal. Une marche accompagnée d'un guide berbère traverse vergers de pommiers et villages accrochés à la pente, avec un déjeuner traditionnel chez l'habitant avant l'installation dans un lodge de montagne pour la nuit.",
+            descriptionEn:
+              "A 4x4 ride up to Imlil, the mountain village where most Toubkal treks begin. A walk with a Berber guide crosses apple orchards and villages clinging to the slope, with a traditional lunch at a local home before checking into a mountain lodge for the night.",
+            descriptionEs:
+              "Subida en todoterreno hasta Imlil, el pueblo de montaña donde comienzan la mayoría de los treks al Toubkal. Una caminata con un guía bereber cruza huertos de manzanos y pueblos aferrados a la ladera, con un almuerzo tradicional en casa de una familia local antes de alojarse en un lodge de montaña para pasar la noche.",
+            image: `${R2}/tours/souss-massa-4x4.jpg`,
+            images: "",
+          },
+          {
+            dayNumber: 13,
+            title: "Un dernier regard sur les sommets",
+            titleEn: "One last look at the peaks",
+            titleEs: "Una última mirada a las cumbres",
+            description:
+              "Une dernière journée libre pour profiter du lodge et de ses environs — terrasse face aux sommets, courte randonnée ou simplement le temps de repenser à treize nuits qui ont traversé tout le Maroc. Le retour vers l'aéroport se fait tôt le lendemain matin.",
+            descriptionEn:
+              "One last free day to enjoy the lodge and its surroundings — a terrace facing the peaks, a short hike, or simply time to look back on thirteen nights that crossed the whole of Morocco. The transfer to the airport happens early the following morning.",
+            descriptionEs:
+              "Un último día libre para disfrutar del lodge y sus alrededores — una terraza frente a las cumbres, una caminata corta o simplemente tiempo para repasar trece noches que atravesaron todo Marruecos. El traslado al aeropuerto se hace temprano a la mañana siguiente.",
+            image: `${R2}/blocks/maroc-bestof-atlas.jpg`,
+            images: "",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    destinationSlug: "maroc",
+    tour: {
+      name: "Le grand désert : de Marrakech à l'Erg Chigaga",
+      nameEn: "Morocco: A Luxury Adventure in the Sahara Desert",
+      nameEs: "Marruecos: una aventura de lujo en el desierto del Sahara",
+      slug: "grand-desert-marrakech-erg-chigaga",
+      tagline: "Kasbahs oubliées et dunes reculées de l'Erg Chigaga",
+      taglineEn: "Forgotten kasbahs and the remote dunes of the Erg Chigaga",
+      taglineEs: "Kasbahs olvidadas y las dunas remotas del Erg Chigaga",
+      description:
+        "Un itinéraire qui évite les foules pour rejoindre l'un des coins les plus reculés du Sahara marocain — villes-kasbahs oubliées, oasis de Skoura, portes du désert à Zagora, puis les dunes isolées de l'Erg Chigaga, loin des campements les plus visités.",
+      descriptionEn:
+        "A route that skips the crowds to reach one of the most remote corners of the Moroccan Sahara — forgotten kasbah towns, the oasis of Skoura, the desert gateway of Zagora, then the isolated dunes of the Erg Chigaga, far from the more visited camps.",
+      descriptionEs:
+        "Un itinerario que evita las multitudes para llegar a uno de los rincones más remotos del Sahara marroquí — ciudades-kasbah olvidadas, el oasis de Skoura, la puerta del desierto en Zagora, y después las dunas aisladas del Erg Chigaga, lejos de los campamentos más visitados.",
+      price: 9900,
+      originalPrice: 0,
+      currency: "EUR",
+      duration: "10 nuits",
+      durationEn: "10 nights",
+      durationEs: "10 noches",
+      whenLabel: "Mars à juin | Sept à nov",
+      whenLabelEn: "March to June | Sept to Nov",
+      whenLabelEs: "Marzo a junio | Sept a nov",
+      category: "multi-day",
+      theme: "adventure",
+      travelerTypes: "couples,groups",
+      maxGuests: 4,
+      image: `${R2}/blocks/maroc-sahara.jpg`,
+      format: "journey",
+      mapImage: "",
+      featured: false,
+      order: 3,
+    },
+    chapters: [
+      {
+        title: "Marrakech",
+        titleEn: "Marrakech",
+        titleEs: "Marrakech",
+        intro:
+          "Une seule nuit dans la ville rouge avant de prendre la route — juste assez pour un premier contact avec ses souks avant de filer vers des paysages autrement plus sauvages.",
+        introEn:
+          "Just one night in the red city before hitting the road — enough for a first taste of its souks before heading toward far wilder landscapes.",
+        introEs:
+          "Una sola noche en la ciudad roja antes de ponerse en marcha — suficiente para un primer contacto con sus zocos antes de dirigirse hacia paisajes mucho más salvajes.",
+        galleryImages: `${R2}/tours/marrakech-depuis-agadir-gallery-1.jpg,${R2}/blocks/maroc-bestof-marrakech.jpg`,
+        mapMarkerX: 0,
+        mapMarkerY: 0,
+        days: [
+          {
+            dayNumber: 1,
+            title: "Une nuit dans la ville rouge",
+            titleEn: "One night in the red city",
+            titleEs: "Una noche en la ciudad roja",
+            description:
+              "Installation dans un riad du cœur de la médina, puis départ l'après-midi même pour une visite privée des souks et de la place Jemaa el-Fna — un premier aperçu de l'effervescence marocaine avant de rejoindre, dès le lendemain, des routes bien plus solitaires.",
+            descriptionEn:
+              "Check-in at a riad in the heart of the medina, then setting off that same afternoon for a private tour of the souks and Jemaa el-Fna square — a first taste of Moroccan effervescence before, from the next day on, taking to far more solitary roads.",
+            descriptionEs:
+              "Alojamiento en un riad del corazón de la medina, y salida esa misma tarde para una visita privada de los zocos y la plaza Jemaa el-Fna — un primer contacto con la efervescencia marroquí antes de tomar, desde el día siguiente, carreteras mucho más solitarias.",
+            image: `${R2}/tours/marrakech-depuis-agadir.jpg`,
+            images: "",
+          },
+        ],
+      },
+      {
+        title: "Skoura",
+        titleEn: "Skoura",
+        titleEs: "Skoura",
+        intro:
+          "La route bascule vers le sud par le col de Tizi n'Tichka, traverse des kasbahs presque oubliées, avant de rejoindre l'oasis de Skoura — préambule paisible avant l'aridité du désert.",
+        introEn:
+          "The road turns south over the Tizi n'Tichka pass, past kasbahs that time seems to have forgotten, before reaching the oasis of Skoura — a peaceful preamble before the desert's aridity.",
+        introEs:
+          "La carretera gira hacia el sur por el puerto de Tizi n'Tichka, pasando junto a kasbahs que el tiempo parece haber olvidado, antes de llegar al oasis de Skoura — un preámbulo apacible antes de la aridez del desierto.",
+        galleryImages: `${R2}/tours/souss-massa-4x4-gallery-3.jpg,${R2}/tours/souss-massa-4x4-gallery-4.jpg,${R2}/blocks/maroc-sahara.jpg`,
+        mapMarkerX: 0,
+        mapMarkerY: 0,
+        days: [
+          {
+            dayNumber: 2,
+            title: "Par le Tizi n'Tichka et Aït Ben Haddou",
+            titleEn: "Via the Tizi n'Tichka and Aït Ben Haddou",
+            titleEs: "Por el Tizi n'Tichka y Aït Ben Haddou",
+            description:
+              "Franchissement du col de Tizi n'Tichka, l'une des plus belles routes de montagne du Maroc, avec un arrêt à la kasbah de Télouet, ancien fief des Glaoui à la décoration encore intacte, puis dans la vallée de l'Ounila et son ksar d'Aït Ben Haddou avant l'arrivée à Skoura.",
+            descriptionEn:
+              "Crossing the Tizi n'Tichka pass, one of Morocco's most spectacular mountain roads, with a stop at the Telouet kasbah, former stronghold of the Glaoui family with its decoration still intact, then the Ounila Valley and its ksar of Aït Ben Haddou before arriving in Skoura.",
+            descriptionEs:
+              "Cruce del puerto de Tizi n'Tichka, una de las carreteras de montaña más espectaculares de Marruecos, con parada en la kasbah de Telouet, antiguo feudo de los Glaoui con su decoración aún intacta, y después el valle del Ounila y su ksar de Aït Ben Haddou antes de llegar a Skoura.",
+            image: `${R2}/tours/souss-massa-4x4.jpg`,
+            images: "",
+          },
+          {
+            dayNumber: 3,
+            title: "Potiers, roses et gorges du Dadès",
+            titleEn: "Potters, roses and the Dadès Gorges",
+            titleEs: "Alfareros, rosas y las gargantas del Dadès",
+            description:
+              "Visite d'un atelier de potiers traditionnels et des kasbahs disséminées dans la palmeraie, puis halte à Kelaa M'Gouna, capitale de la rose de Damas — récolte au printemps, distillerie ouverte toute l'année. L'après-midi se termine par une marche dans les gorges du Dadès et un pique-nique au bord de l'oued.",
+            descriptionEn:
+              "A visit to a traditional pottery workshop and the kasbahs scattered through the palm grove, then a stop at Kelaa M'Gouna, capital of the Damask rose — harvest in spring, the distillery open year-round. The afternoon ends with a walk through the Dadès Gorges and a picnic beside the river.",
+            descriptionEs:
+              "Visita a un taller de alfarería tradicional y a las kasbahs repartidas por el palmeral, y después parada en Kelaa M'Gouna, capital de la rosa de Damasco — cosecha en primavera, destilería abierta todo el año. La tarde termina con una caminata por las gargantas del Dadès y un picnic junto al río.",
+            image: `${R2}/tours/souss-massa-4x4-gallery-1.jpg`,
+            images: "",
+          },
+        ],
+      },
+      {
+        title: "Zagora",
+        titleEn: "Zagora",
+        titleEs: "Zagora",
+        intro:
+          "Porte historique des caravanes vers Tombouctou, Zagora garde une identité artisanale intacte — tisserands, teinturiers, et des dunes qui se devinent déjà à l'horizon.",
+        introEn:
+          "The historic caravan gateway toward Timbuktu, Zagora keeps its artisan identity intact — weavers, dyers, and dunes already visible on the horizon.",
+        introEs:
+          "Puerta histórica de las caravanas hacia Tombuctú, Zagora conserva intacta su identidad artesanal — tejedores, tintoreros, y dunas que ya se adivinan en el horizonte.",
+        galleryImages: `${R2}/tours/camel-ride-barbecue-gallery-3.jpg,${R2}/tours/camel-ride-barbecue-gallery-4.jpg,${R2}/blocks/maroc-sahara.jpg`,
+        mapMarkerX: 0,
+        mapMarkerY: 0,
+        days: [
+          {
+            dayNumber: 4,
+            title: "La kasbah de Tamnougalt",
+            titleEn: "The kasbah of Tamnougalt",
+            titleEs: "La kasbah de Tamnougalt",
+            description:
+              "En chemin vers Zagora, halte à la kasbah de Tamnougalt, ancienne capitale de la vallée du Drâa aux murs de pisé finement sculptés. Installation en fin de journée dans un lodge en lisière du désert, à l'écart de l'agitation de la ville.",
+            descriptionEn:
+              "On the way to Zagora, a stop at the kasbah of Tamnougalt, former capital of the Drâa Valley, its rammed-earth walls finely carved. Check-in later in the day at a lodge on the desert's edge, away from the town's bustle.",
+            descriptionEs:
+              "De camino a Zagora, parada en la kasbah de Tamnougalt, antigua capital del valle del Draa, con sus muros de tapial finamente esculpidos. Alojamiento al final del día en un lodge al borde del desierto, lejos del bullicio de la ciudad.",
+            image: `${R2}/tours/camel-ride-barbecue.jpg`,
+            images: "",
+          },
+          {
+            dayNumber: 5,
+            title: "Tisserands et dunes au crépuscule",
+            titleEn: "Weavers and dunes at dusk",
+            titleEs: "Tejedores y dunas al atardecer",
+            description:
+              "Visite du quartier du Mellah, où des artisans tissent encore à la main tapis et couvertures selon des motifs berbères transmis de mère en fille. En fin de journée, montée sur une dune proche pour un coucher de soleil sur les premières ondulations du désert — un avant-goût de ce qui vous attend.",
+            descriptionEn:
+              "A visit to the Mellah quarter, where artisans still hand-weave rugs and blankets in Berber patterns passed down from mother to daughter. Later in the day, a climb up a nearby dune for sunset over the desert's first ripples — a taste of what's still to come.",
+            descriptionEs:
+              "Visita al barrio del Mellah, donde los artesanos todavía tejen a mano alfombras y mantas con motivos bereberes transmitidos de madre a hija. Al final del día, subida a una duna cercana para ver la puesta de sol sobre las primeras ondulaciones del desierto — un anticipo de lo que está por llegar.",
+            image: `${R2}/tours/camel-ride-barbecue-gallery-1.jpg`,
+            images: "",
+          },
+        ],
+      },
+      {
+        title: "Le désert de l'Erg Chigaga",
+        titleEn: "The Erg Chigaga Desert",
+        titleEs: "El desierto del Erg Chigaga",
+        intro:
+          "Bien plus reculé que l'Erg Chebbi, l'Erg Chigaga se mérite — plusieurs heures de piste à travers le hamada pour rejoindre des dunes qui comptent parmi les plus hautes et les moins visitées du pays.",
+        introEn:
+          "Far more remote than the Erg Chebbi, the Erg Chigaga has to be earned — several hours of track across the hamada stone desert to reach dunes among the highest and least visited in the country.",
+        introEs:
+          "Mucho más remoto que el Erg Chebbi, el Erg Chigaga hay que ganárselo — varias horas de pista a través de la hamada pedregosa para llegar a unas dunas entre las más altas y menos visitadas del país.",
+        galleryImages: `${R2}/tours/merzouga-3-jours-gallery-4.jpg,${R2}/tours/merzouga-3-jours-gallery-5.jpg,${R2}/blocks/maroc-sahara.jpg`,
+        mapMarkerX: 0,
+        mapMarkerY: 0,
+        days: [
+          {
+            dayNumber: 6,
+            title: "Via Tamegroute jusqu'aux dunes isolées",
+            titleEn: "Via Tamegroute to the isolated dunes",
+            titleEs: "Vía Tamegroute hasta las dunas aisladas",
+            description:
+              "Halte à Tamegroute, dont l'ancienne bibliothèque coranique conserve des manuscrits vieux de plusieurs siècles, avant M'Hamid, dernier village avant le grand vide. De là, un 4x4 s'enfonce dans le hamada pendant plusieurs heures jusqu'au campement privé de l'Erg Chigaga — dîner sous tente, nuit à la belle étoile, loin de tout.",
+            descriptionEn:
+              "A stop in Tamegroute, whose ancient Quranic library holds manuscripts centuries old, before M'Hamid, the last village before the great emptiness. From there, a 4x4 pushes into the hamada for several hours to reach the private camp of the Erg Chigaga — dinner under canvas, a night under the stars, far from everything.",
+            descriptionEs:
+              "Parada en Tamegroute, cuya antigua biblioteca coránica conserva manuscritos centenarios, antes de M'Hamid, el último pueblo antes del gran vacío. Desde allí, un todoterreno se adentra en la hamada durante varias horas hasta el campamento privado del Erg Chigaga — cena bajo la jaima, noche a la intemperie, lejos de todo.",
+            image: `${R2}/tours/merzouga-3-jours.jpg`,
+            images: "",
+          },
+        ],
+      },
+      {
+        title: "Taroudant",
+        titleEn: "Taroudant",
+        titleEs: "Taroudant",
+        intro:
+          "Surnommée la « petite Marrakech » pour ses remparts de terre ocre, Taroudant offre une médina plus intime, moins courue, avec tanneries et souks à taille humaine.",
+        introEn:
+          "Nicknamed \"little Marrakech\" for its ochre-earth ramparts, Taroudant offers a more intimate medina, far less crowded, with tanneries and souks on a human scale.",
+        introEs:
+          "Apodada la \"pequeña Marrakech\" por sus murallas de tierra ocre, Taroudant ofrece una medina más íntima, mucho menos concurrida, con tenerías y zocos a escala humana.",
+        galleryImages: `${R2}/tours/agadir-city-tour-cable-car-gallery-1.jpg,${R2}/tours/agadir-city-tour-cable-car-gallery-2.jpg,${R2}/blocks/maroc-medina.jpg`,
+        mapMarkerX: 0,
+        mapMarkerY: 0,
+        days: [
+          {
+            dayNumber: 7,
+            title: "La traversée du hamada",
+            titleEn: "Crossing the hamada",
+            titleEs: "El cruce de la hamada",
+            description:
+              "Longue traversée du désert de pierres jusqu'à Taroudant, ville fortifiée nichée entre l'Anti-Atlas et le Haut Atlas. Installation dans une maison d'hôtes au calme, avec le temps de profiter de la piscine et du spa après plusieurs jours sur la route.",
+            descriptionEn:
+              "A long crossing of the stone desert to Taroudant, a fortified town nestled between the Anti-Atlas and the High Atlas. Check-in at a quiet guesthouse, with time to enjoy the pool and spa after several days on the road.",
+            descriptionEs:
+              "Larga travesía del desierto de piedra hasta Taroudant, ciudad amurallada encajada entre el Anti-Atlas y el Alto Atlas. Alojamiento en una tranquila casa de huéspedes, con tiempo para disfrutar de la piscina y el spa tras varios días de carretera.",
+            image: `${R2}/tours/agadir-city-tour-cable-car.jpg`,
+            images: "",
+          },
+          {
+            dayNumber: 8,
+            title: "Tanneries et remparts au coucher du soleil",
+            titleEn: "Tanneries and ramparts at sunset",
+            titleEs: "Tenerías y murallas al atardecer",
+            description:
+              "Visite guidée des tanneries artisanales et des souks de Taroudant, plus authentiques et moins touristiques que ceux de Marrakech. La journée se termine sur les remparts, cinq kilomètres de murs ocre du XVIe siècle, pour un coucher de soleil qui embrase la ville et les montagnes environnantes.",
+            descriptionEn:
+              "A guided visit to Taroudant's artisan tanneries and souks, more authentic and far less touristy than those of Marrakech. The day ends atop the ramparts, five kilometres of 16th-century ochre walls, for a sunset that sets the town and the surrounding mountains ablaze.",
+            descriptionEs:
+              "Visita guiada a las tenerías artesanales y los zocos de Taroudant, más auténticos y mucho menos turísticos que los de Marrakech. El día termina sobre las murallas, cinco kilómetros de muros ocres del siglo XVI, para una puesta de sol que incendia la ciudad y las montañas circundantes.",
+            image: `${R2}/tours/agadir-city-tour-cable-car-gallery-3.jpg`,
+            images: "",
+          },
+        ],
+      },
+      {
+        title: "Retour à Marrakech",
+        titleEn: "Back to Marrakech",
+        titleEs: "Regreso a Marrakech",
+        intro:
+          "Le voyage referme la boucle là où il a commencé, avec deux nuits pour profiter pleinement de la ville rouge — hammam, souks, et un dernier tour en side-car pour dire au revoir.",
+        introEn:
+          "The journey closes the loop where it began, with two nights to fully enjoy the red city — hammam, souks, and one last sidecar ride to say goodbye.",
+        introEs:
+          "El viaje cierra el círculo donde comenzó, con dos noches para disfrutar de lleno la ciudad roja — hammam, zocos y un último paseo en sidecar para despedirse.",
+        galleryImages: `${R2}/tours/hammam-massage-gallery-1.jpg,${R2}/tours/hammam-massage-gallery-2.jpg,${R2}/blocks/maroc-bestof-marrakech.jpg`,
+        mapMarkerX: 0,
+        mapMarkerY: 0,
+        days: [
+          {
+            dayNumber: 9,
+            title: "Retour vers la ville rouge",
+            titleEn: "Back to the red city",
+            titleEs: "Regreso a la ciudad roja",
+            description:
+              "Longue route de retour vers Marrakech, où deux dernières nuits attendent dans un riad du cœur de la médina. Le rythme ralentit enfin : hammam relaxant en fin d'après-midi, puis une dernière flânerie dans les souks avant la tombée de la nuit.",
+            descriptionEn:
+              "A long road back to Marrakech, where two final nights await at a riad in the heart of the medina. The pace finally slows: a relaxing hammam late in the afternoon, then one last wander through the souks before nightfall.",
+            descriptionEs:
+              "Larga carretera de regreso a Marrakech, donde esperan dos últimas noches en un riad del corazón de la medina. El ritmo por fin se ralentiza: hammam relajante a última hora de la tarde, y después un último paseo por los zocos antes de que caiga la noche.",
+            image: `${R2}/tours/hammam-massage.jpg`,
+            images: "",
+          },
+          {
+            dayNumber: 10,
+            title: "Un dernier tour en side-car",
+            titleEn: "One last sidecar ride",
+            titleEs: "Un último paseo en sidecar",
+            description:
+              "Dernier tour de ville en side-car vintage avant le vol retour — un tour d'horizon des quartiers traversés dix jours plus tôt, avec le sentiment d'avoir vu, cette fois, un Maroc que peu de voyageurs prennent le temps de découvrir.",
+            descriptionEn:
+              "One last vintage sidecar tour of the city before the flight home — a full-circle look at the quarters passed through ten days earlier, with the feeling of having seen, this time, a side of Morocco few travellers take the time to discover.",
+            descriptionEs:
+              "Último recorrido por la ciudad en sidecar vintage antes del vuelo de regreso — una vuelta completa por los barrios recorridos diez días antes, con la sensación de haber visto, esta vez, un Marruecos que pocos viajeros se toman el tiempo de descubrir.",
+            image: `${R2}/tours/hammam-massage-gallery-3.jpg`,
+            images: "",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    destinationSlug: "maroc",
+    tour: {
+      name: "Marrakech, Agafay et Essaouira : de la médina à la côte",
+      nameEn: "Marrakech, Agafay & Essaouira: From the Medina to the Coast",
+      nameEs: "Marrakech, Agafay y Essaouira: de la medina a la costa",
+      slug: "marrakech-agafay-essaouira-medina-cote",
+      tagline: "Trois visages du Maroc, de la ville rouge à l'Atlantique",
+      taglineEn: "Three faces of Morocco, from the red city to the Atlantic",
+      taglineEs: "Tres caras de Marruecos, de la ciudad roja al Atlántico",
+      description:
+        "Un condensé du Maroc en trois temps : la médina animée de Marrakech, une nuit de silence dans le désert d'Agafay, la fraîcheur du Haut Atlas, puis le vent salé et les remparts bleu et blanc d'Essaouira pour clore le voyage en douceur.",
+      descriptionEn:
+        "A condensed Morocco in three movements: Marrakech's lively medina, a night of silence in the Agafay desert, the cool air of the High Atlas, then the salty wind and blue-and-white ramparts of Essaouira to close the trip gently.",
+      descriptionEs:
+        "Un Marruecos condensado en tres tiempos: la animada medina de Marrakech, una noche de silencio en el desierto de Agafay, el frescor del Alto Atlas, y después el viento salado y las murallas azules y blancas de Essaouira para cerrar el viaje con suavidad.",
+      price: 9800,
+      originalPrice: 0,
+      currency: "EUR",
+      duration: "10 nuits",
+      durationEn: "10 nights",
+      durationEs: "10 noches",
+      whenLabel: "Mars à juin | Sept à nov",
+      whenLabelEn: "March to June | Sept to Nov",
+      whenLabelEs: "Marzo a junio | Sept a nov",
+      category: "multi-day",
+      theme: "adventure",
+      travelerTypes: "family,couples,groups",
+      maxGuests: 6,
+      image: `${R2}/blocks/maroc-bestof-essaouira.jpg`,
+      format: "journey",
+      mapImage: "",
+      featured: false,
+      order: 4,
+    },
+    chapters: [
+      {
+        title: "Marrakech",
+        titleEn: "Marrakech",
+        titleEs: "Marrakech",
+        intro:
+          "Le voyage démarre là où bat le cœur du Maroc — souks débordants, place Jemaa el-Fna et ses conteurs, et un riad tranquille pour se poser entre deux effervescences.",
+        introEn:
+          "The journey starts where Morocco's heart beats loudest — overflowing souks, Jemaa el-Fna square and its storytellers, and a quiet riad to land between two bursts of effervescence.",
+        introEs:
+          "El viaje comienza donde late el corazón de Marruecos — zocos desbordantes, la plaza Jemaa el-Fna y sus narradores, y un riad tranquilo donde aterrizar entre dos oleadas de efervescencia.",
+        galleryImages: `${R2}/tours/marrakech-depuis-agadir-gallery-1.jpg,${R2}/tours/marrakech-depuis-agadir-gallery-2.jpg,${R2}/blocks/maroc-bestof-marrakech.jpg`,
+        mapMarkerX: 0,
+        mapMarkerY: 0,
+        days: [
+          {
+            dayNumber: 1,
+            title: "Bienvenue dans la ville rouge",
+            titleEn: "Welcome to the red city",
+            titleEs: "Bienvenidos a la ciudad roja",
+            description:
+              "Transfert privé depuis l'aéroport jusqu'à un riad du cœur de la médina, cour intérieure fleurie et bassin central. Le reste de la journée se passe sans programme fixe — le temps de s'acclimater avant de partir, dès demain, à la découverte de la ville.",
+            descriptionEn:
+              "A private transfer from the airport to a riad in the heart of the medina, a flower-filled courtyard and central pool. The rest of the day has no fixed plan — time to settle in before setting out, from tomorrow, to explore the city.",
+            descriptionEs:
+              "Traslado privado desde el aeropuerto hasta un riad del corazón de la medina, un patio florido y una alberca central. El resto del día no tiene programa fijo — tiempo para aclimatarse antes de salir, desde mañana, a descubrir la ciudad.",
+            image: `${R2}/tours/marrakech-depuis-agadir.jpg`,
+            images: "",
+          },
+          {
+            dayNumber: 2,
+            title: "Souks et marchandage",
+            titleEn: "Souks and haggling",
+            titleEs: "Zocos y regateo",
+            description:
+              "Visite guidée de la médina et de ses souks thématiques — cuir, épices, lampes en fer forgé — avec un guide qui connaît les bonnes adresses et sait négocier. L'après-midi se termine par un hammam traditionnel, gommage au savon noir compris, pour reposer les jambes après une journée de marche.",
+            descriptionEn:
+              "A guided tour of the medina and its themed souks — leather, spices, wrought-iron lamps — with a guide who knows the right addresses and how to haggle. The afternoon ends with a traditional hammam, black soap scrub included, to rest the legs after a day of walking.",
+            descriptionEs:
+              "Visita guiada a la medina y sus zocos temáticos — cuero, especias, lámparas de hierro forjado — con un guía que conoce las buenas direcciones y sabe regatear. La tarde termina con un hammam tradicional, exfoliación con jabón negro incluida, para descansar las piernas tras un día de caminata.",
+            image: `${R2}/tours/marrakech-depuis-agadir-gallery-3.jpg`,
+            images: "",
+          },
+          {
+            dayNumber: 3,
+            title: "Marché, tajine et nuit sur la place",
+            titleEn: "Market, tagine and a night on the square",
+            titleEs: "Mercado, tajine y noche en la plaza",
+            description:
+              "Marché matinal avec le chef du riad pour choisir les ingrédients du jour, puis atelier privé pour préparer son propre tajine. Le soir, direction Jemaa el-Fna à la tombée de la nuit — brochettes grillées, musiciens gnaoua et conteurs, dans une ambiance qui ne ressemble à aucune autre place du monde.",
+            descriptionEn:
+              "A morning market visit with the riad's chef to choose the day's ingredients, then a private workshop to prepare your own tagine. In the evening, head to Jemaa el-Fna as night falls — grilled skewers, Gnaoua musicians and storytellers, in an atmosphere unlike any other square in the world.",
+            descriptionEs:
+              "Visita matinal al mercado con el chef del riad para elegir los ingredientes del día, y después taller privado para preparar su propio tajine. Por la noche, rumbo a Jemaa el-Fna al caer la noche — pinchos a la parrilla, músicos gnaoua y narradores, en un ambiente que no se parece a ninguna otra plaza del mundo.",
+            image: `${R2}/tours/marrakech-depuis-agadir-gallery-4.jpg`,
+            images: "",
+          },
+        ],
+      },
+      {
+        title: "Le désert d'Agafay",
+        titleEn: "The Agafay Desert",
+        titleEs: "El desierto de Agafay",
+        intro:
+          "À moins d'une heure de Marrakech, l'aridité minérale de l'Agafay tranche radicalement avec l'agitation de la ville — le lieu rêvé pour une parenthèse de silence, entre balade en quad et nuit sous tente.",
+        introEn:
+          "Less than an hour from Marrakech, the mineral aridity of the Agafay is a world away from the city's bustle — the perfect place for a pocket of silence, between a quad-bike ride and a night under canvas.",
+        introEs:
+          "A menos de una hora de Marrakech, la aridez mineral de Agafay contrasta radicalmente con el bullicio de la ciudad — el lugar soñado para un paréntesis de silencio, entre un paseo en quad y una noche bajo la jaima.",
+        galleryImages: `${R2}/tours/agadir-quad-adventure-gallery-1.jpg,${R2}/tours/agadir-quad-adventure-gallery-2.jpg,${R2}/blocks/maroc-sahara.jpg`,
+        mapMarkerX: 0,
+        mapMarkerY: 0,
+        days: [
+          {
+            dayNumber: 4,
+            title: "Quad et camp privé",
+            titleEn: "Quad bikes and a private camp",
+            titleEs: "Quad y campamento privado",
+            description:
+              "Départ en quad depuis Marrakech, pistes rocailleuses et dénivelés doux jusqu'au désert d'Agafay, sommets enneigés de l'Atlas en toile de fond. Installation dans un campement privé pour la nuit — dîner au coin du feu, musique berbère live, et un ciel qui s'illumine d'étoiles à mesure que la nuit avance.",
+            descriptionEn:
+              "Setting off by quad bike from Marrakech, rocky tracks and gentle climbs to the Agafay desert, the Atlas' snow-capped peaks in the background. Check-in at a private camp for the night — dinner by the fire, live Berber music, and a sky that fills with stars as the night deepens.",
+            descriptionEs:
+              "Salida en quad desde Marrakech, pistas rocosas y desniveles suaves hasta el desierto de Agafay, con las cumbres nevadas del Atlas de fondo. Alojamiento en un campamento privado para pasar la noche — cena junto al fuego, música bereber en vivo, y un cielo que se llena de estrellas a medida que avanza la noche.",
+            image: `${R2}/tours/agadir-quad-adventure.jpg`,
+            images: `${R2}/tours/agadir-quad-adventure-gallery-3.jpg`,
+          },
+        ],
+      },
+      {
+        title: "Le Haut Atlas",
+        titleEn: "The High Atlas",
+        titleEs: "El Alto Atlas",
+        intro:
+          "À une heure à peine de Marrakech, les vallées du Haut Atlas offrent un tout autre climat — vergers d'oliviers et d'amandiers, villages berbères, et un lodge de montagne pour ralentir le rythme.",
+        introEn:
+          "Barely an hour from Marrakech, the valleys of the High Atlas offer an entirely different climate — olive and almond groves, Berber villages, and a mountain lodge to slow the pace.",
+        introEs:
+          "A poco más de una hora de Marrakech, los valles del Alto Atlas ofrecen un clima completamente distinto — olivares y almendros, pueblos bereberes, y un lodge de montaña para bajar el ritmo.",
+        galleryImages: `${R2}/tours/paradise-valley-gallery-4.jpg,${R2}/blocks/maroc-bestof-atlas.jpg`,
+        mapMarkerX: 0,
+        mapMarkerY: 0,
+        days: [
+          {
+            dayNumber: 5,
+            title: "Installation en altitude",
+            titleEn: "Settling in at altitude",
+            titleEs: "Instalación en altitud",
+            description:
+              "Départ matinal du camp désertique pour rejoindre les vallées du Haut Atlas. Installation dans un lodge de montagne niché parmi les oliviers, où l'air se rafraîchit sensiblement — un contraste bienvenu après la chaleur du désert, avec le temps de profiter du jardin avant le dîner.",
+            descriptionEn:
+              "An early departure from the desert camp to reach the valleys of the High Atlas. Check-in at a mountain lodge tucked among olive trees, where the air noticeably cools — a welcome contrast after the desert heat, with time to enjoy the garden before dinner.",
+            descriptionEs:
+              "Salida matinal del campamento desértico para llegar a los valles del Alto Atlas. Alojamiento en un lodge de montaña encajado entre olivos, donde el aire se refresca notablemente — un contraste bienvenido tras el calor del desierto, con tiempo para disfrutar del jardín antes de la cena.",
+            image: `${R2}/blocks/maroc-bestof-atlas.jpg`,
+            images: "",
+          },
+          {
+            dayNumber: 6,
+            title: "Villages berbères en 4x4",
+            titleEn: "Berber villages by 4x4",
+            titleEs: "Pueblos bereberes en todoterreno",
+            description:
+              "Excursion en 4x4 et à pied vers des villages berbères accrochés aux pentes, entre terrasses cultivées et sources d'eau claire. Déjeuner traditionnel dans un lodge de montagne, tajine mijoté et thé à la menthe servis avec une vue dégagée sur la vallée.",
+            descriptionEn:
+              "A 4x4 and on-foot excursion to Berber villages clinging to the slopes, between cultivated terraces and clear-water springs. A traditional lunch at a mountain lodge, slow-cooked tagine and mint tea served with an open view over the valley.",
+            descriptionEs:
+              "Excursión en todoterreno y a pie hasta pueblos bereberes aferrados a las laderas, entre terrazas cultivadas y manantiales de agua clara. Almuerzo tradicional en un lodge de montaña, tajine cocinado a fuego lento y té a la menta servidos con vistas despejadas al valle.",
+            image: `${R2}/tours/paradise-valley-gallery-4.jpg`,
+            images: "",
+          },
+          {
+            dayNumber: 7,
+            title: "Une journée à son rythme",
+            titleEn: "A day at your own pace",
+            titleEs: "Un día a su ritmo",
+            description:
+              "Journée libre au lodge — piscine, vélo de montagne ou balade à cheval dans la vallée selon l'envie. Un dernier moment de calme avant de reprendre la route vers l'Atlantique et un tout autre paysage.",
+            descriptionEn:
+              "A free day at the lodge — the pool, mountain biking, or a horseback ride through the valley, whichever suits. One last calm moment before hitting the road toward the Atlantic and an entirely different landscape.",
+            descriptionEs:
+              "Día libre en el lodge — piscina, bicicleta de montaña o paseo a caballo por el valle, según apetezca. Un último momento de calma antes de retomar la ruta hacia el Atlántico y un paisaje completamente distinto.",
+            image: `${R2}/blocks/maroc-bestof-atlas.jpg`,
+            images: "",
+          },
+        ],
+      },
+      {
+        title: "Essaouira",
+        titleEn: "Essaouira",
+        titleEs: "Essaouira",
+        intro:
+          "Vent atlantique, remparts portugais et une médina bleu et blanc à taille humaine — Essaouira referme le voyage sur une note plus tranquille, entre plage et ruelles d'artistes.",
+        introEn:
+          "Atlantic wind, Portuguese ramparts and a blue-and-white medina on a human scale — Essaouira closes the trip on a quieter note, between beach and artists' lanes.",
+        introEs:
+          "Viento atlántico, murallas portuguesas y una medina azul y blanca a escala humana — Essaouira cierra el viaje con una nota más tranquila, entre playa y calles de artistas.",
+        galleryImages: `${R2}/tours/decouverte-taghazout-gallery-1.jpg,${R2}/tours/decouverte-taghazout-gallery-4.jpg,${R2}/blocks/maroc-bestof-essaouira.jpg`,
+        mapMarkerX: 0,
+        mapMarkerY: 0,
+        days: [
+          {
+            dayNumber: 8,
+            title: "Cap sur l'Atlantique",
+            titleEn: "Heading for the Atlantic",
+            titleEs: "Rumbo al Atlántico",
+            description:
+              "Route vers la côte à travers des paysages qui changent progressivement — arganiers, puis les premiers effluves d'air marin. Installation dans une maison d'hôtes en front de mer, à deux pas des remparts qui ont donné son surnom de « ville du vent » à Essaouira.",
+            descriptionEn:
+              "The road to the coast through gradually changing landscapes — argan trees, then the first whiffs of sea air. Check-in at a seafront guesthouse, a stone's throw from the ramparts that earned Essaouira its nickname, \"the windy city.\"",
+            descriptionEs:
+              "Carretera hacia la costa a través de paisajes que cambian gradualmente — arganes, y después los primeros aromas de aire marino. Alojamiento en una casa de huéspedes frente al mar, a pocos pasos de las murallas que dieron a Essaouira su apodo de \"ciudad del viento\".",
+            image: `${R2}/tours/decouverte-taghazout.jpg`,
+            images: "",
+          },
+          {
+            dayNumber: 9,
+            title: "Vent, vagues et ruelles bleues",
+            titleEn: "Wind, waves and blue lanes",
+            titleEs: "Viento, olas y calles azules",
+            description:
+              "Une journée à la carte : initiation au kitesurf sur l'une des baies les plus réputées d'Afrique du Nord, balade à cheval le long de la plage, ou flânerie dans la médina bleu et blanc, entre galeries d'art et ateliers de marqueterie en bois de thuya.",
+            descriptionEn:
+              "A day to design as you please: a kitesurfing lesson on one of North Africa's most renowned bays, a horseback ride along the beach, or a wander through the blue-and-white medina, between art galleries and thuya-wood marquetry workshops.",
+            descriptionEs:
+              "Un día a la carta: iniciación al kitesurf en una de las bahías más reputadas del norte de África, paseo a caballo por la playa, o un paseo por la medina azul y blanca, entre galerías de arte y talleres de marquetería en madera de tuya.",
+            image: `${R2}/tours/decouverte-taghazout-gallery-2.jpg`,
+            images: "",
+          },
+          {
+            dayNumber: 10,
+            title: "Dernier air marin",
+            titleEn: "One last sea breeze",
+            titleEs: "Última brisa marina",
+            description:
+              "Dernière matinée face à l'océan, café en terrasse et mouettes en fond sonore, avant le transfert vers l'aéroport de Marrakech. Un voyage qui aura traversé, en dix nuits, à peu près tous les visages du Maroc.",
+            descriptionEn:
+              "One last morning facing the ocean, coffee on a terrace with seagulls for background noise, before the transfer to Marrakech airport. A trip that, in ten nights, will have crossed nearly every face of Morocco.",
+            descriptionEs:
+              "Última mañana frente al océano, café en la terraza con gaviotas de fondo, antes del traslado al aeropuerto de Marrakech. Un viaje que, en diez noches, habrá recorrido casi todas las caras de Marruecos.",
+            image: `${R2}/tours/decouverte-taghazout-gallery-3.jpg`,
+            images: "",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    destinationSlug: "maroc",
+    tour: {
+      name: "Le Maroc du nord : Fès, Chefchaouen et Tanger",
+      nameEn: "Northern Morocco: From Beguiling Fez to Stylish Tangier",
+      nameEs: "El norte de Marruecos: de la fascinante Fez a la elegante Tánger",
+      slug: "maroc-du-nord-fes-chefchaouen-tanger",
+      tagline: "Le nord confidentiel, entre médinas et côte sauvage",
+      taglineEn: "The confidential north, between medinas and wild coastline",
+      taglineEs: "El norte confidencial, entre medinas y costa salvaje",
+      description:
+        "Un Maroc que peu de voyageurs prennent le temps d'explorer — la médina savante de Fès, les ruines romaines de Volubilis, les ruelles indigo de Chefchaouen, l'âme bohème de Tanger, puis une retraite sur une côte atlantique encore préservée.",
+      descriptionEn:
+        "A Morocco few travellers take the time to explore — the scholarly medina of Fez, the Roman ruins of Volubilis, Chefchaouen's indigo lanes, Tangier's bohemian soul, then a retreat on a still-unspoilt stretch of Atlantic coast.",
+      descriptionEs:
+        "Un Marruecos que pocos viajeros se toman el tiempo de explorar — la sabia medina de Fez, las ruinas romanas de Volubilis, las callejuelas añil de Chefchaouen, el alma bohemia de Tánger, y después un retiro en un tramo de costa atlántica aún virgen.",
+      price: 9950,
+      originalPrice: 0,
+      currency: "EUR",
+      duration: "11 nuits",
+      durationEn: "11 nights",
+      durationEs: "11 noches",
+      whenLabel: "Mars à juin | Sept à nov",
+      whenLabelEn: "March to June | Sept to Nov",
+      whenLabelEs: "Marzo a junio | Sept a nov",
+      category: "multi-day",
+      theme: "culture",
+      travelerTypes: "couples,honeymoon,groups",
+      maxGuests: 6,
+      image: `${R2}/blocks/maroc-medina.jpg`,
+      format: "journey",
+      mapImage: "",
+      featured: false,
+      order: 5,
+    },
+    chapters: [
+      {
+        title: "Fès",
+        titleEn: "Fez",
+        titleEs: "Fez",
+        intro:
+          "Après une nuit à Casablanca pour souffler du vol, direction Fès, la plus savante des villes impériales — médina classée à l'UNESCO, écoles coraniques et une tradition artisanale toujours vivace.",
+        introEn:
+          "After a night in Casablanca to catch your breath from the flight, on to Fez, the most scholarly of the imperial cities — a UNESCO-listed medina, Quranic schools, and a craft tradition still very much alive.",
+        introEs:
+          "Tras una noche en Casablanca para recuperarse del vuelo, rumbo a Fez, la más sabia de las ciudades imperiales — una medina declarada Patrimonio de la Humanidad, escuelas coránicas y una tradición artesanal todavía muy viva.",
+        galleryImages: `${R2}/tours/agadir-city-tour-cable-car-gallery-4.jpg,${R2}/blocks/maroc-medina.jpg`,
+        mapMarkerX: 0,
+        mapMarkerY: 0,
+        days: [
+          {
+            dayNumber: 1,
+            title: "Escale à Casablanca",
+            titleEn: "A stopover in Casablanca",
+            titleEs: "Escala en Casablanca",
+            description:
+              "Nuit à Casablanca pour récupérer du vol, dans un hôtel proche du front de mer. Rien de programmé pour cette première soirée — juste le temps de se réacclimater avant de prendre la route vers l'intérieur des terres dès le lendemain.",
+            descriptionEn:
+              "A night in Casablanca to recover from the flight, at a hotel near the seafront. Nothing planned for this first evening — just time to readjust before heading inland the next day.",
+            descriptionEs:
+              "Noche en Casablanca para recuperarse del vuelo, en un hotel cercano al frente marítimo. Nada programado para esta primera noche — solo tiempo para reaclimatarse antes de tomar la ruta hacia el interior al día siguiente.",
+            image: `${R2}/blocks/maroc-medina.jpg`,
+            images: "",
+          },
+          {
+            dayNumber: 2,
+            title: "Arrivée à Fès",
+            titleEn: "Arrival in Fez",
+            titleEs: "Llegada a Fez",
+            description:
+              "Route vers Fès, où un riad du cœur de la médina vous attend pour les prochaines nuits — patio andalou, zelliges colorés et thé à la menthe servi sur la terrasse à l'arrivée, avec une vue sur les toits de la vieille ville.",
+            descriptionEn:
+              "The road to Fez, where a riad in the heart of the medina awaits for the coming nights — an Andalusian courtyard, colourful zellige tilework, and mint tea served on the terrace on arrival, with a view over the old city's rooftops.",
+            descriptionEs:
+              "Carretera hacia Fez, donde un riad del corazón de la medina les espera para las próximas noches — un patio andalusí, coloridos azulejos zellige y té a la menta servido en la terraza a la llegada, con vistas a los tejados de la ciudad vieja.",
+            image: `${R2}/blocks/maroc-medina.jpg`,
+            images: "",
+          },
+          {
+            dayNumber: 3,
+            title: "Tanneries et souks",
+            titleEn: "Tanneries and souks",
+            titleEs: "Tenerías y zocos",
+            description:
+              "Journée guidée dans la médina : les tanneries à ciel ouvert, vues depuis une terrasse en surplomb, les écoles coraniques aux portails sculptés, puis une tournée gourmande dans les souks pour goûter pâtisseries au miel, olives marinées et pain tout juste sorti du four à bois communal.",
+            descriptionEn:
+              "A guided day through the medina: the open-air tanneries, viewed from an overlooking terrace, the Quranic schools with their carved portals, then a food tour through the souks to taste honey pastries, marinated olives, and bread fresh from the communal wood oven.",
+            descriptionEs:
+              "Jornada guiada por la medina: las tenerías al aire libre, vistas desde una terraza elevada, las escuelas coránicas de portales esculpidos, y después una ruta gastronómica por los zocos para probar pasteles de miel, aceitunas marinadas y pan recién salido del horno de leña comunitario.",
+            image: `${R2}/tours/agadir-city-tour-cable-car-gallery-4.jpg`,
+            images: "",
+          },
+          {
+            dayNumber: 4,
+            title: "Atelier de tbal, tambours artisanaux",
+            titleEn: "A workshop making traditional drums",
+            titleEs: "Taller de tambores artesanales",
+            description:
+              "Rencontre privée avec un artisan luthier qui fabrique encore ses tambours à la main, peaux tendues et bois sculpté selon des techniques inchangées depuis des générations. Un atelier pratique permet de repartir avec un instrument confectionné de ses propres mains — et une meilleure oreille pour la musique gnaoua.",
+            descriptionEn:
+              "A private meeting with an artisan luthier who still makes his drums entirely by hand, stretched hides and carved wood using techniques unchanged for generations. A hands-on workshop lets you leave with an instrument made by your own hands — and a better ear for Gnaoua music.",
+            descriptionEs:
+              "Encuentro privado con un artesano luthier que todavía fabrica sus tambores a mano, pieles tensadas y madera esculpida con técnicas sin cambios desde hace generaciones. Un taller práctico permite salir con un instrumento hecho por sus propias manos — y un mejor oído para la música gnaoua.",
+            image: `${R2}/blocks/maroc-medina.jpg`,
+            images: "",
+          },
+        ],
+      },
+      {
+        title: "Chefchaouen",
+        titleEn: "Chefchaouen",
+        titleEs: "Chefchaouen",
+        intro:
+          "Sur la route vers le nord, un détour par les ruines romaines de Volubilis avant de rejoindre Chefchaouen, dont les ruelles peintes en bleu depuis les années 1930 comptent parmi les images les plus reconnaissables du Maroc.",
+        introEn:
+          "On the road north, a detour via the Roman ruins of Volubilis before reaching Chefchaouen, whose lanes — painted blue since the 1930s — rank among Morocco's most recognisable images.",
+        introEs:
+          "En la ruta hacia el norte, un desvío por las ruinas romanas de Volubilis antes de llegar a Chefchaouen, cuyas callejuelas — pintadas de azul desde los años 30 — figuran entre las imágenes más reconocibles de Marruecos.",
+        galleryImages: `${R2}/tours/decouverte-taghazout-gallery-1.jpg,${R2}/blocks/maroc-medina.jpg`,
+        mapMarkerX: 0,
+        mapMarkerY: 0,
+        days: [
+          {
+            dayNumber: 5,
+            title: "Volubilis et dîner en famille",
+            titleEn: "Volubilis and dinner with a family",
+            titleEs: "Volubilis y cena en familia",
+            description:
+              "Visite des ruines romaines de Volubilis, mosaïques et colonnes encore debout sous le grand ciel du Moyen Atlas, puis déjeuner dans une ferme des environs. En soirée, arrivée à Chefchaouen et dîner chez une famille locale — un moment simple et sincère pour découvrir la cuisine rifaine.",
+            descriptionEn:
+              "A visit to the Roman ruins of Volubilis, mosaics and columns still standing under the wide sky of the Middle Atlas, then lunch at a nearby farm. In the evening, arrival in Chefchaouen and dinner with a local family — a simple, sincere way to discover Rif cuisine.",
+            descriptionEs:
+              "Visita a las ruinas romanas de Volubilis, mosaicos y columnas todavía en pie bajo el amplio cielo del Atlas Medio, y después almuerzo en una granja cercana. Por la noche, llegada a Chefchaouen y cena con una familia local — una forma sencilla y sincera de descubrir la cocina rifeña.",
+            image: `${R2}/tours/decouverte-taghazout.jpg`,
+            images: "",
+          },
+          {
+            dayNumber: 6,
+            title: "La perle bleue",
+            titleEn: "The blue pearl",
+            titleEs: "La perla azul",
+            description:
+              "Journée entière à explorer les escaliers et ruelles bleutées de la médina, entre boutiques de tissage traditionnel et cafés perchés. La place Uta el-Hammam, cœur de la ville, se prête à une pause prolongée en terrasse, thé à la menthe et vue sur la Kasbah du XVe siècle.",
+            descriptionEn:
+              "A full day exploring the medina's blue stairways and lanes, between traditional weaving shops and perched cafés. Uta el-Hammam square, the town's heart, is made for a long terrace break, mint tea and a view of the 15th-century Kasbah.",
+            descriptionEs:
+              "Día entero explorando las escaleras y callejuelas azuladas de la medina, entre tiendas de tejido tradicional y cafés encaramados. La plaza Uta el-Hammam, corazón de la ciudad, invita a una larga pausa en terraza, té a la menta y vistas de la Kasbah del siglo XV.",
+            image: `${R2}/tours/decouverte-taghazout-gallery-1.jpg`,
+            images: "",
+          },
+        ],
+      },
+      {
+        title: "Tanger",
+        titleEn: "Tangier",
+        titleEs: "Tánger",
+        intro:
+          "Ville de passage entre deux continents, Tanger a longtemps attiré artistes et esprits libres — une atmosphère bohème qui se ressent encore aujourd'hui dans ses cafés, ses galeries et sa médina en pente vers le détroit.",
+        introEn:
+          "A crossroads town between two continents, Tangier has long drawn artists and free spirits — a bohemian atmosphere still felt today in its cafés, galleries, and a medina sloping down toward the strait.",
+        introEs:
+          "Ciudad de paso entre dos continentes, Tánger ha atraído durante mucho tiempo a artistas y espíritus libres — una atmósfera bohemia que todavía se percibe hoy en sus cafés, galerías y una medina en pendiente hacia el estrecho.",
+        galleryImages: `${R2}/tours/cours-cuisine-berbere-gallery-4.jpg,${R2}/blocks/maroc-medina.jpg`,
+        mapMarkerX: 0,
+        mapMarkerY: 0,
+        days: [
+          {
+            dayNumber: 7,
+            title: "Cascades d'Akchour en chemin",
+            titleEn: "The Akchour waterfalls en route",
+            titleEs: "Las cascadas de Akchour en el camino",
+            description:
+              "En quittant Chefchaouen, halte dans le parc national de Talassemtane pour une randonnée jusqu'aux cascades d'Akchour, eau turquoise nichée entre falaises calcaires — une matinée rafraîchissante avant de rejoindre Tanger et ses vues sur le détroit de Gibraltar en fin de journée.",
+            descriptionEn:
+              "Leaving Chefchaouen, a stop in Talassemtane National Park for a hike to the Akchour waterfalls, turquoise water tucked between limestone cliffs — a refreshing morning before reaching Tangier and its views over the Strait of Gibraltar by day's end.",
+            descriptionEs:
+              "Al dejar Chefchaouen, parada en el parque nacional de Talassemtane para una caminata hasta las cascadas de Akchour, agua turquesa encajada entre acantilados calizos — una mañana refrescante antes de llegar a Tánger y sus vistas del estrecho de Gibraltar al final del día.",
+            image: `${R2}/blocks/maroc-medina.jpg`,
+            images: "",
+          },
+          {
+            dayNumber: 8,
+            title: "Marché et tajine de poisson",
+            titleEn: "Market and fish tagine",
+            titleEs: "Mercado y tajine de pescado",
+            description:
+              "Visite du marché aux poissons de Tanger au petit matin, quand les étals débordent tout juste des prises de la nuit, puis atelier de cuisine privé pour préparer un tajine de poisson à la chermoula. L'après-midi se prête à une flânerie dans la médina, entre galeries d'art contemporain et cafés historiques.",
+            descriptionEn:
+              "A visit to Tangier's fish market early in the morning, when the stalls are still overflowing with the night's catch, then a private cooking workshop to prepare a chermoula fish tagine. The afternoon is made for wandering the medina, between contemporary art galleries and historic cafés.",
+            descriptionEs:
+              "Visita al mercado de pescado de Tánger a primera hora, cuando los puestos todavía rebosan de la pesca de la noche, y después taller de cocina privado para preparar un tajine de pescado a la chermoula. La tarde invita a pasear por la medina, entre galerías de arte contemporáneo y cafés históricos.",
+            image: `${R2}/tours/cours-cuisine-berbere-gallery-4.jpg`,
+            images: "",
+          },
+        ],
+      },
+      {
+        title: "La côte de Larache",
+        titleEn: "The Larache Coast",
+        titleEs: "La costa de Larache",
+        intro:
+          "Le voyage se referme sur une retraite en bord d'océan, loin des villes, où le rythme ralentit enfin — chevaux sur la plage, hammam, et des couchers de soleil sans autre spectateur que vous.",
+        introEn:
+          "The journey closes with a retreat by the ocean, far from the cities, where the pace finally slows — horses on the beach, hammam, and sunsets with no other audience but you.",
+        introEs:
+          "El viaje se cierra con un retiro junto al océano, lejos de las ciudades, donde el ritmo por fin se ralentiza — caballos en la playa, hammam, y puestas de sol sin más público que ustedes.",
+        galleryImages: `${R2}/tours/decouverte-taghazout-gallery-2.jpg,${R2}/tours/hammam-massage-gallery-4.jpg,${R2}/blocks/maroc-bestof-essaouira.jpg`,
+        mapMarkerX: 0,
+        mapMarkerY: 0,
+        days: [
+          {
+            dayNumber: 9,
+            title: "Asilah et l'arrivée sur la côte",
+            titleEn: "Asilah and arrival on the coast",
+            titleEs: "Asilah y la llegada a la costa",
+            description:
+              "En route vers Larache, halte à Asilah, petite ville fortifiée dont les murs blancs sont recouverts chaque année de fresques par des artistes du monde entier. Installation en fin de journée dans une retraite en bord d'océan, villa privée avec vue dégagée sur l'Atlantique.",
+            descriptionEn:
+              "On the way to Larache, a stop in Asilah, a small fortified town whose white walls are repainted with murals each year by artists from around the world. Check-in later in the day at an oceanfront retreat, a private villa with an open view over the Atlantic.",
+            descriptionEs:
+              "De camino a Larache, parada en Asilah, una pequeña ciudad amurallada cuyos muros blancos se cubren cada año con murales de artistas de todo el mundo. Alojamiento al final del día en un retiro frente al océano, una villa privada con vistas despejadas al Atlántico.",
+            image: `${R2}/tours/decouverte-taghazout-gallery-2.jpg`,
+            images: "",
+          },
+          {
+            dayNumber: 10,
+            title: "Chevaux, hammam et petit-déjeuner de village",
+            titleEn: "Horses, hammam and a village breakfast",
+            titleEs: "Caballos, hammam y desayuno de pueblo",
+            description:
+              "Balade à cheval sur la plage au lever du jour, sable encore frais et vagues de l'Atlantique en fond sonore, suivie d'un hammam traditionnel pour se détendre. La matinée se termine par un petit-déjeuner pris dans un village de pêcheurs voisin — pain chaud, miel local, et thé à la menthe.",
+            descriptionEn:
+              "A horseback ride on the beach at sunrise, the sand still cool and the Atlantic waves for background noise, followed by a traditional hammam to unwind. The morning ends with breakfast in a nearby fishing village — warm bread, local honey, and mint tea.",
+            descriptionEs:
+              "Paseo a caballo por la playa al amanecer, con la arena todavía fresca y las olas del Atlántico de fondo, seguido de un hammam tradicional para relajarse. La mañana termina con un desayuno en un pueblo de pescadores cercano — pan caliente, miel local y té a la menta.",
+            image: `${R2}/tours/hammam-massage-gallery-4.jpg`,
+            images: "",
+          },
+          {
+            dayNumber: 11,
+            title: "Pique-nique au coucher du soleil",
+            titleEn: "A sunset picnic",
+            titleEs: "Picnic al atardecer",
+            description:
+              "Dernière journée libre autour de la villa — piscine privée, lecture en terrasse, ou simplement le bruit des vagues. En fin de journée, un pique-nique est dressé face à l'océan pour un dernier coucher de soleil, suivi d'une observation des étoiles avant le vol retour le lendemain.",
+            descriptionEn:
+              "A final free day around the villa — private pool, reading on the terrace, or simply the sound of the waves. Later in the day, a picnic is laid out facing the ocean for one last sunset, followed by stargazing before the flight home the next day.",
+            descriptionEs:
+              "Un último día libre en torno a la villa — piscina privada, lectura en la terraza, o simplemente el sonido de las olas. Al final del día, se prepara un picnic frente al océano para una última puesta de sol, seguida de observación de estrellas antes del vuelo de regreso al día siguiente.",
+            image: `${R2}/blocks/maroc-bestof-essaouira.jpg`,
+            images: "",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    destinationSlug: "maroc",
+    tour: {
+      name: "Voyages gourmands : Marrakech",
+      nameEn: "Gourmet Journeys: Marrakech",
+      nameEs: "Viajes gourmet: Marrakech",
+      slug: "voyages-gourmands-marrakech",
+      tagline: "La ville rouge racontée par ses saveurs",
+      taglineEn: "The red city, told through its flavours",
+      taglineEs: "La ciudad roja, contada a través de sus sabores",
+      description:
+        "Marrakech vue par le prisme de sa cuisine — restaurants tenus par des femmes, cuisine de rue à la tombée du jour, atelier de tajine, puis une parenthèse dans le désert d'Agafay avant un dernier repos parmi les oliviers.",
+      descriptionEn:
+        "Marrakech seen through the lens of its cuisine — women-run restaurants, street food at nightfall, a tagine workshop, then a pocket of desert in Agafay before one last rest among the olive trees.",
+      descriptionEs:
+        "Marrakech vista a través de su cocina — restaurantes dirigidos por mujeres, comida callejera al caer la noche, un taller de tajine, y después un paréntesis en el desierto de Agafay antes de un último descanso entre olivos.",
+      price: 7500,
+      originalPrice: 0,
+      currency: "EUR",
+      duration: "6 nuits",
+      durationEn: "6 nights",
+      durationEs: "6 noches",
+      whenLabel: "Mars à juin | Sept à nov",
+      whenLabelEn: "March to June | Sept to Nov",
+      whenLabelEs: "Marzo a junio | Sept a nov",
+      category: "multi-day",
+      theme: "culture",
+      travelerTypes: "couples,honeymoon",
+      maxGuests: 2,
+      image: `${R2}/tours/cours-cuisine-berbere.jpg`,
+      format: "journey",
+      mapImage: "",
+      featured: false,
+      order: 6,
+    },
+    chapters: [
+      {
+        title: "Marrakech",
+        titleEn: "Marrakech",
+        titleEs: "Marrakech",
+        intro:
+          "Marrakech se déguste autant qu'elle se visite — trois jours pour explorer la ville par ses cuisines, des tables tenues par des femmes aux stands de rue les plus courus, jusqu'à l'atelier où l'on apprend à préparer son propre tajine.",
+        introEn:
+          "Marrakech is as much to be tasted as visited — three days to explore the city through its kitchens, from women-run tables to the most popular street stalls, right through to the workshop where you learn to make your own tagine.",
+        introEs:
+          "Marrakech se saborea tanto como se visita — tres días para explorar la ciudad a través de sus cocinas, desde mesas dirigidas por mujeres hasta los puestos callejeros más concurridos, hasta el taller donde aprenden a preparar su propio tajine.",
+        galleryImages: `${R2}/tours/cours-cuisine-berbere-gallery-1.jpg,${R2}/tours/cours-cuisine-berbere-gallery-2.jpg,${R2}/blocks/maroc-bestof-marrakech.jpg`,
+        mapMarkerX: 0,
+        mapMarkerY: 0,
+        days: [
+          {
+            dayNumber: 1,
+            title: "Premier dîner, cuisine de femmes",
+            titleEn: "A first dinner, cooking by women",
+            titleEs: "Primera cena, cocina de mujeres",
+            description:
+              "Installation dans un riad du cœur de la médina, puis premier dîner dans un restaurant entièrement tenu par des femmes — recettes de famille transmises de génération en génération, loin des adresses standardisées pour touristes. Une belle entrée en matière pour un séjour tout entier tourné vers la gastronomie.",
+            descriptionEn:
+              "Check-in at a riad in the heart of the medina, then a first dinner at a restaurant run entirely by women — family recipes passed down through generations, far from the standardised tourist addresses. A fine introduction to a stay built entirely around food.",
+            descriptionEs:
+              "Alojamiento en un riad del corazón de la medina, y primera cena en un restaurante dirigido enteramente por mujeres — recetas familiares transmitidas de generación en generación, lejos de las direcciones estandarizadas para turistas. Una gran manera de comenzar una estancia dedicada por completo a la gastronomía.",
+            image: `${R2}/tours/cours-cuisine-berbere.jpg`,
+            images: "",
+          },
+          {
+            dayNumber: 2,
+            title: "Rues et saveurs nocturnes",
+            titleEn: "Streets and night-time flavours",
+            titleEs: "Calles y sabores nocturnos",
+            description:
+              "Matinée d'exploration libre dans la médina, au gré des ruelles et des odeurs d'épices. Le soir, une tournée privée de cuisine de rue démarre à la tombée du jour — brochettes grillées, escargots en bouillon, jus de fruits pressés — direction les stands que seuls les habitants fréquentent vraiment.",
+            descriptionEn:
+              "A free morning exploring the medina, following the lanes and the scent of spices. In the evening, a private street-food tour begins as night falls — grilled skewers, snails in broth, fresh-pressed juices — heading to the stalls only locals really frequent.",
+            descriptionEs:
+              "Mañana libre para explorar la medina, siguiendo las callejuelas y el aroma de las especias. Por la noche, comienza una ruta privada de comida callejera al caer la noche — pinchos a la parrilla, caracoles en caldo, zumos recién exprimidos — rumbo a los puestos que solo frecuentan de verdad los vecinos.",
+            image: `${R2}/tours/cours-cuisine-berbere-gallery-1.jpg`,
+            images: "",
+          },
+          {
+            dayNumber: 3,
+            title: "Atelier de tajine",
+            titleEn: "A tagine workshop",
+            titleEs: "Taller de tajine",
+            description:
+              "Matinée en cuisine avec un chef marocain pour apprendre les bases du tajine et de quelques plats traditionnels — choix des épices, cuisson lente, dressage. Le repas préparé de ses propres mains se déguste ensuite en terrasse, la meilleure façon de repartir avec un peu de la cuisine marocaine dans ses valises.",
+            descriptionEn:
+              "A morning in the kitchen with a Moroccan chef to learn the basics of tagine and a few traditional dishes — choosing spices, slow cooking, plating. The meal, prepared with your own hands, is then enjoyed on the terrace — the best way to take a little of Moroccan cooking home with you.",
+            descriptionEs:
+              "Mañana en la cocina con un chef marroquí para aprender las bases del tajine y algunos platos tradicionales — elección de especias, cocción lenta, emplatado. La comida, preparada con sus propias manos, se disfruta después en la terraza — la mejor forma de llevarse un poco de la cocina marroquí de vuelta a casa.",
+            image: `${R2}/tours/cours-cuisine-berbere-gallery-2.jpg`,
+            images: "",
+          },
+        ],
+      },
+      {
+        title: "Le désert d'Agafay",
+        titleEn: "The Agafay Desert",
+        titleEs: "El desierto de Agafay",
+        intro:
+          "À une heure de Marrakech, l'Agafay offre une parenthèse minérale et silencieuse — vue en montgolfière au lever du jour, déjeuner dans un camp emblématique du désert, et un dîner sous les étoiles guidé par un astronome.",
+        introEn:
+          "An hour from Marrakech, the Agafay offers a mineral, silent interlude — a hot-air balloon view at sunrise, lunch at an iconic desert camp, and a dinner under the stars guided by an astronomer.",
+        introEs:
+          "A una hora de Marrakech, Agafay ofrece un paréntesis mineral y silencioso — vistas en globo aerostático al amanecer, almuerzo en un campamento emblemático del desierto, y una cena bajo las estrellas guiada por un astrónomo.",
+        galleryImages: `${R2}/tours/camel-ride-barbecue-gallery-1.jpg,${R2}/tours/safari-desert-dejeuner-gallery-3.jpg,${R2}/blocks/maroc-sahara.jpg`,
+        mapMarkerX: 0,
+        mapMarkerY: 0,
+        days: [
+          {
+            dayNumber: 4,
+            title: "Montgolfière, chameaux et étoiles",
+            titleEn: "Balloon flight, camels and stars",
+            titleEs: "Globo, camellos y estrellas",
+            description:
+              "Lever avant l'aube pour un vol en montgolfière au-dessus du désert d'Agafay, suivi d'un petit-déjeuner servi en pleine nature à l'atterrissage. Déjeuner dans un camp mythique du désert, puis visite d'un village berbère à dos de chameau. La soirée se referme sur un dîner sous les étoiles, commenté par un astronome muni d'un télescope.",
+            descriptionEn:
+              "Waking before dawn for a hot-air balloon flight over the Agafay desert, followed by breakfast served in the open air on landing. Lunch at a legendary desert camp, then a camel visit to a Berber village. The evening closes with dinner under the stars, narrated by an astronomer with a telescope in hand.",
+            descriptionEs:
+              "Despertar antes del amanecer para un vuelo en globo aerostático sobre el desierto de Agafay, seguido de un desayuno servido al aire libre al aterrizar. Almuerzo en un campamento legendario del desierto, y después visita a un pueblo bereber a lomos de camello. La velada se cierra con una cena bajo las estrellas, narrada por un astrónomo con telescopio en mano.",
+            image: `${R2}/tours/camel-ride-barbecue.jpg`,
+            images: `${R2}/tours/safari-desert-dejeuner-gallery-3.jpg`,
+          },
+        ],
+      },
+      {
+        title: "La campagne de Marrakech",
+        titleEn: "The Marrakech Countryside",
+        titleEs: "La campiña de Marrakech",
+        intro:
+          "Le voyage se termine tout en douceur parmi les oliveraies qui entourent Marrakech — un lodge champêtre, loin de l'agitation, pour un dernier repas et un dernier cocktail avant de repartir.",
+        introEn:
+          "The journey ends gently among the olive groves surrounding Marrakech — a rural lodge, far from the bustle, for one last meal and one last cocktail before heading home.",
+        introEs:
+          "El viaje termina con suavidad entre los olivares que rodean Marrakech — un lodge campestre, lejos del bullicio, para una última comida y un último cóctel antes de partir.",
+        galleryImages: `${R2}/tours/paradise-valley-gallery-1.jpg,${R2}/blocks/maroc-bestof-atlas.jpg`,
+        mapMarkerX: 0,
+        mapMarkerY: 0,
+        days: [
+          {
+            dayNumber: 5,
+            title: "Transfert en side-car",
+            titleEn: "A sidecar transfer",
+            titleEs: "Traslado en sidecar",
+            description:
+              "Départ du camp désertique à bord d'un side-car vintage — une manière insolite de rejoindre le lodge champêtre niché parmi les oliviers, à une trentaine de minutes de Marrakech. Installation avec vue sur les jardins et les montagnes de l'Atlas au loin.",
+            descriptionEn:
+              "Leaving the desert camp aboard a vintage sidecar — an unusual way to reach the rural lodge tucked among the olive trees, about thirty minutes from Marrakech. Check-in with a view over the gardens and the Atlas mountains in the distance.",
+            descriptionEs:
+              "Salida del campamento desértico a bordo de un sidecar vintage — una forma insólita de llegar al lodge campestre encajado entre los olivos, a unos treinta minutos de Marrakech. Alojamiento con vistas a los jardines y las montañas del Atlas a lo lejos.",
+            image: `${R2}/tours/paradise-valley.jpg`,
+            images: "",
+          },
+          {
+            dayNumber: 6,
+            title: "Derniers repas parmi les oliviers",
+            titleEn: "Last meals among the olive trees",
+            titleEs: "Últimas comidas entre olivos",
+            description:
+              "Une journée sans programme, à profiter du lodge et de ses jardins d'oliviers et d'amandiers. Le dernier dîner se prend en plein air, dernier verre à la main pour trinquer à six nuits qui auront fait le tour de Marrakech par le ventre — et par le cœur.",
+            descriptionEn:
+              "A day with no set plan, enjoying the lodge and its gardens of olive and almond trees. The final dinner is taken outdoors, one last drink in hand to toast six nights that will have taken you around Marrakech through the stomach — and through the heart.",
+            descriptionEs:
+              "Un día sin programa, disfrutando del lodge y sus jardines de olivos y almendros. La última cena se toma al aire libre, con una última copa en la mano para brindar por seis noches que habrán recorrido Marrakech por el estómago — y por el corazón.",
+            image: `${R2}/blocks/maroc-bestof-atlas.jpg`,
+            images: "",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    destinationSlug: "maroc",
+    tour: {
+      name: "Fès, Essaouira et Agadir : médinas et littoral",
+      nameEn: "Fez, Essaouira & Agadir: Medinas & Coastlines",
+      nameEs: "Fez, Essaouira y Agadir: medinas y costas",
+      slug: "fes-essaouira-agadir-medinas-littoral",
+      tagline: "Du nord savant au grand large de l'Atlantique",
+      taglineEn: "From the scholarly north to the wide Atlantic",
+      taglineEs: "Del sabio norte al ancho Atlántico",
+      description:
+        "Un voyage qui balaie le Maroc du nord au sud — la médina savante de Fès, la ville rouge de Marrakech et le Haut Atlas, la cité venteuse d'Essaouira, puis la baie d'Agadir pour finir en beauté, entre surf, yoga et farniente face à l'océan.",
+      descriptionEn:
+        "A journey that sweeps Morocco from north to south — the scholarly medina of Fez, the red city of Marrakech and the High Atlas, the windswept town of Essaouira, then the bay of Agadir to finish in style, between surfing, yoga, and doing nothing much at all facing the ocean.",
+      descriptionEs:
+        "Un viaje que recorre Marruecos de norte a sur — la sabia medina de Fez, la ciudad roja de Marrakech y el Alto Atlas, la ventosa Essaouira, y después la bahía de Agadir para terminar por todo lo alto, entre surf, yoga y no hacer gran cosa frente al océano.",
+      price: 9600,
+      originalPrice: 0,
+      currency: "EUR",
+      duration: "12 nuits",
+      durationEn: "12 nights",
+      durationEs: "12 noches",
+      whenLabel: "Mars à juin | Sept à nov",
+      whenLabelEn: "March to June | Sept to Nov",
+      whenLabelEs: "Marzo a junio | Sept a nov",
+      category: "multi-day",
+      theme: "relax",
+      travelerTypes: "family,couples,groups",
+      maxGuests: 6,
+      image: `${R2}/tours/agadir-city-tour-cable-car.jpg`,
+      format: "journey",
+      mapImage: "",
+      featured: true,
+      order: 7,
+    },
+    chapters: [
+      {
+        title: "Fès",
+        titleEn: "Fez",
+        titleEs: "Fez",
+        intro:
+          "Le voyage commence dans la plus ancienne des villes impériales, entre médersas séculaires, souks débordants et un premier thé à la menthe pris en terrasse au coucher du soleil.",
+        introEn:
+          "The journey begins in the oldest of the imperial cities, between centuries-old madrasas, overflowing souks, and a first mint tea taken on a terrace at sunset.",
+        introEs:
+          "El viaje comienza en la más antigua de las ciudades imperiales, entre madrasas centenarias, zocos desbordantes y un primer té a la menta tomado en la terraza al atardecer.",
+        galleryImages: `${R2}/tours/agadir-city-tour-cable-car-gallery-1.jpg,${R2}/blocks/maroc-medina.jpg`,
+        mapMarkerX: 0,
+        mapMarkerY: 0,
+        days: [
+          {
+            dayNumber: 1,
+            title: "Arrivée et thé sur la terrasse",
+            titleEn: "Arrival and terrace tea",
+            titleEs: "Llegada y té en la terraza",
+            description:
+              "Installation dans un riad du cœur de la médina de Fès, patio orné de zelliges et fontaine en son centre. Le reste de la journée se passe en douceur, thé à la menthe servi sur la terrasse au coucher du soleil, vue sur les toits de la ville et le muezzin qui appelle à la prière au loin.",
+            descriptionEn:
+              "Check-in at a riad in the heart of the Fez medina, a courtyard adorned with zellige tilework and a fountain at its centre. The rest of the day unfolds gently, mint tea served on the terrace at sunset, a view over the city's rooftops and the muezzin's call to prayer in the distance.",
+            descriptionEs:
+              "Alojamiento en un riad del corazón de la medina de Fez, un patio decorado con azulejos zellige y una fuente en su centro. El resto del día transcurre con calma, té a la menta servido en la terraza al atardecer, vistas de los tejados de la ciudad y el llamado del muecín a la oración a lo lejos.",
+            image: `${R2}/blocks/maroc-medina.jpg`,
+            images: "",
+          },
+          {
+            dayNumber: 2,
+            title: "Marchés d'épices et tapis",
+            titleEn: "Spice markets and rugs",
+            titleEs: "Mercados de especias y alfombras",
+            description:
+              "Demi-journée guidée dans la médina, entre étals d'épices aux couleurs vives, échoppes de tapis berbères où chaque motif raconte une histoire, et ateliers de cuir où l'on tanne encore selon des méthodes millénaires. L'après-midi reste libre, pour se perdre — volontairement — dans le plus grand espace piéton du monde.",
+            descriptionEn:
+              "A guided half-day through the medina, between vividly coloured spice stalls, Berber rug shops where every pattern tells a story, and leather workshops still tanning by methods thousands of years old. The afternoon stays free, for getting lost — on purpose — in the largest car-free space in the world.",
+            descriptionEs:
+              "Media jornada guiada por la medina, entre puestos de especias de colores vivos, tiendas de alfombras bereberes donde cada motivo cuenta una historia, y talleres de cuero que todavía curten con métodos milenarios. La tarde queda libre, para perderse — a propósito — en el mayor espacio peatonal del mundo.",
+            image: `${R2}/tours/agadir-city-tour-cable-car-gallery-1.jpg`,
+            images: "",
+          },
+          {
+            dayNumber: 3,
+            title: "Meknès, Volubilis et Moulay Idriss",
+            titleEn: "Meknes, Volubilis and Moulay Idriss",
+            titleEs: "Meknes, Volubilis y Moulay Idriss",
+            description:
+              "Excursion à la journée vers Meknès, ville impériale aux portes monumentales, puis les ruines romaines de Volubilis et ses mosaïques encore visibles à ciel ouvert. Dernière halte à Moulay Idriss, ville sainte perchée sur deux collines, avant le retour à Fès en fin de journée.",
+            descriptionEn:
+              "A full-day excursion to Meknes, an imperial city with monumental gates, then the Roman ruins of Volubilis and its mosaics still visible in the open air. A last stop in Moulay Idriss, a holy town perched across two hills, before returning to Fez by day's end.",
+            descriptionEs:
+              "Excursión de un día a Meknes, ciudad imperial de puertas monumentales, y después las ruinas romanas de Volubilis y sus mosaicos todavía visibles al aire libre. Última parada en Moulay Idriss, ciudad santa encaramada entre dos colinas, antes de volver a Fez al final del día.",
+            image: `${R2}/blocks/maroc-medina.jpg`,
+            images: "",
+          },
+        ],
+      },
+      {
+        title: "Marrakech et le Haut Atlas",
+        titleEn: "Marrakech and the High Atlas",
+        titleEs: "Marrakech y el Alto Atlas",
+        intro:
+          "Après le nord savant, place à l'effervescence de Marrakech et à la fraîcheur du Haut Atlas voisin — un contraste qui résume, à lui seul, la diversité du Maroc.",
+        introEn:
+          "After the scholarly north, on to Marrakech's effervescence and the cool air of the nearby High Atlas — a contrast that alone sums up Morocco's diversity.",
+        introEs:
+          "Tras el sabio norte, llega la efervescencia de Marrakech y el frescor del cercano Alto Atlas — un contraste que resume, por sí solo, la diversidad de Marruecos.",
+        galleryImages: `${R2}/tours/hammam-massage-gallery-1.jpg,${R2}/tours/paradise-valley-gallery-2.jpg,${R2}/blocks/maroc-bestof-marrakech.jpg`,
+        mapMarkerX: 0,
+        mapMarkerY: 0,
+        days: [
+          {
+            dayNumber: 4,
+            title: "Longue route et hammam du soir",
+            titleEn: "A long road and an evening hammam",
+            titleEs: "Larga ruta y hammam nocturno",
+            description:
+              "Longue et magnifique route vers Marrakech à travers le Moyen Atlas, forêts de cèdres et cols en lacets, avec une arrivée à la tombée de la nuit. Un hammam relaxant referme la journée, gommage au savon noir et massage à l'huile d'argan pour reposer les jambes du trajet.",
+            descriptionEn:
+              "A long and beautiful road to Marrakech through the Middle Atlas, cedar forests and switchback passes, arriving as night falls. A relaxing hammam closes the day, black soap scrub and an argan oil massage to rest the legs after the journey.",
+            descriptionEs:
+              "Larga y bonita carretera hacia Marrakech a través del Atlas Medio, bosques de cedros y puertos en zigzag, con llegada al caer la noche. Un hammam relajante cierra el día, exfoliación con jabón negro y masaje con aceite de argán para descansar las piernas tras el trayecto.",
+            image: `${R2}/tours/hammam-massage.jpg`,
+            images: "",
+          },
+          {
+            dayNumber: 5,
+            title: "Souks, tajines et charmeurs de serpents",
+            titleEn: "Souks, tagines and snake charmers",
+            titleEs: "Zocos, tajines y encantadores de serpientes",
+            description:
+              "Journée entière dans la médina de Marrakech — souks colorés, stands de tajine fumants, et la place Jemaa el-Fna qui se transforme à la tombée du jour en théâtre à ciel ouvert, charmeurs de serpents, conteurs et musiciens gnaoua compris.",
+            descriptionEn:
+              "A full day in the Marrakech medina — colourful souks, steaming tagine stalls, and Jemaa el-Fna square, which transforms at nightfall into an open-air theatre, snake charmers, storytellers, and Gnaoua musicians included.",
+            descriptionEs:
+              "Día entero en la medina de Marrakech — zocos coloridos, puestos de tajine humeantes, y la plaza Jemaa el-Fna, que al caer la noche se transforma en un teatro al aire libre, con encantadores de serpientes, narradores y músicos gnaoua incluidos.",
+            image: `${R2}/tours/hammam-massage-gallery-1.jpg`,
+            images: "",
+          },
+          {
+            dayNumber: 6,
+            title: "Randonnée dans le Haut Atlas",
+            titleEn: "A hike in the High Atlas",
+            titleEs: "Caminata en el Alto Atlas",
+            description:
+              "Excursion à la journée dans le Haut Atlas voisin, randonnée guidée entre villages berbères et vallées cultivées, avec un déjeuner traditionnel dans un lodge de montagne — tajine mijoté et vue sur les sommets qui referment la journée en beauté.",
+            descriptionEn:
+              "A full-day excursion into the nearby High Atlas, a guided hike between Berber villages and cultivated valleys, with a traditional lunch at a mountain lodge — slow-cooked tagine and a view of the peaks to close the day in style.",
+            descriptionEs:
+              "Excursión de un día al cercano Alto Atlas, caminata guiada entre pueblos bereberes y valles cultivados, con un almuerzo tradicional en un lodge de montaña — tajine a fuego lento y vistas de las cumbres para cerrar el día a lo grande.",
+            image: `${R2}/tours/paradise-valley-gallery-2.jpg`,
+            images: "",
+          },
+        ],
+      },
+      {
+        title: "Essaouira",
+        titleEn: "Essaouira",
+        titleEs: "Essaouira",
+        intro:
+          "Vent atlantique et remparts portugais : Essaouira offre un contraste bienvenu après l'agitation des villes, entre médina bleu et blanc et un port de pêche encore bien vivant.",
+        introEn:
+          "Atlantic wind and Portuguese ramparts: Essaouira offers a welcome contrast after the bustle of the cities, between a blue-and-white medina and a still-thriving fishing port.",
+        introEs:
+          "Viento atlántico y murallas portuguesas: Essaouira ofrece un contraste bienvenido tras el bullicio de las ciudades, entre una medina azul y blanca y un puerto pesquero todavía muy vivo.",
+        galleryImages: `${R2}/tours/decouverte-taghazout-gallery-3.jpg,${R2}/blocks/maroc-bestof-essaouira.jpg`,
+        mapMarkerX: 0,
+        mapMarkerY: 0,
+        days: [
+          {
+            dayNumber: 7,
+            title: "Transfert et dîner au port",
+            titleEn: "Transfer and dinner at the port",
+            titleEs: "Traslado y cena en el puerto",
+            description:
+              "Transfert vers la côte et installation dans une maison d'hôtes à deux pas des remparts. Le soir, dîner de poissons et fruits de mer tout juste débarqués, dans un petit restaurant du port de pêche, entre les barques bleues qui se balancent doucement.",
+            descriptionEn:
+              "A transfer to the coast and check-in at a guesthouse a stone's throw from the ramparts. In the evening, a dinner of fish and seafood just landed, at a small restaurant by the fishing port, among blue boats gently rocking.",
+            descriptionEs:
+              "Traslado a la costa y alojamiento en una casa de huéspedes a pocos pasos de las murallas. Por la noche, cena de pescado y marisco recién desembarcado, en un pequeño restaurante del puerto pesquero, entre barcas azules que se mecen suavemente.",
+            image: `${R2}/tours/decouverte-taghazout.jpg`,
+            images: "",
+          },
+          {
+            dayNumber: 8,
+            title: "Vent, spa ou ruelles",
+            titleEn: "Wind, spa or lanes",
+            titleEs: "Viento, spa o callejuelas",
+            description:
+              "Une journée à la carte : initiation au windsurf sur l'une des baies les plus ventées d'Afrique du Nord, moment de détente au spa de la maison d'hôtes, ou flânerie dans la médina bleu et blanc, entre galeries d'art et ateliers de marqueterie.",
+            descriptionEn:
+              "A day to design as you please: a windsurfing lesson on one of North Africa's windiest bays, a relaxing moment at the guesthouse spa, or a wander through the blue-and-white medina, between art galleries and marquetry workshops.",
+            descriptionEs:
+              "Un día a la carta: iniciación al windsurf en una de las bahías más ventosas del norte de África, un momento de relax en el spa de la casa de huéspedes, o un paseo por la medina azul y blanca, entre galerías de arte y talleres de marquetería.",
+            image: `${R2}/tours/decouverte-taghazout-gallery-3.jpg`,
+            images: "",
+          },
+        ],
+      },
+      {
+        title: "Agadir",
+        titleEn: "Agadir",
+        titleEs: "Agadir",
+        intro:
+          "Le voyage se referme face à l'océan, dans la grande baie d'Agadir — quatre nuits pour ralentir enfin, entre surf, yoga au lever du jour et farniente sur la plage.",
+        introEn:
+          "The journey closes facing the ocean, in the great bay of Agadir — four nights to finally slow down, between surfing, sunrise yoga, and lazing on the beach.",
+        introEs:
+          "El viaje se cierra frente al océano, en la gran bahía de Agadir — cuatro noches para por fin bajar el ritmo, entre surf, yoga al amanecer y descanso en la playa.",
+        galleryImages: `${R2}/tours/agadir-city-tour-cable-car-gallery-2.jpg,${R2}/tours/agadir-quad-adventure-gallery-4.jpg,${R2}/blocks/maroc-bestof-essaouira.jpg`,
+        mapMarkerX: 0,
+        mapMarkerY: 0,
+        days: [
+          {
+            dayNumber: 9,
+            title: "Installation face à la baie",
+            titleEn: "Settling in facing the bay",
+            titleEs: "Instalación frente a la bahía",
+            description:
+              "Transfert vers Agadir et installation dans un hôtel les pieds dans le sable, grande baie ouverte sur l'Atlantique. Aucun programme pour cette première soirée — seulement le bruit des vagues et un dîner en terrasse pour marquer le début de cette dernière étape.",
+            descriptionEn:
+              "A transfer to Agadir and check-in at a hotel right on the sand, the wide bay open to the Atlantic. No plans for this first evening — just the sound of the waves and a terrace dinner to mark the start of this final stretch.",
+            descriptionEs:
+              "Traslado a Agadir y alojamiento en un hotel con los pies en la arena, la amplia bahía abierta al Atlántico. Sin programa para esta primera noche — solo el sonido de las olas y una cena en la terraza para marcar el comienzo de esta última etapa.",
+            image: `${R2}/tours/agadir-city-tour-cable-car.jpg`,
+            images: "",
+          },
+          {
+            dayNumber: 10,
+            title: "Première session de surf",
+            titleEn: "A first surf lesson",
+            titleEs: "Primera clase de surf",
+            description:
+              "Cours de surf avec un moniteur local sur l'une des vagues les plus régulières de la côte atlantique, adapté à tous les niveaux. La journée se termine par un coucher de soleil observé depuis la plage, planche encore sous le bras et sel séché sur la peau.",
+            descriptionEn:
+              "A surf lesson with a local instructor on one of the Atlantic coast's most consistent waves, suited to every level. The day ends watching the sunset from the beach, board still under your arm and salt dried on your skin.",
+            descriptionEs:
+              "Clase de surf con un monitor local en una de las olas más constantes de la costa atlántica, adaptada a todos los niveles. El día termina viendo la puesta de sol desde la playa, con la tabla todavía bajo el brazo y sal seca en la piel.",
+            image: `${R2}/tours/agadir-city-tour-cable-car-gallery-2.jpg`,
+            images: "",
+          },
+          {
+            dayNumber: 11,
+            title: "Yoga face aux vagues",
+            titleEn: "Yoga facing the waves",
+            titleEs: "Yoga frente a las olas",
+            description:
+              "Séance de yoga ou de méditation au lever du jour, tapis posé à même le sable, bruit des vagues pour seul métronome. Le reste de la journée reste volontairement libre — sieste, lecture, ou simplement le temps de laisser le voyage se refermer en douceur.",
+            descriptionEn:
+              "A yoga or meditation session at sunrise, mat laid directly on the sand, the sound of the waves the only metronome. The rest of the day stays deliberately free — a nap, some reading, or simply time to let the journey wind down gently.",
+            descriptionEs:
+              "Sesión de yoga o meditación al amanecer, esterilla colocada directamente sobre la arena, el sonido de las olas como único metrónomo. El resto del día queda deliberadamente libre — siesta, lectura, o simplemente tiempo para dejar que el viaje se cierre con suavidad.",
+            image: `${R2}/tours/agadir-quad-adventure-gallery-4.jpg`,
+            images: "",
+          },
+          {
+            dayNumber: 12,
+            title: "Un dernier jour face à l'océan",
+            titleEn: "One last day facing the ocean",
+            titleEs: "Un último día frente al océano",
+            description:
+              "Dernière journée sans autre projet que de profiter de la plage et de la piscine, avant le transfert vers l'aéroport d'Agadir. Douze nuits qui, du nord savant au grand large, auront montré un Maroc dans toute sa diversité.",
+            descriptionEn:
+              "A final day with no other plan than to enjoy the beach and the pool, before the transfer to Agadir airport. Twelve nights that, from the scholarly north to the open ocean, will have shown Morocco in all its diversity.",
+            descriptionEs:
+              "Un último día sin más plan que disfrutar de la playa y la piscina, antes del traslado al aeropuerto de Agadir. Doce noches que, del sabio norte al mar abierto, habrán mostrado un Marruecos en toda su diversidad.",
+            image: `${R2}/blocks/maroc-bestof-essaouira.jpg`,
+            images: "",
           },
         ],
       },
