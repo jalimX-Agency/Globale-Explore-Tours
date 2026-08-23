@@ -127,72 +127,82 @@ model Faq {
 //    link-card sections stay in src/lib/experienceTypesData.ts for now (page-structure
 //    config, not day-to-day editorial content). ──
 model ExperienceType {
-  id               String         @id @default(cuid())
-  slug             String         @unique
-  travelerTypeKey  String         @default("") // family | couples | groups | honeymoon | solo
-  heroImage        String         @default("")
-  heroTitle        String         @default("")
-  heroTitleEn      String         @default("")
-  heroTitleEs      String         @default("")
-  heroSubtitle     String         @default("")
-  heroSubtitleEn   String         @default("")
-  heroSubtitleEs   String         @default("")
-  overviewTitle    String         @default("")
-  overviewTitleEn  String         @default("")
-  overviewTitleEs  String         @default("")
-  overviewBody     String         @default("")
-  overviewBodyEn   String         @default("")
-  overviewBodyEs   String         @default("")
-  order            Int            @default(0)
-  createdAt        DateTime       @default(now())
-  updatedAt        DateTime       @updatedAt
-  contentBlocks    ContentBlock[]
-  faqs             Faq[]
+  id                String         @id @default(cuid())
+  slug              String         @unique
+  travelerTypeKey   String         @default("") // family | couples | groups | honeymoon | solo
+  // Small card shown in the nav mega-menu, the homepage "By traveller" section, and the
+  // /experience-types hub — deliberately separate from heroImage/heroTitle below (a short
+  // card label + one-line desc reads very differently from a full page hero).
+  cardImage         String         @default("")
+  cardTitle         String         @default("")
+  cardTitleEn       String         @default("")
+  cardTitleEs       String         @default("")
+  cardDescription   String         @default("")
+  cardDescriptionEn String         @default("")
+  cardDescriptionEs String         @default("")
+  heroImage         String         @default("")
+  heroTitle         String         @default("")
+  heroTitleEn       String         @default("")
+  heroTitleEs       String         @default("")
+  heroSubtitle      String         @default("")
+  heroSubtitleEn    String         @default("")
+  heroSubtitleEs    String         @default("")
+  overviewTitle     String         @default("")
+  overviewTitleEn   String         @default("")
+  overviewTitleEs   String         @default("")
+  overviewBody      String         @default("")
+  overviewBodyEn    String         @default("")
+  overviewBodyEs    String         @default("")
+  order             Int            @default(0)
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+  contentBlocks     ContentBlock[]
+  faqs              Faq[]
 }
 
 // ── Tour / Excursion (day trips, city tours, activities) ──
 model Tour {
-  id                String         @id @default(cuid())
+  id                String           @id @default(cuid())
   name              String // FR (default)
-  nameEn            String         @default("")
-  nameEs            String         @default("")
-  slug              String         @unique
-  tagline           String         @default("")
-  taglineEn         String         @default("")
-  taglineEs         String         @default("")
-  description       String         @default("")
-  descriptionEn     String         @default("")
-  descriptionEs     String         @default("")
-  longDescription   String         @default("")
-  longDescriptionEn String         @default("")
-  longDescriptionEs String         @default("")
-  price             Float          @default(0)
-  originalPrice     Float          @default(0)
-  currency          String         @default("EUR")
-  duration          String         @default("") // e.g. "1 jour", "2 heures"
-  durationEn        String         @default("")
-  durationEs        String         @default("")
-  includes          String         @default("") // comma-separated
-  includesEn        String         @default("")
-  includesEs        String         @default("")
-  category          String         @default("") // activity | tour | multi-day | transfer
-  theme             String         @default("") // adventure | culture | relax | family
-  travelerTypes     String         @default("") // comma-separated: family | couples | groups | honeymoon | solo
+  nameEn            String           @default("")
+  nameEs            String           @default("")
+  slug              String           @unique
+  tagline           String           @default("")
+  taglineEn         String           @default("")
+  taglineEs         String           @default("")
+  description       String           @default("")
+  descriptionEn     String           @default("")
+  descriptionEs     String           @default("")
+  longDescription   String           @default("")
+  longDescriptionEn String           @default("")
+  longDescriptionEs String           @default("")
+  price             Float            @default(0)
+  originalPrice     Float            @default(0)
+  currency          String           @default("EUR")
+  duration          String           @default("") // e.g. "1 jour", "2 heures"
+  durationEn        String           @default("")
+  durationEs        String           @default("")
+  includes          String           @default("") // comma-separated
+  includesEn        String           @default("")
+  includesEs        String           @default("")
+  category          String           @default("") // activity | tour | multi-day | transfer
+  theme             String           @default("") // adventure | culture | relax | family
+  travelerTypes     String           @default("") // comma-separated: family | couples | groups | honeymoon | solo
   destinationId     String
-  destination       Destination    @relation(fields: [destinationId], references: [id])
-  maxGuests         Int            @default(2)
-  departureFrom     String         @default("Agadir")
-  image             String         @default("")
-  images            String         @default("") // comma-separated URLs — tour gallery
-  featured          Boolean        @default(false)
-  order             Int            @default(0)
-  format            String         @default("standard") // "standard" | "journey" — picks the trip-detail page template
-  mapImage          String         @default("") // journey-format only: illustrated route-map background
-  whenLabel         String         @default("") // journey-format stats row, e.g. "March to June | Sept to Nov"
-  whenLabelEn       String         @default("")
-  whenLabelEs       String         @default("")
-  createdAt         DateTime       @default(now())
-  updatedAt         DateTime       @updatedAt
+  destination       Destination      @relation(fields: [destinationId], references: [id])
+  maxGuests         Int              @default(2)
+  departureFrom     String           @default("Agadir")
+  image             String           @default("")
+  images            String           @default("") // comma-separated URLs — tour gallery
+  featured          Boolean          @default(false)
+  order             Int              @default(0)
+  format            String           @default("standard") // "standard" | "journey" — picks the trip-detail page template
+  mapImage          String           @default("") // journey-format only: illustrated route-map background
+  whenLabel         String           @default("") // journey-format stats row, e.g. "March to June | Sept to Nov"
+  whenLabelEn       String           @default("")
+  whenLabelEs       String           @default("")
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
   bookings          Booking[]
   itineraryDays     ItineraryDay[]
   chapters          JourneyChapter[]
@@ -321,25 +331,25 @@ model Testimonial {
 
 // ── Booking request (lead form — no online payment in scope) ──
 model Booking {
-  id            String    @id @default(cuid())
-  firstName     String
-  lastName      String
-  email         String
-  phone         String    @default("")
-  tourId        String?
-  tour          Tour?     @relation(fields: [tourId], references: [id])
-  preferredDate DateTime?
-  guests        Int       @default(1)
-  children      Int       @default(0)
-  duration      String    @default("") // free text, "how long for?" — e.g. "2 semaines"
-  budget        String    @default("") // free text range per person, e.g. "1000-2500 EUR"
-  destinationsInterest String @default("") // comma-separated region names — "where would you like to go?"
-  hearAboutUs   String    @default("")
-  message       String    @default("")
-  language      String    @default("fr") // fr | en | es
-  status        String    @default("pending") // pending | contacted | confirmed | cancelled
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id                   String    @id @default(cuid())
+  firstName            String
+  lastName             String
+  email                String
+  phone                String    @default("")
+  tourId               String?
+  tour                 Tour?     @relation(fields: [tourId], references: [id])
+  preferredDate        DateTime?
+  guests               Int       @default(1)
+  children             Int       @default(0)
+  duration             String    @default("") // free text, "how long for?" — e.g. "2 semaines"
+  budget               String    @default("") // free text range per person, e.g. "1000-2500 EUR"
+  destinationsInterest String    @default("") // comma-separated region names — "where would you like to go?"
+  hearAboutUs          String    @default("")
+  message              String    @default("")
+  language             String    @default("fr") // fr | en | es
+  status               String    @default("pending") // pending | contacted | confirmed | cancelled
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
 }
 
 // ── Contact ──

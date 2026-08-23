@@ -27,6 +27,9 @@ export const experienceFaqSchema = z.object({
   ...trilingual("answer"),
 });
 
+// Known presets offered as quick-picks in the admin form — not an exhaustive enum. A new
+// experience page can use any custom key here (see the "Voyages" tab, which tags Tour rows
+// with whatever key is typed), so this stays a free-text field rather than a closed enum.
 export const TRAVELER_TYPE_KEYS = ["family", "couples", "groups", "honeymoon", "solo"] as const;
 
 export const experienceTypeFormSchema = z.object({
@@ -34,7 +37,13 @@ export const experienceTypeFormSchema = z.object({
     .string()
     .min(1, "Le lien (slug) est requis")
     .regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, "Lettres minuscules, chiffres et tirets uniquement"),
-  travelerTypeKey: z.enum(TRAVELER_TYPE_KEYS),
+  travelerTypeKey: z
+    .string()
+    .min(1, "Le type de voyageur est requis")
+    .regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, "Lettres minuscules, chiffres et tirets uniquement"),
+  cardImage: z.string(),
+  ...trilingual("cardTitle"),
+  ...trilingual("cardDescription"),
   heroImage: z.string(),
   ...trilingual("heroTitle"),
   ...trilingual("heroSubtitle"),

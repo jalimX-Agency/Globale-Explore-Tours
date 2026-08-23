@@ -40,11 +40,26 @@ const TOUR_CARD_SELECT = {
 } as const;
 
 export default async function ExperienceTypesPage() {
-  const tours = await db.tour.findMany({
-    orderBy: [{ featured: "desc" }, { order: "asc" }],
-    take: 8,
-    select: TOUR_CARD_SELECT,
-  });
+  const [tours, experienceTypes] = await Promise.all([
+    db.tour.findMany({
+      orderBy: [{ featured: "desc" }, { order: "asc" }],
+      take: 8,
+      select: TOUR_CARD_SELECT,
+    }),
+    db.experienceType.findMany({
+      orderBy: { order: "asc" },
+      select: {
+        slug: true,
+        cardImage: true,
+        cardTitle: true,
+        cardTitleEn: true,
+        cardTitleEs: true,
+        cardDescription: true,
+        cardDescriptionEn: true,
+        cardDescriptionEs: true,
+      },
+    }),
+  ]);
 
   const toursWithHref = tours.map((tour) => ({
     ...tour,
@@ -52,5 +67,5 @@ export default async function ExperienceTypesPage() {
     regionSlug: tour.destination?.regionSlug,
   }));
 
-  return <ExperiencesPageClient tours={toursWithHref} />;
+  return <ExperiencesPageClient tours={toursWithHref} experienceTypes={experienceTypes} />;
 }

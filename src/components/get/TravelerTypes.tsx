@@ -4,20 +4,18 @@ import { motion } from "framer-motion";
 import { useLanguage } from "@/lib/i18n/context";
 import { LocaleLink } from "@/components/get/LocaleLink";
 
-const R2 = "https://pub-6777907d6a4e4378b16e81847f00f2d2.r2.dev";
+export type TravelerTypeCard = { key: string; href: string; image: string; title: string; titleEn: string; titleEs: string };
 
-// Generic mood imagery (Pexels, free/commercial-use licensed) — appropriate here since
-// these tiles are category art, not photos claiming to depict a specific paid tour.
-const TYPES = [
-  { key: "family", href: "/experience-types/family-holidays", image: `${R2}/traveler-types/family.jpg` },
-  { key: "couples", href: "/experience-types/couples-holidays", image: `${R2}/traveler-types/couples.jpg` },
-  { key: "groups", href: "/experience-types/luxury-group-holidays", image: `${R2}/traveler-types/groups.jpg` },
-  { key: "honeymoon", href: "/experience-types/luxury-honeymoons", image: `${R2}/traveler-types/honeymoon.jpg` },
-  { key: "solo", href: "/experience-types/solo-holidays", image: `${R2}/traveler-types/solo.jpg` },
-] as const;
+function localizedTitle(type: TravelerTypeCard, language: string) {
+  if (language === "en") return type.titleEn || type.title;
+  if (language === "es") return type.titleEs || type.title;
+  return type.title;
+}
 
-export function TravelerTypes() {
-  const { t } = useLanguage();
+// Admin-editable (see /admin/experiences) — card image/title come from the ExperienceType
+// row itself, so adding a new one adds a tile here automatically, no code change needed.
+export function TravelerTypes({ types }: { types: TravelerTypeCard[] }) {
+  const { t, language } = useLanguage();
 
   return (
     <section className="bg-[var(--brand-sand)] py-16 sm:py-20">
@@ -33,7 +31,7 @@ export function TravelerTypes() {
         </p>
 
         <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:gap-4">
-          {TYPES.map((type, i) => (
+          {types.map((type, i) => (
             <motion.div
               key={type.key}
               initial={{ opacity: 0, y: 20 }}
@@ -54,7 +52,7 @@ export function TravelerTypes() {
                 />
                 <span className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-black/0 transition-opacity group-hover:from-black/70" />
                 <span className="relative z-10 pb-6 font-display text-lg tracking-wide text-white sm:text-xl">
-                  {t(`travelerTypes.${type.key}`)}
+                  {localizedTitle(type, language)}
                 </span>
               </LocaleLink>
             </motion.div>

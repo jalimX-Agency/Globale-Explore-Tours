@@ -6,23 +6,32 @@ import type { ExperienceTypeFormValues } from "../schema";
 export default async function EditExperienceTypePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
 
-  const experienceType = await db.experienceType.findUnique({
-    where: { id },
-    include: {
-      contentBlocks: { orderBy: { order: "asc" } },
-      faqs: { orderBy: { order: "asc" } },
-    },
-  });
+  const [experienceType, trips] = await Promise.all([
+    db.experienceType.findUnique({
+      where: { id },
+      include: {
+        contentBlocks: { orderBy: { order: "asc" } },
+        faqs: { orderBy: { order: "asc" } },
+      },
+    }),
+    db.tour.findMany({
+      orderBy: { name: "asc" },
+      select: { id: true, name: true, travelerTypes: true, destination: { select: { name: true } } },
+    }),
+  ]);
 
   if (!experienceType) notFound();
 
   const defaultValues: ExperienceTypeFormValues = {
     slug: experienceType.slug,
-    travelerTypeKey: (["family", "couples", "groups", "honeymoon", "solo"] as const).includes(
-      experienceType.travelerTypeKey as never
-    )
-      ? (experienceType.travelerTypeKey as ExperienceTypeFormValues["travelerTypeKey"])
-      : "family",
+    travelerTypeKey: experienceType.travelerTypeKey,
+    cardImage: experienceType.cardImage,
+    cardTitle: experienceType.cardTitle,
+    cardTitleEn: experienceType.cardTitleEn,
+    cardTitleEs: experienceType.cardTitleEs,
+    cardDescription: experienceType.cardDescription,
+    cardDescriptionEn: experienceType.cardDescriptionEn,
+    cardDescriptionEs: experienceType.cardDescriptionEs,
     heroImage: experienceType.heroImage,
     heroTitle: experienceType.heroTitle,
     heroTitleEn: experienceType.heroTitleEn,
@@ -69,5 +78,14 @@ export default async function EditExperienceTypePage({ params }: { params: Promi
     })),
   };
 
-  return <ExperienceTypeForm experienceTypeId={experienceType.id} defaultValues={defaultValues} />;
+  const tripOptions = trips.map((t) => ({
+    id: t.id,
+    name: t.name,
+    destinationName: t.destination?.name ?? "",
+    travelerTypes: t.travelerTypes,
+  }));
+
+  return (
+    <ExperienceTypeForm experienceTypeId={experienceType.id} defaultValues={defaultValues} trips={tripOptions} />
+  );
 }

@@ -37,6 +37,17 @@ type DestinationLite = {
   featured: boolean;
 };
 
+type ExperienceTypeLite = {
+  slug: string;
+  cardImage: string;
+  cardTitle: string;
+  cardTitleEn: string;
+  cardTitleEs: string;
+  cardDescription: string;
+  cardDescriptionEn: string;
+  cardDescriptionEs: string;
+};
+
 type Language = "fr" | "en" | "es";
 
 function localizedName(d: DestinationLite, language: Language) {
@@ -51,7 +62,25 @@ function localizedRegion(d: DestinationLite, language: Language) {
   return d.region;
 }
 
-export function Navigation({ destinations }: { destinations: DestinationLite[] }) {
+function localizedCardTitle(e: ExperienceTypeLite, language: Language) {
+  if (language === "en") return e.cardTitleEn || e.cardTitle;
+  if (language === "es") return e.cardTitleEs || e.cardTitle;
+  return e.cardTitle;
+}
+
+function localizedCardDescription(e: ExperienceTypeLite, language: Language) {
+  if (language === "en") return e.cardDescriptionEn || e.cardDescription;
+  if (language === "es") return e.cardDescriptionEs || e.cardDescription;
+  return e.cardDescription;
+}
+
+export function Navigation({
+  destinations,
+  experienceTypes,
+}: {
+  destinations: DestinationLite[];
+  experienceTypes: ExperienceTypeLite[];
+}) {
   const [scrolled, setScrolled] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -102,13 +131,15 @@ export function Navigation({ destinations }: { destinations: DestinationLite[] }
 
   // Reused by both the Destinations and Experiences mega-menus below — a compact grid of image
   // cards, same visual language as the "Not Where But Who/What" rows on /experience-types.
-  const whoCards = [
-    { key: "family", image: `${R2}/traveler-types/family.jpg`, title: t("travelerTypes.family"), desc: t("experienceTypes.whoFamilyDesc"), href: "/experience-types/family-holidays" },
-    { key: "couples", image: `${R2}/traveler-types/couples.jpg`, title: t("travelerTypes.couples"), desc: t("experienceTypes.whoCouplesDesc"), href: "/experience-types/couples-holidays" },
-    { key: "groups", image: `${R2}/traveler-types/groups.jpg`, title: t("travelerTypes.groups"), desc: t("experienceTypes.whoGroupsDesc"), href: "/experience-types/luxury-group-holidays" },
-    { key: "honeymoon", image: `${R2}/traveler-types/honeymoon.jpg`, title: t("travelerTypes.honeymoon"), desc: t("experienceTypes.whoHoneymoonDesc"), href: "/experience-types/luxury-honeymoons" },
-    { key: "solo", image: `${R2}/traveler-types/solo.jpg`, title: t("travelerTypes.solo"), desc: t("experienceTypes.whoSoloDesc"), href: "/experience-types/solo-holidays" },
-  ];
+  // Admin-editable (see /admin/experiences) — adding a new ExperienceType row adds a card here
+  // automatically, no code change needed.
+  const whoCards = experienceTypes.map((e) => ({
+    key: e.slug,
+    image: e.cardImage,
+    title: localizedCardTitle(e, language),
+    desc: localizedCardDescription(e, language),
+    href: `/experience-types/${e.slug}`,
+  }));
 
   const whatCards = [
     { key: "adventure", image: `${R2}/experiences/what-adventure.jpg`, title: t("menu.adventure"), desc: t("menu.adventureDesc"), href: "/experience-types/adventure-holidays" },

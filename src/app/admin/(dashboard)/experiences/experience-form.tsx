@@ -11,7 +11,6 @@ import { ArrowLeft, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import {
   AlertDialog,
@@ -33,6 +32,7 @@ import { CollapsibleSection } from "@/components/admin/collapsible-section";
 
 import { experienceTypeFormSchema, TRAVELER_TYPE_KEYS, type ExperienceTypeFormValues } from "./schema";
 import { createExperienceType, updateExperienceType, deleteExperienceType } from "./actions";
+import { ExperienceTripsPanel, type TripOption } from "./experience-trips-panel";
 
 const TRAVELER_TYPE_LABELS: Record<(typeof TRAVELER_TYPE_KEYS)[number], string> = {
   family: "Famille",
@@ -44,6 +44,8 @@ const TRAVELER_TYPE_LABELS: Record<(typeof TRAVELER_TYPE_KEYS)[number], string> 
 
 function computeIncomplete(values: ExperienceTypeFormValues) {
   const triples: { fr: string; en: string; es: string }[] = [
+    { fr: values.cardTitle, en: values.cardTitleEn, es: values.cardTitleEs },
+    { fr: values.cardDescription, en: values.cardDescriptionEn, es: values.cardDescriptionEs },
     { fr: values.heroTitle, en: values.heroTitleEn, es: values.heroTitleEs },
     { fr: values.heroSubtitle, en: values.heroSubtitleEn, es: values.heroSubtitleEs },
     { fr: values.overviewTitle, en: values.overviewTitleEn, es: values.overviewTitleEs },
@@ -70,9 +72,11 @@ function computeIncomplete(values: ExperienceTypeFormValues) {
 export function ExperienceTypeForm({
   experienceTypeId,
   defaultValues,
+  trips,
 }: {
   experienceTypeId?: string;
   defaultValues: ExperienceTypeFormValues;
+  trips?: TripOption[];
 }) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
@@ -170,6 +174,7 @@ export function ExperienceTypeForm({
               </TabsTrigger>
               <TabsTrigger value="reassurance">Réassurance ({values.reassurance.length})</TabsTrigger>
               <TabsTrigger value="faqs">FAQ ({values.faqs.length})</TabsTrigger>
+              {trips && <TabsTrigger value="trips">Voyages</TabsTrigger>}
             </TabsList>
 
             <TabsContent value="basic" className="space-y-5 pt-5">
@@ -197,32 +202,53 @@ export function ExperienceTypeForm({
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>
-                            Type de voyageur <span className="text-brand-accent">*</span>
+                            Type de voyageur (clé) <span className="text-brand-accent">*</span>
                           </FormLabel>
-                          <Select value={field.value} onValueChange={field.onChange}>
-                            <FormControl>
-                              <SelectTrigger className="w-full">
-                                <SelectValue placeholder="Choisir un type" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              {TRAVELER_TYPE_KEYS.map((key) => (
-                                <SelectItem key={key} value={key}>
-                                  {TRAVELER_TYPE_LABELS[key]}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
+                          <FormControl>
+                            <Input {...field} dir="ltr" list="traveler-type-key-options" placeholder="family" />
+                          </FormControl>
+                          <datalist id="traveler-type-key-options">
+                            {TRAVELER_TYPE_KEYS.map((key) => (
+                              <option key={key} value={key}>
+                                {TRAVELER_TYPE_LABELS[key]}
+                              </option>
+                            ))}
+                          </datalist>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    Le type de voyageur détermine quels voyages du catalogue s&apos;affichent sur
-                    cette page (ceux dont le champ « Types de voyageurs » dans la fiche Voyage
-                    contient ce type).
+                    Cette clé détermine quels voyages du catalogue s&apos;affichent sur cette page
+                    (ceux dont le champ « Types de voyageurs » dans la fiche Voyage la contient) —
+                    utilisez une des valeurs suggérées, ou tapez-en une nouvelle pour créer un type
+                    entièrement inédit. Vous pourrez ensuite choisir précisément quels voyages y
+                    correspondent depuis l&apos;onglet « Voyages ».
                   </p>
+                </div>
+              </CollapsibleSection>
+
+              <CollapsibleSection title="Carte (menu, accueil, page Expériences)">
+                <div className="space-y-4">
+                  <p className="text-xs text-muted-foreground">
+                    La petite carte affichée dans le menu « Expériences », sur la page d&apos;accueil,
+                    et sur la page /experience-types — distincte de l&apos;image et du titre du hero
+                    ci-dessous.
+                  </p>
+                  <TrilingualField control={form.control} baseName="cardTitle" label="Titre court" required />
+                  <TrilingualField
+                    control={form.control}
+                    baseName="cardDescription"
+                    label="Description courte"
+                    multiline
+                  />
+                  <MediaUploadField
+                    control={form.control}
+                    name="cardImage"
+                    label="Image de la carte"
+                    folder="experience-types"
+                  />
                 </div>
               </CollapsibleSection>
 
@@ -385,6 +411,12 @@ export function ExperienceTypeForm({
                 )}
               />
             </TabsContent>
+
+            {trips && (
+              <TabsContent value="trips" className="pt-5">
+                <ExperienceTripsPanel travelerTypeKey={values.travelerTypeKey} trips={trips} />
+              </TabsContent>
+            )}
           </Tabs>
         </form>
       </LangProvider>

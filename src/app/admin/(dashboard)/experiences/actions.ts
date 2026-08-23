@@ -61,6 +61,13 @@ export async function createExperienceType(raw: ExperienceTypeFormValues) {
       data: {
         slug: values.slug,
         travelerTypeKey: values.travelerTypeKey,
+        cardImage: values.cardImage,
+        cardTitle: values.cardTitle,
+        cardTitleEn: values.cardTitleEn,
+        cardTitleEs: values.cardTitleEs,
+        cardDescription: values.cardDescription,
+        cardDescriptionEn: values.cardDescriptionEn,
+        cardDescriptionEs: values.cardDescriptionEs,
         heroImage: values.heroImage,
         heroTitle: values.heroTitle,
         heroTitleEn: values.heroTitleEn,
@@ -96,6 +103,13 @@ export async function updateExperienceType(id: string, raw: ExperienceTypeFormVa
       data: {
         slug: values.slug,
         travelerTypeKey: values.travelerTypeKey,
+        cardImage: values.cardImage,
+        cardTitle: values.cardTitle,
+        cardTitleEn: values.cardTitleEn,
+        cardTitleEs: values.cardTitleEs,
+        cardDescription: values.cardDescription,
+        cardDescriptionEn: values.cardDescriptionEn,
+        cardDescriptionEs: values.cardDescriptionEs,
         heroImage: values.heroImage,
         heroTitle: values.heroTitle,
         heroTitleEn: values.heroTitleEn,
@@ -123,5 +137,27 @@ export async function deleteExperienceType(id: string) {
   await assertAdmin();
   await db.experienceType.delete({ where: { id } });
   revalidatePath("/admin/experiences");
+  revalidatePath("/[locale]", "layout");
+}
+
+// Which trips "belong" to a traveler-type page isn't a separate relation — it's whichever
+// Tour rows have this key inside their comma-separated `travelerTypes` string (same field
+// already editable, as free text, on the Tour form). This toggles that key on/off a single
+// tour's list so the experience page's "Voyages" tab can manage matches without asking staff
+// to hand-edit the raw comma list themselves.
+export async function toggleTourTravelerType(tourId: string, travelerTypeKey: string, included: boolean) {
+  await assertAdmin();
+  const tour = await db.tour.findUniqueOrThrow({ where: { id: tourId }, select: { travelerTypes: true } });
+  const current = tour.travelerTypes
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
+  const next = included
+    ? [...new Set([...current, travelerTypeKey])]
+    : current.filter((t) => t !== travelerTypeKey);
+
+  await db.tour.update({ where: { id: tourId }, data: { travelerTypes: next.join(",") } });
+  revalidatePath("/admin/experiences");
+  revalidatePath("/admin/tours");
   revalidatePath("/[locale]", "layout");
 }

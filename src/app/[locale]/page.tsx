@@ -1,3 +1,4 @@
+import { db } from "@/lib/db";
 import { Hero } from "@/components/get/Hero";
 import { Mission } from "@/components/get/Mission";
 import { Testimonials } from "@/components/get/Testimonials";
@@ -7,13 +8,26 @@ import { OurApproach } from "@/components/get/OurApproach";
 import { TrustStrip } from "@/components/get/TrustStrip";
 import { ClosingCta } from "@/components/get/ClosingCta";
 
-export default function Home() {
+export default async function Home() {
+  const experienceTypes = await db.experienceType.findMany({
+    orderBy: { order: "asc" },
+    select: { slug: true, cardImage: true, cardTitle: true, cardTitleEn: true, cardTitleEs: true },
+  });
+  const travelerTypeCards = experienceTypes.map((e) => ({
+    key: e.slug,
+    href: `/experience-types/${e.slug}`,
+    image: e.cardImage,
+    title: e.cardTitle,
+    titleEn: e.cardTitleEn,
+    titleEs: e.cardTitleEs,
+  }));
+
   return (
     <main className="flex-1">
       <Hero />
       <Mission />
       <Testimonials />
-      <TravelerTypes />
+      <TravelerTypes types={travelerTypeCards} />
       <FeaturedTours />
       <OurApproach />
       <TrustStrip />

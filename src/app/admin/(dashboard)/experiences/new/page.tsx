@@ -4,6 +4,13 @@ import type { ExperienceTypeFormValues } from "../schema";
 const emptyValues: ExperienceTypeFormValues = {
   slug: "",
   travelerTypeKey: "family",
+  cardImage: "",
+  cardTitle: "",
+  cardTitleEn: "",
+  cardTitleEs: "",
+  cardDescription: "",
+  cardDescriptionEn: "",
+  cardDescriptionEs: "",
   heroImage: "",
   heroTitle: "",
   heroTitleEn: "",

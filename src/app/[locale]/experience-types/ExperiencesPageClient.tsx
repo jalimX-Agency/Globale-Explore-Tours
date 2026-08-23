@@ -10,6 +10,28 @@ import { type TourCardData } from "@/components/get/TourCard";
 
 const R2 = "https://pub-6777907d6a4e4378b16e81847f00f2d2.r2.dev";
 
+export type ExperienceTypeLite = {
+  slug: string;
+  cardImage: string;
+  cardTitle: string;
+  cardTitleEn: string;
+  cardTitleEs: string;
+  cardDescription: string;
+  cardDescriptionEn: string;
+  cardDescriptionEs: string;
+};
+
+function localizedCard(e: ExperienceTypeLite, language: string): ExperienceCard {
+  const title = language === "en" ? e.cardTitleEn || e.cardTitle : language === "es" ? e.cardTitleEs || e.cardTitle : e.cardTitle;
+  const desc =
+    language === "en"
+      ? e.cardDescriptionEn || e.cardDescription
+      : language === "es"
+        ? e.cardDescriptionEs || e.cardDescription
+        : e.cardDescription;
+  return { key: e.slug, image: e.cardImage, title, desc, href: `/experience-types/${e.slug}` };
+}
+
 function scrollToSection(id: string) {
   const el = document.getElementById(id);
   if (!el) return;
@@ -17,16 +39,18 @@ function scrollToSection(id: string) {
   window.scrollTo({ top, behavior: "smooth" });
 }
 
-export function ExperiencesPageClient({ tours }: { tours: TourCardData[] }) {
-  const { t } = useLanguage();
+export function ExperiencesPageClient({
+  tours,
+  experienceTypes,
+}: {
+  tours: TourCardData[];
+  experienceTypes: ExperienceTypeLite[];
+}) {
+  const { t, language } = useLanguage();
 
-  const whoCards: ExperienceCard[] = [
-    { key: "family", image: `${R2}/traveler-types/family.jpg`, title: t("travelerTypes.family"), desc: t("experienceTypes.whoFamilyDesc"), href: "/experience-types/family-holidays" },
-    { key: "couples", image: `${R2}/traveler-types/couples.jpg`, title: t("travelerTypes.couples"), desc: t("experienceTypes.whoCouplesDesc"), href: "/experience-types/couples-holidays" },
-    { key: "groups", image: `${R2}/traveler-types/groups.jpg`, title: t("travelerTypes.groups"), desc: t("experienceTypes.whoGroupsDesc"), href: "/experience-types/luxury-group-holidays" },
-    { key: "honeymoon", image: `${R2}/traveler-types/honeymoon.jpg`, title: t("travelerTypes.honeymoon"), desc: t("experienceTypes.whoHoneymoonDesc"), href: "/experience-types/luxury-honeymoons" },
-    { key: "solo", image: `${R2}/traveler-types/solo.jpg`, title: t("travelerTypes.solo"), desc: t("experienceTypes.whoSoloDesc"), href: "/experience-types/solo-holidays" },
-  ];
+  // Admin-editable (see /admin/experiences) — adding a new ExperienceType row adds a card
+  // here automatically, no code change needed.
+  const whoCards: ExperienceCard[] = experienceTypes.map((e) => localizedCard(e, language));
 
   const whatCards: ExperienceCard[] = [
     { key: "adventure", image: `${R2}/experiences/what-adventure.jpg`, title: t("menu.adventure"), desc: t("menu.adventureDesc"), href: "/experience-types/adventure-holidays" },
