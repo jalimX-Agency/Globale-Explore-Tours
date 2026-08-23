@@ -2,9 +2,10 @@
 
 import { useMemo, useState, useTransition } from "react";
 import { toast } from "sonner";
-import { Search } from "lucide-react";
+import { Search, ChevronLeft, ChevronRight } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
 import { toggleTourTravelerType } from "./actions";
 
 export type TripOption = {
@@ -13,6 +14,10 @@ export type TripOption = {
   destinationName: string;
   travelerTypes: string;
 };
+
+type StatusFilter = "all" | "matched" | "unmatched";
+
+const PAGE_SIZE = 20;
 
 function isMatched(travelerTypes: string, key: string) {
   return travelerTypes
@@ -27,13 +32,35 @@ function isMatched(travelerTypes: string, key: string) {
 export function ExperienceTripsPanel({ travelerTypeKey, trips }: { travelerTypeKey: string; trips: TripOption[] }) {
   const [matches, setMatches] = useState(() => new Set(trips.filter((t) => isMatched(t.travelerTypes, travelerTypeKey)).map((t) => t.id)));
   const [query, setQuery] = useState("");
+  const [status, setStatus] = useState<StatusFilter>("all");
+  const [destinationFilter, setDestinationFilter] = useState("");
+  const [rawPage, setPage] = useState(1);
   const [pending, startTransition] = useTransition();
 
+  const destinationOptions = useMemo(
+    () => Array.from(new Set(trips.map((t) => t.destinationName).filter(Boolean))).sort((a, b) => a.localeCompare(b)),
+    [trips]
+  );
+
   const filtered = useMemo(() => {
-    if (!query.trim()) return trips;
-    const q = query.trim().toLowerCase();
-    return trips.filter((t) => `${t.name} ${t.destinationName}`.toLowerCase().includes(q));
-  }, [trips, query]);
+    let list = trips;
+    if (query.trim()) {
+      const q = query.trim().toLowerCase();
+      list = list.filter((t) => `${t.name} ${t.destinationName}`.toLowerCase().includes(q));
+    }
+    if (destinationFilter) list = list.filter((t) => t.destinationName === destinationFilter);
+    if (status === "matched") list = list.filter((t) => matches.has(t.id));
+    else if (status === "unmatched") list = list.filter((t) => !matches.has(t.id));
+    return list;
+  }, [trips, query, destinationFilter, status, matches]);
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const page = Math.min(rawPage, totalPages);
+  const paged = useMemo(() => filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE), [filtered, page]);
+
+  function resetToFirstPage() {
+    setPage(1);
+  }
 
   function toggle(tripId: string, checked: boolean) {
     setMatches((prev) => {
@@ -59,27 +86,72 @@ export function ExperienceTripsPanel({ travelerTypeKey, trips }: { travelerTypeK
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between gap-3">
-        <p className="text-sm text-muted-foreground">
-          {matches.size} voyage{matches.size > 1 ? "s" : ""} correspondent actuellement à cette page. Cochez ou
-          décochez un voyage pour le faire apparaître ou disparaître de cette page.
-        </p>
+      <p className="text-sm text-muted-foreground">
+        {matches.size} voyage{matches.size > 1 ? "s" : ""} correspondent actuellement à cette page. Cochez ou
+        décochez un voyage pour le faire apparaître ou disparaître de cette page.
+      </p>
+
+      <div className="flex flex-wrap items-center gap-3">
+        <div className="relative max-w-xs flex-1">
+          <Search className="absolute top-1/2 left-2.5 size-3.5 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            value={query}
+            onChange={(e) => {
+              setQuery(e.target.value);
+              resetToFirstPage();
+            }}
+            placeholder="Rechercher un voyage..."
+            className="pl-8"
+          />
+        </div>
+
+        <select
+          value={destinationFilter}
+          onChange={(e) => {
+            setDestinationFilter(e.target.value);
+            resetToFirstPage();
+          }}
+          className="h-9 rounded-md border border-input bg-transparent px-3 text-sm text-foreground"
+        >
+          <option value="">Toutes les destinations</option>
+          {destinationOptions.map((d) => (
+            <option key={d} value={d}>
+              {d}
+            </option>
+          ))}
+        </select>
+
+        <div className="flex items-center gap-1 rounded-md border border-input p-0.5">
+          {(
+            [
+              ["all", "Tous"],
+              ["matched", "Correspondants"],
+              ["unmatched", "Non correspondants"],
+            ] as const
+          ).map(([value, label]) => (
+            <button
+              key={value}
+              type="button"
+              onClick={() => {
+                setStatus(value);
+                resetToFirstPage();
+              }}
+              className={`rounded px-3 py-1.5 text-xs font-medium transition-colors ${
+                status === value ? "bg-brand-ink text-brand-paper" : "text-muted-foreground hover:bg-muted"
+              }`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
       </div>
-      <div className="relative max-w-xs">
-        <Search className="absolute top-1/2 left-2.5 size-3.5 -translate-y-1/2 text-muted-foreground" />
-        <Input
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Rechercher un voyage..."
-          className="pl-8"
-        />
-      </div>
-      <div className="max-h-[32rem] overflow-y-auto rounded-xl border border-border">
-        {filtered.length === 0 && (
+
+      <div className="rounded-xl border border-border">
+        {paged.length === 0 && (
           <p className="py-10 text-center text-sm text-muted-foreground">Aucun voyage trouvé.</p>
         )}
         <div className="divide-y divide-border">
-          {filtered.map((trip) => {
+          {paged.map((trip) => {
             const checked = matches.has(trip.id);
             return (
               <label
@@ -100,6 +172,39 @@ export function ExperienceTripsPanel({ travelerTypeKey, trips }: { travelerTypeK
           })}
         </div>
       </div>
+
+      {filtered.length > 0 && (
+        <div className="flex items-center justify-between gap-3">
+          <p className="text-xs text-muted-foreground">
+            {(page - 1) * PAGE_SIZE + 1}–{Math.min(page * PAGE_SIZE, filtered.length)} sur {filtered.length}
+          </p>
+          <div className="flex items-center gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              disabled={page <= 1}
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+            >
+              <ChevronLeft className="size-3.5" />
+              Précédent
+            </Button>
+            <span className="text-xs text-muted-foreground">
+              {page} / {totalPages}
+            </span>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              disabled={page >= totalPages}
+              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+            >
+              Suivant
+              <ChevronRight className="size-3.5" />
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
