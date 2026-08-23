@@ -2,11 +2,16 @@
 
 import { useMemo, useState } from "react";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from "@/components/ui/table";
-import { Search, ChevronRight, X, Inbox } from "lucide-react";
+import { Search, ChevronRight, ChevronLeft, X, Inbox } from "lucide-react";
 
-// Data scale here is small (~111 destinations, ~150 tours) — a client-side filter over an
-// already-fetched full list is simpler and fast enough; no server pagination needed.
+const PAGE_SIZE = 20;
+
+// The full (already-filtered-by-the-server) list is still fetched and searched client-side —
+// data scale here is small enough for that (~111 destinations, ~150 tours) — but only one
+// page's worth is ever rendered into the DOM at a time, so the table itself stays cheap to
+// paint and scroll regardless of how many rows come in.
 export function DataTable<T>({
   data,
   columns,
@@ -26,12 +31,24 @@ export function DataTable<T>({
 }) {
   const clickable = rowHref ?? onRowClick;
   const [query, setQuery] = useState("");
+  const [rawPage, setPage] = useState(1);
 
   const filtered = useMemo(() => {
     if (!query.trim()) return data;
     const q = query.trim().toLowerCase();
     return data.filter((row) => getSearchText(row).toLowerCase().includes(q));
   }, [data, query, getSearchText]);
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  // Searching (or the underlying data shrinking) can leave stored `page` past the new last
+  // page — clamp it here during render rather than syncing it back with an effect, so there's
+  // never a frame with an out-of-range page and dead-looking pagination controls.
+  const page = Math.min(rawPage, totalPages);
+
+  const paged = useMemo(
+    () => filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE),
+    [filtered, page]
+  );
 
   return (
     <div className="space-y-3">
@@ -40,7 +57,10 @@ export function DataTable<T>({
           <Search className="absolute top-1/2 left-2.5 size-3.5 -translate-y-1/2 text-muted-foreground" />
           <Input
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={(e) => {
+              setQuery(e.target.value);
+              setPage(1);
+            }}
             placeholder={searchPlaceholder}
             className="pl-8"
             aria-label={searchPlaceholder}
@@ -48,7 +68,10 @@ export function DataTable<T>({
           {query && (
             <button
               type="button"
-              onClick={() => setQuery("")}
+              onClick={() => {
+                setQuery("");
+                setPage(1);
+              }}
               aria-label="Effacer la recherche"
               className="absolute top-1/2 right-2 -translate-y-1/2 cursor-pointer rounded-full p-0.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
             >
@@ -89,7 +112,7 @@ export function DataTable<T>({
                 </TableCell>
               </TableRow>
             )}
-            {filtered.map((row, i) => (
+            {paged.map((row, i) => (
               <TableRow
                 key={i}
                 className={cnRow(clickable)}
@@ -110,6 +133,39 @@ export function DataTable<T>({
           </TableBody>
         </Table>
       </div>
+
+      {filtered.length > 0 && (
+        <div className="flex items-center justify-between gap-3">
+          <p className="text-xs text-muted-foreground">
+            {(page - 1) * PAGE_SIZE + 1}–{Math.min(page * PAGE_SIZE, filtered.length)} sur {filtered.length}
+          </p>
+          <div className="flex items-center gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              disabled={page <= 1}
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+            >
+              <ChevronLeft className="size-3.5" />
+              Précédent
+            </Button>
+            <span className="text-xs text-muted-foreground">
+              {page} / {totalPages}
+            </span>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              disabled={page >= totalPages}
+              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+            >
+              Suivant
+              <ChevronRight className="size-3.5" />
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

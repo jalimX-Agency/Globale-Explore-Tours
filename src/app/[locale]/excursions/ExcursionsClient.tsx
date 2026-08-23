@@ -31,10 +31,16 @@ export function ExcursionsClient({
   tours,
   activeTheme: initialTheme,
   activeTravelers: initialTravelers,
+  page = 1,
+  totalPages = 1,
+  baseQuery = "",
 }: {
   tours: TourCardData[];
   activeTheme?: string;
   activeTravelers?: string;
+  page?: number;
+  totalPages?: number;
+  baseQuery?: string;
 }) {
   const { t } = useLanguage();
   const [selectedFeeling, setSelectedFeeling] = useState<FeelingKey | null>(null);
@@ -45,6 +51,14 @@ export function ExcursionsClient({
     const targetTheme = FEELINGS.find((f) => f.key === selectedFeeling)?.theme;
     return tours.filter((t) => t.theme === targetTheme);
   }, [tours, selectedFeeling]);
+
+  function pageHref(p: number) {
+    const params = new URLSearchParams(baseQuery);
+    if (p > 1) params.set("page", String(p));
+    else params.delete("page");
+    const qs = params.toString();
+    return qs ? `/excursions?${qs}` : "/excursions";
+  }
 
   const activeFeelingDesc = selectedFeeling 
     ? t(`feelings.${selectedFeeling}Desc`) 
@@ -212,6 +226,39 @@ export function ExcursionsClient({
             </motion.div>
           )}
         </AnimatePresence>
+
+        {!selectedFeeling && totalPages > 1 && (
+          <nav
+            aria-label={t("excursionsPage.title")}
+            className="mt-16 flex items-center justify-center gap-2 border-t border-neutral-200/60 pt-10"
+          >
+            <LocaleLink
+              href={pageHref(page - 1)}
+              aria-disabled={page <= 1}
+              className={`label-eyebrow rounded-sm border px-4 py-2 transition-colors ${
+                page <= 1
+                  ? "pointer-events-none border-neutral-100 text-neutral-300"
+                  : "border-neutral-200 text-neutral-600 hover:border-neutral-400"
+              }`}
+            >
+              {t("pagination.previous")}
+            </LocaleLink>
+            <span className="font-body px-4 text-sm text-neutral-500">
+              {t("pagination.pageOf").replace("{page}", String(page)).replace("{total}", String(totalPages))}
+            </span>
+            <LocaleLink
+              href={pageHref(page + 1)}
+              aria-disabled={page >= totalPages}
+              className={`label-eyebrow rounded-sm border px-4 py-2 transition-colors ${
+                page >= totalPages
+                  ? "pointer-events-none border-neutral-100 text-neutral-300"
+                  : "border-neutral-200 text-neutral-600 hover:border-neutral-400"
+              }`}
+            >
+              {t("pagination.next")}
+            </LocaleLink>
+          </nav>
+        )}
       </section>
     </main>
   );

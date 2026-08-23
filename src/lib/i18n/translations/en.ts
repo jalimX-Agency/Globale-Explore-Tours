@@ -77,6 +77,11 @@ export const en = {
     subtitle: "From Morocco to the rest of the world — every trip is built for you, not for a group.",
     noResults: "No excursions match that filter yet.",
   },
+  pagination: {
+    previous: "Previous",
+    next: "Next",
+    pageOf: "Page {page} of {total}",
+  },
   feelings: {
     title: "How do you want to feel?",
     subtitle: "Select a mood to discover journeys tailored to your state of mind.",

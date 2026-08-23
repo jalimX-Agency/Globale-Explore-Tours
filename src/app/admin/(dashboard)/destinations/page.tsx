@@ -8,6 +8,7 @@ import { Plus } from "lucide-react";
 export default async function DestinationsListPage() {
   const destinations = await db.destination.findMany({
     orderBy: { order: "asc" },
+    take: 500, // defensive cap — destinations are naturally bounded (world's countries), but never unbounded fetches
     select: {
       id: true,
       name: true,

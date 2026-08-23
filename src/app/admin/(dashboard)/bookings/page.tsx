@@ -2,11 +2,20 @@ import { db } from "@/lib/db";
 import { PageHeader } from "@/components/admin/page-header";
 import { BookingsTable } from "./bookings-table";
 
+// Bookings carry customer PII (name/email/phone) and this table has no pruning — grows
+// forever. Capped to the most recent 200 rather than fetched unbounded; pending requests
+// should get worked before they'd ever fall off the back of that window in practice.
+const MAX_ROWS = 200;
+
 export default async function BookingsListPage() {
-  const bookings = await db.booking.findMany({
-    orderBy: { createdAt: "desc" },
-    include: { tour: { select: { name: true } } },
-  });
+  const [bookings, totalCount] = await Promise.all([
+    db.booking.findMany({
+      orderBy: { createdAt: "desc" },
+      take: MAX_ROWS,
+      include: { tour: { select: { name: true } } },
+    }),
+    db.booking.count(),
+  ]);
 
   const rows = bookings.map((b) => ({
     id: b.id,
@@ -23,7 +32,11 @@ export default async function BookingsListPage() {
     <div className="space-y-6">
       <PageHeader
         title="Réservations"
-        description={`${bookings.length} demande${bookings.length > 1 ? "s" : ""} de réservation`}
+        description={
+          totalCount > bookings.length
+            ? `${bookings.length} plus récentes sur ${totalCount} demandes de réservation`
+            : `${bookings.length} demande${bookings.length > 1 ? "s" : ""} de réservation`
+        }
       />
       <BookingsTable data={rows} />
     </div>

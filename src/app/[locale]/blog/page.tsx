@@ -14,13 +14,29 @@ function pick(locale: Locale, frText: string, enText: string, esText: string) {
   return frText;
 }
 
-export default async function BlogIndexPage({ params }: { params: Promise<{ locale: string }> }) {
+const PAGE_SIZE = 12;
+
+export default async function BlogIndexPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ locale: string }>;
+  searchParams: Promise<{ page?: string }>;
+}) {
   const { locale: rawLocale } = await params;
   const locale = isLocale(rawLocale) ? rawLocale : DEFAULT_LOCALE;
+  const { page: pageParam } = await searchParams;
+  const page = Math.max(1, Number(pageParam) || 1);
 
-  const posts = await db.blogPost.findMany({
-    orderBy: [{ featured: "desc" }, { order: "asc" }],
-  });
+  const [posts, totalCount] = await Promise.all([
+    db.blogPost.findMany({
+      orderBy: [{ featured: "desc" }, { order: "asc" }],
+      skip: (page - 1) * PAGE_SIZE,
+      take: PAGE_SIZE,
+    }),
+    db.blogPost.count(),
+  ]);
+  const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
 
   return (
     <main className="mx-auto max-w-6xl px-6 py-16 sm:py-24">
@@ -59,6 +75,40 @@ export default async function BlogIndexPage({ params }: { params: Promise<{ loca
             </LocaleLink>
           ))}
         </div>
+      )}
+
+      {totalPages > 1 && (
+        <nav aria-label="Journal" className="mt-16 flex items-center justify-center gap-2 border-t border-neutral-200/60 pt-10">
+          <LocaleLink
+            href={page > 1 ? `/blog?page=${page - 1}` : "/blog"}
+            aria-disabled={page <= 1}
+            className={`label-eyebrow rounded-sm border px-4 py-2 transition-colors ${
+              page <= 1
+                ? "pointer-events-none border-neutral-100 text-neutral-300"
+                : "border-neutral-200 text-neutral-600 hover:border-neutral-400"
+            }`}
+          >
+            {locale === "en" ? "Previous" : locale === "es" ? "Anterior" : "Précédent"}
+          </LocaleLink>
+          <span className="font-body px-4 text-sm text-neutral-500">
+            {locale === "en"
+              ? `Page ${page} of ${totalPages}`
+              : locale === "es"
+                ? `Página ${page} de ${totalPages}`
+                : `Page ${page} sur ${totalPages}`}
+          </span>
+          <LocaleLink
+            href={`/blog?page=${page + 1}`}
+            aria-disabled={page >= totalPages}
+            className={`label-eyebrow rounded-sm border px-4 py-2 transition-colors ${
+              page >= totalPages
+                ? "pointer-events-none border-neutral-100 text-neutral-300"
+                : "border-neutral-200 text-neutral-600 hover:border-neutral-400"
+            }`}
+          >
+            {locale === "en" ? "Next" : locale === "es" ? "Siguiente" : "Suivant"}
+          </LocaleLink>
+        </nav>
       )}
     </main>
   );

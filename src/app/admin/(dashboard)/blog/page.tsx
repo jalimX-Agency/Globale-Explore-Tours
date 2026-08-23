@@ -8,6 +8,7 @@ import { Plus } from "lucide-react";
 export default async function BlogListPage() {
   const posts = await db.blogPost.findMany({
     orderBy: { order: "asc" },
+    take: 500,
     select: { id: true, title: true, category: true, author: true, order: true },
   });
 

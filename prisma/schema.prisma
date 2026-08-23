@@ -374,3 +374,14 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+// ── RateLimitHit — sliding-window rate limiting for public form submissions (booking,
+// contact), keyed by "<action>:<ip>". Rows older than the checked window are opportunistically
+// pruned on every check, so this table never needs a separate cleanup job. ──
+model RateLimitHit {
+  id        String   @id @default(cuid())
+  key       String
+  createdAt DateTime @default(now())
+
+  @@index([key, createdAt])
+}

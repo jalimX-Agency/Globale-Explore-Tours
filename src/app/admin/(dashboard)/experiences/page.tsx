@@ -8,6 +8,7 @@ import { Plus } from "lucide-react";
 export default async function ExperiencesListPage() {
   const experienceTypes = await db.experienceType.findMany({
     orderBy: { order: "asc" },
+    take: 500,
     select: {
       id: true,
       slug: true,

@@ -77,6 +77,11 @@ export const es = {
     subtitle: "De Marruecos al resto del mundo — cada viaje está pensado para usted, no para un grupo.",
     noResults: "Ninguna excursión coincide con este filtro por ahora.",
   },
+  pagination: {
+    previous: "Anterior",
+    next: "Siguiente",
+    pageOf: "Página {page} de {total}",
+  },
   feelings: {
     title: "¿Cómo se quiere sentir?",
     subtitle: "Seleccione un estado de ánimo para descubrir viajes adaptados a su mente.",

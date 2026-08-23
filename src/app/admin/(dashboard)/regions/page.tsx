@@ -4,8 +4,8 @@ import { RegionsTable } from "./regions-table";
 
 export default async function RegionsListPage() {
   const [regions, destinations] = await Promise.all([
-    db.region.findMany({ orderBy: { order: "asc" } }),
-    db.destination.findMany({ select: { regionSlug: true, region: true } }),
+    db.region.findMany({ orderBy: { order: "asc" }, take: 500 }),
+    db.destination.findMany({ select: { regionSlug: true, region: true }, take: 500 }),
   ]);
 
   const countByRegionSlug = new Map<string, number>();

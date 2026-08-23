@@ -89,8 +89,16 @@ export async function deleteFromR2(key: string): Promise<void> {
 // route, and Next.js API routes have body-size/duration limits on serverless hosts — so
 // large files get a presigned PUT URL instead and upload directly from the browser to R2,
 // never passing through our server.
+// `contentType` is part of the signature (via the signed `content-type` header), not just a
+// value we happen to check before minting the URL — otherwise the whitelist check in the
+// route that calls this is only enforced on the request *for* the URL, and whoever ends up
+// performing the actual PUT (the browser, normally, but potentially anyone who intercepts the
+// URL within its short expiry) could send any Content-Type they like and have R2 serve the
+// object that way. Signing it means R2 rejects a PUT whose Content-Type header doesn't match
+// exactly what was authorized.
 export async function getPresignedUploadUrl(
   key: string,
+  contentType: string,
   expiresInSeconds: number = 300
 ): Promise<string> {
   const { amzDate, dateStamp } = amzDateNow();
@@ -98,7 +106,7 @@ export async function getPresignedUploadUrl(
   const service = "s3";
   const host = `${ACCOUNT_ID}.r2.cloudflarestorage.com`;
   const credentialScope = `${dateStamp}/${region}/${service}/aws4_request`;
-  const signedHeaders = "host";
+  const signedHeaders = "content-type;host";
   const queryParams: [string, string][] = [
     ["X-Amz-Algorithm", "AWS4-HMAC-SHA256"],
     ["X-Amz-Credential", `${ACCESS_KEY}/${credentialScope}`],
@@ -111,7 +119,7 @@ export async function getPresignedUploadUrl(
     .sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0))
     .map(([k, v]) => `${k}=${v}`)
     .join("&");
-  const canonicalHeaders = `host:${host}\n`;
+  const canonicalHeaders = `content-type:${contentType}\nhost:${host}\n`;
   const canonicalRequest = `PUT\n/${BUCKET}/${key}\n${canonicalQueryString}\n${canonicalHeaders}\n${signedHeaders}\nUNSIGNED-PAYLOAD`;
   const stringToSign = `AWS4-HMAC-SHA256\n${amzDate}\n${credentialScope}\n${sha256hex(canonicalRequest)}`;
   const signingKey = getSigningKey(SECRET_KEY, dateStamp, region, service);

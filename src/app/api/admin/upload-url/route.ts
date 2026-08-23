@@ -15,7 +15,11 @@ const VALID_FOLDERS = [
   "testimonials",
 ];
 
-const VALID_VIDEO_TYPES = ["video/mp4", "video/webm", "video/quicktime"];
+const VALID_VIDEO_TYPES: Record<string, string> = {
+  "video/mp4": "mp4",
+  "video/webm": "webm",
+  "video/quicktime": "mov",
+};
 
 // Large files (video hero backgrounds) get a presigned PUT URL and upload directly
 // from the browser to R2 — bypassing our server entirely, so Next.js body-size and
@@ -33,13 +37,13 @@ export async function POST(request: NextRequest) {
   if (!fileName || !contentType) {
     return NextResponse.json({ error: "Missing fileName or contentType" }, { status: 400 });
   }
-  if (!VALID_VIDEO_TYPES.includes(contentType)) {
+  const ext = VALID_VIDEO_TYPES[contentType];
+  if (!ext) {
     return NextResponse.json({ error: "Type non supporté" }, { status: 400 });
   }
   const resolvedFolder = VALID_FOLDERS.includes(folder) ? folder : "gallery";
-  const ext = fileName.split(".").pop()?.toLowerCase() ?? "mp4";
   const key = `${resolvedFolder}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
 
-  const uploadUrl = await getPresignedUploadUrl(key);
+  const uploadUrl = await getPresignedUploadUrl(key, contentType);
   return NextResponse.json({ uploadUrl, publicUrl: `${R2_PUBLIC_URL}/${key}` });
 }

@@ -2,12 +2,18 @@
 
 import { db } from "@/lib/db";
 import { sendBookingRequestConfirmation, sendBookingNotificationToAdmin } from "@/lib/email";
+import { checkRateLimit } from "@/lib/rate-limit";
 import { bookingServerSchema, type BookingServerValues } from "./schema";
 
 export async function submitBooking(raw: BookingServerValues, honeypot: string) {
   // A filled honeypot means a bot — pretend success without touching the database, so the
   // bot gets no signal that anything was rejected.
   if (honeypot) return { ok: true as const };
+
+  // 5 requests per 10 minutes per IP — generous for a genuine traveler, tight enough to stop
+  // a scripted flood (this form writes to the DB and fires two emails per submission).
+  const allowed = await checkRateLimit("booking", 5, 10 * 60 * 1000);
+  if (!allowed) throw new Error("Trop de demandes envoyées récemment. Merci de réessayer dans quelques minutes.");
 
   const values = bookingServerSchema.parse(raw);
 

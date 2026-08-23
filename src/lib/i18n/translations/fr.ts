@@ -77,6 +77,11 @@ export const fr = {
     subtitle: "Du Maroc au reste du monde — chaque voyage est pensé pour vous, pas pour un groupe.",
     noResults: "Aucune excursion ne correspond à ce filtre pour le moment.",
   },
+  pagination: {
+    previous: "Précédent",
+    next: "Suivant",
+    pageOf: "Page {page} sur {total}",
+  },
   feelings: {
     title: "Comment voulez-vous vous sentir ?",
     subtitle: "Sélectionnez une humeur pour découvrir des voyages adaptés à votre état d'esprit.",
