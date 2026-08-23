@@ -5,7 +5,7 @@ import { isLocale, DEFAULT_LOCALE, type Locale } from "@/lib/i18n/locales";
 import { fr } from "@/lib/i18n/translations/fr";
 import { en } from "@/lib/i18n/translations/en";
 import { es } from "@/lib/i18n/translations/es";
-import { getTravelerTypePage, TRAVELER_TYPE_PAGES } from "@/lib/experienceTypesData";
+import { getTravelerTypePage, TRAVELER_TYPE_PAGES, type TravelerTypePage } from "@/lib/experienceTypesData";
 import { getWhatTypePage, WHAT_TYPE_PAGES } from "@/lib/whatTypesData";
 import { TravelerTypePageClient } from "./TravelerTypePageClient";
 import { WhatTypePageClient } from "./WhatTypePageClient";
@@ -38,6 +38,55 @@ const TOUR_CARD_SELECT = {
   destination: { select: { slug: true, regionSlug: true } },
 } as const;
 
+// Hero/overview/best-destinations/reassurance/FAQ content is admin-editable (ExperienceType +
+// ContentBlock + Faq rows) — this adapts the DB row back into the TravelerTypePage shape
+// TravelerTypePageClient already expects, so that component stays untouched. categorySections
+// and linkCardGroups are page-structure config, not day-to-day editorial content, and stay
+// sourced from src/lib/experienceTypesData.ts for now.
+async function getTravelerTypeContent(slug: string): Promise<TravelerTypePage | null> {
+  const row = await db.experienceType.findUnique({
+    where: { slug },
+    include: {
+      contentBlocks: { orderBy: { order: "asc" } },
+      faqs: { orderBy: { order: "asc" } },
+    },
+  });
+  if (!row) return null;
+
+  const staticExtras = getTravelerTypePage(slug);
+
+  return {
+    slug: row.slug,
+    travelerTypeKey: row.travelerTypeKey as TravelerTypePage["travelerTypeKey"],
+    heroImage: row.heroImage,
+    heroTitle: { fr: row.heroTitle, en: row.heroTitleEn, es: row.heroTitleEs },
+    heroSubtitle: { fr: row.heroSubtitle, en: row.heroSubtitleEn, es: row.heroSubtitleEs },
+    overviewTitle: { fr: row.overviewTitle, en: row.overviewTitleEn, es: row.overviewTitleEs },
+    overviewBody: { fr: row.overviewBody, en: row.overviewBodyEn, es: row.overviewBodyEs },
+    categorySections: staticExtras?.categorySections,
+    linkCardGroups: staticExtras?.linkCardGroups,
+    bestDestinations: row.contentBlocks
+      .filter((b) => b.section === "bestDestinations")
+      .map((b) => ({
+        key: b.id,
+        image: b.image,
+        name: { fr: b.title, en: b.titleEn, es: b.titleEs },
+        blurb: { fr: b.description, en: b.descriptionEn, es: b.descriptionEs },
+        href: b.ctaHref,
+      })),
+    reassurance: row.contentBlocks
+      .filter((b) => b.section === "reassurance")
+      .map((b) => ({
+        title: { fr: b.title, en: b.titleEn, es: b.titleEs },
+        body: { fr: b.description, en: b.descriptionEn, es: b.descriptionEs },
+      })),
+    faqs: row.faqs.map((f) => ({
+      question: { fr: f.question, en: f.questionEn, es: f.questionEs },
+      answer: { fr: f.answer, en: f.answerEn, es: f.answerEs },
+    })),
+  };
+}
+
 export function generateStaticParams() {
   return [...TRAVELER_TYPE_PAGES.map((p) => ({ slug: p.slug })), ...WHAT_TYPE_PAGES.map((p) => ({ slug: p.slug }))];
 }
@@ -50,7 +99,7 @@ export async function generateMetadata({
   const { locale: rawLocale, slug } = await params;
   const locale = isLocale(rawLocale) ? rawLocale : DEFAULT_LOCALE;
 
-  const travelerContent = getTravelerTypePage(slug);
+  const travelerContent = await getTravelerTypeContent(slug);
   if (travelerContent) {
     return { title: pick(locale, travelerContent.heroTitle), description: pick(locale, travelerContent.heroSubtitle) };
   }
@@ -69,7 +118,7 @@ export default async function ExperienceTypePage({
   const { locale: rawLocale, slug } = await params;
   const locale = isLocale(rawLocale) ? rawLocale : DEFAULT_LOCALE;
 
-  const travelerContent = getTravelerTypePage(slug);
+  const travelerContent = await getTravelerTypeContent(slug);
   const whatContent = !travelerContent ? getWhatTypePage(slug) : undefined;
 
   if (!travelerContent && !whatContent) notFound();

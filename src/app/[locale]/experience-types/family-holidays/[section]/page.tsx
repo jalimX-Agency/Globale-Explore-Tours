@@ -6,7 +6,6 @@ import { fr } from "@/lib/i18n/translations/fr";
 import { en } from "@/lib/i18n/translations/en";
 import { es } from "@/lib/i18n/translations/es";
 import { getFamilySubPage, FAMILY_SUB_PAGES } from "@/lib/familySubPagesData";
-import { getTravelerTypePage } from "@/lib/experienceTypesData";
 import { FamilySubPageClient } from "./FamilySubPageClient";
 
 const NAV_EXPERIENCES = { fr: fr.nav.experiences, en: en.nav.experiences, es: es.nav.experiences };
@@ -81,7 +80,13 @@ export default async function FamilySubPage({
   }));
 
   const experiencesLabel = pick(locale, NAV_EXPERIENCES);
-  const familyPageTitle = pick(locale, getTravelerTypePage("family-holidays")!.heroTitle);
+  const familyExperienceType = await db.experienceType.findUnique({
+    where: { slug: "family-holidays" },
+    select: { heroTitle: true, heroTitleEn: true, heroTitleEs: true },
+  });
+  const familyPageTitle = familyExperienceType
+    ? pick(locale, { fr: familyExperienceType.heroTitle, en: familyExperienceType.heroTitleEn, es: familyExperienceType.heroTitleEs })
+    : "Family holidays";
   const pageTitle = pick(locale, content.title);
 
   return (

@@ -13,6 +13,7 @@ import {
   Quote,
   CalendarCheck,
   Mail,
+  Compass,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -23,6 +24,7 @@ const CONTENT_NAV_ITEMS = [
   { href: "/admin", label: "Tableau de bord", icon: LayoutDashboard, exact: true, iconBg: "bg-slate-100", iconColor: "text-slate-600" },
   { href: "/admin/regions", label: "Régions", icon: Globe2, exact: false, iconBg: "bg-sky-100", iconColor: "text-sky-600" },
   { href: "/admin/destinations", label: "Destinations", icon: MapPin, exact: false, iconBg: "bg-emerald-100", iconColor: "text-emerald-600" },
+  { href: "/admin/experiences", label: "Expériences", icon: Compass, exact: false, iconBg: "bg-fuchsia-100", iconColor: "text-fuchsia-600" },
   { href: "/admin/blog", label: "Blog", icon: Newspaper, exact: false, iconBg: "bg-violet-100", iconColor: "text-violet-600" },
   { href: "/admin/testimonials", label: "Témoignages", icon: Quote, exact: false, iconBg: "bg-amber-100", iconColor: "text-amber-600" },
 ];

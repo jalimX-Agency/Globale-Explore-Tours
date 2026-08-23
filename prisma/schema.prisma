@@ -61,27 +61,30 @@ model Region {
   team        TeamMember[]
 }
 
-// ── ContentBlock — "What to see and do" / "Best of X" / "Experiences clients loved",
-//    attached to exactly one of Region or Destination ──
+// ── ContentBlock — "What to see and do" / "Best of X" / "Experiences clients loved" /
+//    "bestDestinations" / "reassurance" (the last two for ExperienceType pages), attached
+//    to exactly one of Region, Destination, or ExperienceType ──
 model ContentBlock {
-  id            String       @id @default(cuid())
-  section       String // "seeAndDo" | "bestOf" | "clientLoved"
-  title         String
-  titleEn       String       @default("")
-  titleEs       String       @default("")
-  description   String       @default("")
-  descriptionEn String       @default("")
-  descriptionEs String       @default("")
-  image         String       @default("")
-  ctaLabel      String       @default("")
-  ctaLabelEn    String       @default("")
-  ctaLabelEs    String       @default("")
-  ctaHref       String       @default("")
-  order         Int          @default(0)
-  regionId      String?
-  region        Region?      @relation(fields: [regionId], references: [id])
-  destinationId String?
-  destination   Destination? @relation(fields: [destinationId], references: [id])
+  id               String          @id @default(cuid())
+  section          String // "seeAndDo" | "bestOf" | "clientLoved" | "bestDestinations" | "reassurance"
+  title            String
+  titleEn          String          @default("")
+  titleEs          String          @default("")
+  description      String          @default("")
+  descriptionEn    String          @default("")
+  descriptionEs    String          @default("")
+  image            String          @default("")
+  ctaLabel         String          @default("")
+  ctaLabelEn       String          @default("")
+  ctaLabelEs       String          @default("")
+  ctaHref          String          @default("")
+  order            Int             @default(0)
+  regionId         String?
+  region           Region?         @relation(fields: [regionId], references: [id])
+  destinationId    String?
+  destination      Destination?    @relation(fields: [destinationId], references: [id])
+  experienceTypeId String?
+  experienceType   ExperienceType? @relation(fields: [experienceTypeId], references: [id])
 }
 
 // ── TeamMember — destination specialists, attached to exactly one of Region or Destination ──
@@ -99,20 +102,52 @@ model TeamMember {
   destination   Destination? @relation(fields: [destinationId], references: [id])
 }
 
-// ── Faq — attached to exactly one of Region or Destination ──
+// ── Faq — attached to exactly one of Region, Destination, or ExperienceType ──
 model Faq {
-  id            String       @id @default(cuid())
-  question      String
-  questionEn    String       @default("")
-  questionEs    String       @default("")
-  answer        String       @default("")
-  answerEn      String       @default("")
-  answerEs      String       @default("")
-  order         Int          @default(0)
-  regionId      String?
-  region        Region?      @relation(fields: [regionId], references: [id])
-  destinationId String?
-  destination   Destination? @relation(fields: [destinationId], references: [id])
+  id               String          @id @default(cuid())
+  question         String
+  questionEn       String          @default("")
+  questionEs       String          @default("")
+  answer           String          @default("")
+  answerEn         String          @default("")
+  answerEs         String          @default("")
+  order            Int             @default(0)
+  regionId         String?
+  region           Region?         @relation(fields: [regionId], references: [id])
+  destinationId    String?
+  destination      Destination?    @relation(fields: [destinationId], references: [id])
+  experienceTypeId String?
+  experienceType   ExperienceType? @relation(fields: [experienceTypeId], references: [id])
+}
+
+// ── ExperienceType — "/experience-types/[slug]" traveler-type pages (family-holidays,
+//    couples-holidays, luxury-group-holidays, solo-holidays, luxury-honeymoons). The trip
+//    cards shown on each page are a live query against Tour.travelerTypes, matched via
+//    travelerTypeKey — not stored here. Each page's category-carousel and "explore further"
+//    link-card sections stay in src/lib/experienceTypesData.ts for now (page-structure
+//    config, not day-to-day editorial content). ──
+model ExperienceType {
+  id               String         @id @default(cuid())
+  slug             String         @unique
+  travelerTypeKey  String         @default("") // family | couples | groups | honeymoon | solo
+  heroImage        String         @default("")
+  heroTitle        String         @default("")
+  heroTitleEn      String         @default("")
+  heroTitleEs      String         @default("")
+  heroSubtitle     String         @default("")
+  heroSubtitleEn   String         @default("")
+  heroSubtitleEs   String         @default("")
+  overviewTitle    String         @default("")
+  overviewTitleEn  String         @default("")
+  overviewTitleEs  String         @default("")
+  overviewBody     String         @default("")
+  overviewBodyEn   String         @default("")
+  overviewBodyEs   String         @default("")
+  order            Int            @default(0)
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  contentBlocks    ContentBlock[]
+  faqs             Faq[]
 }
 
 // ── Tour / Excursion (day trips, city tours, activities) ──
