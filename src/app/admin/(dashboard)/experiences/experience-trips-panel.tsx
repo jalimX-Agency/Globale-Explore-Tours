@@ -12,6 +12,8 @@ export type TripOption = {
   id: string;
   name: string;
   destinationName: string;
+  region: string;
+  regionSlug: string;
   travelerTypes: string;
 };
 
@@ -33,14 +35,17 @@ export function ExperienceTripsPanel({ travelerTypeKey, trips }: { travelerTypeK
   const [matches, setMatches] = useState(() => new Set(trips.filter((t) => isMatched(t.travelerTypes, travelerTypeKey)).map((t) => t.id)));
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState<StatusFilter>("all");
-  const [destinationFilter, setDestinationFilter] = useState("");
+  const [regionFilter, setRegionFilter] = useState("");
   const [rawPage, setPage] = useState(1);
   const [pending, startTransition] = useTransition();
 
-  const destinationOptions = useMemo(
-    () => Array.from(new Set(trips.map((t) => t.destinationName).filter(Boolean))).sort((a, b) => a.localeCompare(b)),
-    [trips]
-  );
+  const regionOptions = useMemo(() => {
+    const seen = new Map<string, string>(); // regionSlug -> region label
+    for (const t of trips) {
+      if (t.regionSlug && !seen.has(t.regionSlug)) seen.set(t.regionSlug, t.region);
+    }
+    return Array.from(seen.entries()).sort(([, a], [, b]) => a.localeCompare(b));
+  }, [trips]);
 
   const filtered = useMemo(() => {
     let list = trips;
@@ -48,11 +53,11 @@ export function ExperienceTripsPanel({ travelerTypeKey, trips }: { travelerTypeK
       const q = query.trim().toLowerCase();
       list = list.filter((t) => `${t.name} ${t.destinationName}`.toLowerCase().includes(q));
     }
-    if (destinationFilter) list = list.filter((t) => t.destinationName === destinationFilter);
+    if (regionFilter) list = list.filter((t) => t.regionSlug === regionFilter);
     if (status === "matched") list = list.filter((t) => matches.has(t.id));
     else if (status === "unmatched") list = list.filter((t) => !matches.has(t.id));
     return list;
-  }, [trips, query, destinationFilter, status, matches]);
+  }, [trips, query, regionFilter, status, matches]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const page = Math.min(rawPage, totalPages);
@@ -106,17 +111,17 @@ export function ExperienceTripsPanel({ travelerTypeKey, trips }: { travelerTypeK
         </div>
 
         <select
-          value={destinationFilter}
+          value={regionFilter}
           onChange={(e) => {
-            setDestinationFilter(e.target.value);
+            setRegionFilter(e.target.value);
             resetToFirstPage();
           }}
           className="h-9 rounded-md border border-input bg-transparent px-3 text-sm text-foreground"
         >
-          <option value="">Toutes les destinations</option>
-          {destinationOptions.map((d) => (
-            <option key={d} value={d}>
-              {d}
+          <option value="">Toutes les régions</option>
+          {regionOptions.map(([slug, label]) => (
+            <option key={slug} value={slug}>
+              {label}
             </option>
           ))}
         </select>

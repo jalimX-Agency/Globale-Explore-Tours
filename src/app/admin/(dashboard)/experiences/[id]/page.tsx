@@ -17,7 +17,12 @@ export default async function EditExperienceTypePage({ params }: { params: Promi
     db.tour.findMany({
       orderBy: { name: "asc" },
       take: 1000, // defensive cap — the "Voyages" picker needs the full catalog, not a partial view
-      select: { id: true, name: true, travelerTypes: true, destination: { select: { name: true } } },
+      select: {
+        id: true,
+        name: true,
+        travelerTypes: true,
+        destination: { select: { name: true, region: true, regionSlug: true } },
+      },
     }),
   ]);
 
@@ -83,6 +88,8 @@ export default async function EditExperienceTypePage({ params }: { params: Promi
     id: t.id,
     name: t.name,
     destinationName: t.destination?.name ?? "",
+    region: t.destination?.region ?? "",
+    regionSlug: t.destination?.regionSlug ?? "",
     travelerTypes: t.travelerTypes,
   }));
 
