@@ -41,6 +41,8 @@ function tourData(values: TourFormValues) {
     includesEs: values.includesEs,
     category: values.category,
     theme: values.theme,
+    feeling: values.feeling,
+    bestMonths: values.bestMonths,
     travelerTypes: values.travelerTypes,
     maxGuests: values.maxGuests,
     departureFrom: values.departureFrom,

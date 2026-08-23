@@ -46,6 +46,8 @@ export default async function EditTourPage({ params }: { params: Promise<{ id: s
     includesEs: tour.includesEs,
     category: tour.category,
     theme: tour.theme,
+    feeling: tour.feeling,
+    bestMonths: tour.bestMonths,
     travelerTypes: tour.travelerTypes,
     maxGuests: tour.maxGuests,
     departureFrom: tour.departureFrom,

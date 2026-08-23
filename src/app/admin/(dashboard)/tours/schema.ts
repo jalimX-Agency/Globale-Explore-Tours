@@ -69,6 +69,8 @@ export const tourFormSchema = z.object({
   includesEs: z.string(),
   category: z.string(),
   theme: z.string(),
+  feeling: z.string(),
+  bestMonths: z.string(),
   travelerTypes: z.string(),
   maxGuests: z.number().int(),
   departureFrom: z.string(),

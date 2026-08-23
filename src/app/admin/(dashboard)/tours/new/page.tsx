@@ -28,6 +28,8 @@ const emptyValues: TourFormValues = {
   includesEs: "",
   category: "",
   theme: "",
+  feeling: "",
+  bestMonths: "",
   travelerTypes: "",
   maxGuests: 2,
   departureFrom: "Agadir",

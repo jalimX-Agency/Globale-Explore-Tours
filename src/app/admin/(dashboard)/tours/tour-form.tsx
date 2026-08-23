@@ -56,6 +56,31 @@ const THEMES = [
   { value: "family", label: "Famille" },
 ];
 
+// Same 5 keys as the public "Trip Finder" (t("feelings.*") in fr/en/es.ts) — this is the
+// tag it filters tours by, distinct from Theme above.
+const FEELINGS = [
+  { value: "revitalized", label: "Ressourcé" },
+  { value: "freedom", label: "Libre" },
+  { value: "distraction", label: "Émerveillé" },
+  { value: "challenged", label: "Stimulé" },
+  { value: "contentment", label: "Apaisé" },
+];
+
+const MONTHS = [
+  { value: "january", label: "Janvier" },
+  { value: "february", label: "Février" },
+  { value: "march", label: "Mars" },
+  { value: "april", label: "Avril" },
+  { value: "may", label: "Mai" },
+  { value: "june", label: "Juin" },
+  { value: "july", label: "Juillet" },
+  { value: "august", label: "Août" },
+  { value: "september", label: "Septembre" },
+  { value: "october", label: "Octobre" },
+  { value: "november", label: "Novembre" },
+  { value: "december", label: "Décembre" },
+];
+
 function newDay() {
   return {
     dayNumber: 1,
@@ -524,7 +549,7 @@ export function TourForm({
                   </div>
                   <TrilingualField control={form.control} baseName="name" label="Nom" required />
                   <TrilingualField control={form.control} baseName="tagline" label="Accroche" />
-                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
                     <FormField
                       control={form.control}
                       name="category"
@@ -564,6 +589,29 @@ export function TourForm({
                               {THEMES.map((t) => (
                                 <SelectItem key={t.value} value={t.value}>
                                   {t.label}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="feeling"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Ressenti (Trip Finder)</FormLabel>
+                          <Select value={field.value} onValueChange={field.onChange}>
+                            <FormControl>
+                              <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Choisir..." />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {FEELINGS.map((f) => (
+                                <SelectItem key={f.value} value={f.value}>
+                                  {f.label}
                                 </SelectItem>
                               ))}
                             </SelectContent>
@@ -667,6 +715,41 @@ export function TourForm({
                       </FormControl>
                     </FormItem>
                   )}
+                />
+              </CollapsibleSection>
+
+              <CollapsibleSection title="Meilleure période (Trip Finder)">
+                <p className="mb-3 text-xs text-muted-foreground">
+                  Mois pour lesquels ce voyage apparaît quand un visiteur filtre par mois sur
+                  le Trip Finder. Laissez tout décoché pour que ce voyage apparaisse quel que
+                  soit le mois choisi.
+                </p>
+                <FormField
+                  control={form.control}
+                  name="bestMonths"
+                  render={({ field }) => {
+                    const selected = field.value ? field.value.split(",").map((s: string) => s.trim()).filter(Boolean) : [];
+                    return (
+                      <FormItem>
+                        <div className="grid grid-cols-2 gap-x-4 gap-y-2 sm:grid-cols-4">
+                          {MONTHS.map((m) => (
+                            <label key={m.value} className="flex items-center gap-2 text-sm font-normal">
+                              <Checkbox
+                                checked={selected.includes(m.value)}
+                                onCheckedChange={(checked) => {
+                                  const next = checked
+                                    ? [...selected, m.value]
+                                    : selected.filter((v: string) => v !== m.value);
+                                  field.onChange(next.join(","));
+                                }}
+                              />
+                              {m.label}
+                            </label>
+                          ))}
+                        </div>
+                      </FormItem>
+                    );
+                  }}
                 />
               </CollapsibleSection>
 

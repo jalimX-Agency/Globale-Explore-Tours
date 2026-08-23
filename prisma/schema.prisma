@@ -187,6 +187,8 @@ model Tour {
   includesEs        String           @default("")
   category          String           @default("") // activity | tour | multi-day | transfer
   theme             String           @default("") // adventure | culture | relax | family
+  feeling           String           @default("") // revitalized | freedom | distraction | challenged | contentment — Trip Finder's "how do you want to feel?" tag, distinct from theme
+  bestMonths        String           @default("") // comma-separated month slugs (e.g. "march,april,september") — Trip Finder's "when?" filter; empty = matches any month
   travelerTypes     String           @default("") // comma-separated: family | couples | groups | honeymoon | solo
   destinationId     String
   destination       Destination      @relation(fields: [destinationId], references: [id])
