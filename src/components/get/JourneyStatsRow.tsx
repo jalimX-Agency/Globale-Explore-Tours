@@ -35,26 +35,26 @@ export function JourneyStatsRow({
     <div className="mx-auto mt-10 max-w-2xl border-t border-neutral-200 pt-8">
       <div className="grid grid-cols-3 gap-6 text-center">
         <div>
-          <p className="label-eyebrow" style={{ color: "var(--brand-clay)", fontSize: "1.05rem", letterSpacing: "0.12em" }}>
+          <p className="font-display text-xl sm:text-2xl" style={{ color: "var(--brand-when)", fontWeight: 700, letterSpacing: "0.01em" }}>
             {t("tripDetailPage.when")}
           </p>
-          <p className="font-body mt-2 text-sm text-neutral-800">{when}</p>
+          <p className="font-body mt-2 text-sm italic text-neutral-800">{when}</p>
         </div>
         <div>
-          <p className="label-eyebrow" style={{ color: "var(--brand-accent)", fontSize: "1.05rem", letterSpacing: "0.12em" }}>
+          <p className="font-display text-xl sm:text-2xl" style={{ color: "var(--brand-price)", fontWeight: 700, letterSpacing: "0.01em" }}>
             {t("tripDetailPage.price")}
           </p>
-          <p className="font-body mt-2 text-sm text-neutral-800">
+          <p className="font-body mt-2 text-sm italic text-neutral-800">
             {t("tripDetailPage.priceFrom")} {price.toLocaleString("fr-FR")}{currency === "EUR" ? "€" : currency}{" "}
             {t("tripDetailPage.exclFlights")}
           </p>
           <p className="font-body mt-0.5 text-xs italic text-neutral-400">{t("tripDetailPage.priceSharing")}</p>
         </div>
         <div>
-          <p className="label-eyebrow" style={{ color: "var(--brand-ink-soft)", fontSize: "1.05rem", letterSpacing: "0.12em" }}>
+          <p className="font-display text-xl sm:text-2xl" style={{ color: "var(--brand-duration)", fontWeight: 700, letterSpacing: "0.01em" }}>
             {t("tripDetailPage.howLong")}
           </p>
-          <p className="font-body mt-2 text-sm text-neutral-800">{durationText}</p>
+          <p className="font-body mt-2 text-sm italic text-neutral-800">{durationText}</p>
           <p className="font-body mt-0.5 text-xs italic text-neutral-400">{t("tripDetailPage.idealLength")}</p>
         </div>
       </div>

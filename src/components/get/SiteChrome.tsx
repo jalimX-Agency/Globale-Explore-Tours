@@ -23,7 +23,7 @@ export function SiteChrome({ nav, children }: { nav: React.ReactNode; children: 
     <>
       {nav}
       {/* Home's hero sits under the transparent header; every other page needs the offset. */}
-      <div className={hasDarkHero ? undefined : "pt-20"}>{children}</div>
+      <div className={hasDarkHero ? undefined : "pt-14"}>{children}</div>
       <Footer />
       <Toaster richColors position="top-center" />
     </>

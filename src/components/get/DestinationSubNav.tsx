@@ -26,7 +26,7 @@ export function DestinationSubNav({ tabs }: { tabs: SubNavTab[] }) {
   if (tabs.length === 0) return null;
 
   return (
-    <div className="sticky top-20 z-40 border-b border-neutral-200 bg-[var(--brand-sand)]">
+    <div className="sticky top-14 z-40 border-b border-neutral-200 bg-[var(--brand-sand)]">
       <nav className="mx-auto flex max-w-7xl items-center justify-center gap-8 overflow-x-auto px-6 lg:px-10">
         {tabs.map((tab) => (
           <a

@@ -7,8 +7,12 @@ export function ClosingCta() {
   const { t } = useLanguage();
 
   return (
-    <section className="bg-[var(--brand-accent)] py-16 text-white sm:py-20">
-      <div className="mx-auto flex max-w-3xl flex-col items-center gap-5 px-6 text-center lg:px-10">
+    <section
+      className="relative bg-cover bg-center py-16 text-white sm:py-20"
+      style={{ backgroundImage: "url(/textures/closing-cta-bg.avif)" }}
+    >
+      <div className="absolute inset-0 bg-black/20" />
+      <div className="relative mx-auto flex max-w-3xl flex-col items-center gap-5 px-6 text-center lg:px-10">
         <h2 className="font-display text-3xl font-normal tracking-wide sm:text-4xl" style={{ textWrap: "balance" }}>
           {t("closingCta.title")}
         </h2>

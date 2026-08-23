@@ -154,6 +154,9 @@
   --brand-clay: oklch(0.58 0.15 40);
   --brand-accent: #e93423; /* sampled from the client's own logo */
   --brand-accent-dark: #c22318;
+  --brand-when: #c1560f;
+  --brand-price: #178a72;
+  --brand-duration: #2b6ca3;
 }
 
 .font-display {

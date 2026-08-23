@@ -207,43 +207,45 @@ export function Navigation({
           solid ? "bg-white/95 backdrop-blur-md shadow-[0_1px_0_rgba(0,0,0,0.06)]" : "bg-transparent"
         }`}
       >
-      <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 lg:px-10">
-        <LocaleLink href="/" aria-label="Globale Explore Tours">
+      <div className="mx-auto grid h-14 max-w-7xl grid-cols-[auto_1fr_auto] items-center gap-6 px-6 lg:px-10">
+        <LocaleLink href="/" aria-label="Globale Explore Tours" className="justify-self-start">
           <Image
             src={solid ? "/logo.png" : "/logo-white.png"}
             alt="Globale Explore Tours"
-            width={52}
-            height={35}
-            className="object-contain"
+            width={70}
+            height={46}
+            className="h-9 w-auto object-contain lg:h-10"
             priority
           />
         </LocaleLink>
 
-        <nav className={`hidden items-center gap-8 lg:flex ${textColor}`}>
-          {regionGroups.length > 0 && (
-            <button className="label-eyebrow hover:opacity-70" onClick={openDestinations}>
-              {t("nav.destinations")}
-            </button>
-          )}
+        {/* Center zone — nav links + hamburger, grouped together and roughly centered between
+            the logo and the right-hand utilities (Black Tomato header layout). */}
+        <div className="hidden items-center justify-center gap-10 lg:flex">
+          <nav className={`flex items-center gap-10 ${textColor}`}>
+            {regionGroups.length > 0 && (
+              <button className="label-eyebrow hover:opacity-70" onClick={openDestinations}>
+                {t("nav.destinations")}
+              </button>
+            )}
 
-          {/* Opens on hover, closes only via the panel's own close button (or Escape) — not on
-              mouse-leave, so moving off the trigger to browse the panel doesn't dismiss it. */}
-          <LocaleLink
-            href="/experience-types"
-            onMouseEnter={openExperiences}
-            className="label-eyebrow hover:opacity-70"
-          >
-            {t("nav.experiences")}
-          </LocaleLink>
+            {/* Opens on hover, closes only via the panel's own close button (or Escape) — not on
+                mouse-leave, so moving off the trigger to browse the panel doesn't dismiss it. */}
+            <LocaleLink
+              href="/experience-types"
+              onMouseEnter={openExperiences}
+              className="label-eyebrow hover:opacity-70"
+            >
+              {t("nav.experiences")}
+            </LocaleLink>
 
-          <LocaleLink href="/a-propos" className="label-eyebrow hover:opacity-70">
-            {t("nav.about")}
-          </LocaleLink>
-        </nav>
+            <LocaleLink href="/a-propos" className="label-eyebrow hover:opacity-70">
+              {t("nav.about")}
+            </LocaleLink>
+          </nav>
 
-        <div className="flex items-center gap-4">
           <div
-            className="relative hidden lg:block"
+            className="relative"
             onMouseEnter={() => setMoreOpen(true)}
             onMouseLeave={() => setMoreOpen(false)}
           >
@@ -255,7 +257,7 @@ export function Navigation({
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.18 }}
-                className="absolute right-0 top-full w-56 rounded-sm border border-neutral-100 bg-white py-3 text-neutral-900 shadow-xl"
+                className="absolute left-1/2 top-full w-56 -translate-x-1/2 rounded-sm border border-neutral-100 bg-white py-3 text-neutral-900 shadow-xl"
               >
                 {MORE_LINKS.map(({ labelKey, href }) => (
                   <LocaleLink
@@ -283,13 +285,20 @@ export function Navigation({
               </motion.div>
             )}
           </div>
+        </div>
 
+        {/* Right zone — phone + CTA only. */}
+        <div className="flex items-center gap-6 justify-self-end">
           <a href="tel:+33667586462" className={`hidden items-center gap-1.5 text-sm xl:flex ${textColor}`}>
             <Phone className="h-3.5 w-3.5" />
             +33 6 67 58 64 62
           </a>
 
-          <LocaleLink href="/faire-une-demande" className="btn-accent hidden lg:inline-flex text-xs px-5 py-2.5">
+          <LocaleLink
+            href="/faire-une-demande"
+            className="btn-accent hidden lg:inline-flex text-xs"
+            style={{ padding: "0.4rem 1.1rem" }}
+          >
             {t("nav.bookNow")}
           </LocaleLink>
 
@@ -306,8 +315,8 @@ export function Navigation({
             animate={{ opacity: 1 }}
             className="fixed inset-0 z-50 flex flex-col bg-white lg:hidden"
           >
-            <div className="flex h-20 flex-shrink-0 items-center justify-between px-6">
-              <Image src="/logo.png" alt="Globale Explore Tours" width={44} height={30} className="object-contain" />
+            <div className="flex h-14 flex-shrink-0 items-center justify-between px-6">
+              <Image src="/logo.png" alt="Globale Explore Tours" width={64} height={42} className="h-9 w-auto object-contain" />
               <button
                 onClick={() => {
                   setMobileOpen(false);
@@ -463,7 +472,7 @@ export function Navigation({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.18 }}
-            className="fixed left-0 right-0 top-20 z-40 flex h-[calc(100vh-5rem)] flex-col overflow-y-auto border-t border-neutral-100 bg-white shadow-xl"
+            className="fixed left-0 right-0 top-14 z-40 flex h-[calc(100vh-3.5rem)] flex-col overflow-y-auto border-t border-neutral-100 bg-white shadow-xl"
           >
             <button
               onClick={() => setDestinationsOpen(false)}
@@ -474,28 +483,31 @@ export function Navigation({
             </button>
 
             <div className="mx-auto flex w-full max-w-7xl flex-col px-6 pb-10 pt-10 lg:flex-row lg:px-10">
-              <div className="flex flex-col gap-1 py-6 lg:w-1/4 lg:py-0">
+              <div className="flex flex-col gap-1 py-6 lg:w-1/5 lg:py-0">
                 {regionGroups.map((group) => (
-                  <button
+                  <LocaleLink
                     key={group.slug}
+                    href={`/destinations/${group.slug}`}
                     onMouseEnter={() => setActiveRegionSlug(group.slug)}
-                    onClick={() => setActiveRegionSlug(group.slug)}
+                    onClick={() => setDestinationsOpen(false)}
                     className={`font-display text-left text-2xl py-2 transition-colors ${
                       group.slug === activeGroup.slug ? "text-[var(--brand-accent)]" : "text-neutral-800 hover:text-neutral-500"
                     }`}
                   >
                     {group.label}
-                  </button>
+                  </LocaleLink>
                 ))}
               </div>
 
-              <div className="flex flex-col gap-3 py-6 lg:w-1/4 lg:border-l lg:border-neutral-100 lg:py-0 lg:pl-10">
+              <div
+                className="grid grid-flow-col grid-rows-[repeat(15,minmax(0,auto))] gap-x-8 gap-y-1 py-6 lg:w-2/5 lg:border-l lg:border-neutral-100 lg:py-0 lg:pl-10"
+              >
                 {activeGroup.items.map((d) => (
                   <LocaleLink
                     key={d.slug}
                     href={`/destinations/${d.regionSlug}/${d.slug}`}
                     onClick={() => setDestinationsOpen(false)}
-                    className="font-body text-neutral-700 hover:text-neutral-900"
+                    className="font-body py-1.5 text-neutral-700 hover:text-neutral-900"
                   >
                     {localizedName(d, language)}
                   </LocaleLink>
@@ -503,13 +515,13 @@ export function Navigation({
                 <LocaleLink
                   href={`/destinations/${activeGroup.slug}`}
                   onClick={() => setDestinationsOpen(false)}
-                  className="font-display mt-4 text-sm font-semibold tracking-wide text-neutral-900 hover:opacity-60"
+                  className="font-display mt-3 text-sm font-semibold tracking-wide text-neutral-900 hover:opacity-60"
                 >
                   {t("nav.browseAll")} {activeGroup.label.toUpperCase()}
                 </LocaleLink>
               </div>
 
-              <div className="relative hidden overflow-hidden rounded-sm lg:block lg:w-1/2 lg:py-0 lg:pl-10">
+              <div className="relative hidden overflow-hidden rounded-sm lg:block lg:w-2/5 lg:py-0 lg:pl-10">
                 <div className="relative h-full min-h-[380px] w-full">
                   {(() => {
                     const photo = activeGroup.items.find((d) => d.featured)?.heroImage ?? activeGroup.items[0]?.heroImage;
@@ -528,7 +540,7 @@ export function Navigation({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.18 }}
-            className="fixed left-0 right-0 top-20 z-40 flex h-[calc(100vh-5rem)] flex-col overflow-y-auto border-t border-neutral-100 bg-white shadow-xl"
+            className="fixed left-0 right-0 top-14 z-40 flex h-[calc(100vh-3.5rem)] flex-col overflow-y-auto border-t border-neutral-100 bg-white shadow-xl"
           >
             <button
               onClick={() => setExperiencesOpen(false)}

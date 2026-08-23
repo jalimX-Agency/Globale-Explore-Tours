@@ -89,7 +89,7 @@ export function ExperiencesPageClient({
       </section>
 
       {/* ── Sticky sub-nav ── */}
-      <div className="sticky top-20 z-30 border-y border-neutral-200 bg-white/95 backdrop-blur-md">
+      <div className="sticky top-14 z-30 border-y border-neutral-200 bg-white/95 backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl justify-center gap-8 px-6 py-4 sm:gap-12">
           <button onClick={() => scrollToSection("whos-travelling")} className="label-eyebrow text-neutral-600 transition-colors hover:text-neutral-900">
             {t("experienceTypes.subnavWho")}
