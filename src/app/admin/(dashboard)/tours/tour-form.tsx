@@ -29,6 +29,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 import { TrilingualField } from "@/components/admin/trilingual-field";
 import { MediaUploadField } from "@/components/admin/media-upload-field";
@@ -157,149 +158,223 @@ function SubCollapsible({
   );
 }
 
-// A chapter's own fields plus a nested RepeatableList for that chapter's days — nesting
-// works because useFieldArray follows dotted paths like `chapters.2.days` without any
-// special support needed from <RepeatableList> itself. Day numbers are no longer a hand-typed
-// field: they're derived live from each day's position across every chapter (chapter 2's
-// first day continues right after chapter 1's last one), shown as a read-only label, and the
-// same computation runs again in onSubmit so the saved value always matches — see there for
-// why it isn't just synced into form state via an effect.
-function ChapterFields({
+// Just the chapter's own fields (title/intro/gallery/map) — shown inside the "Modifier"
+// dialog from <ChaptersManager>, never inline in the chapter list.
+function ChapterInfoFields({
   control,
   baseName,
-  chapterIndex,
 }: {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   control: any;
   baseName: string;
-  chapterIndex: number;
 }) {
-  const chapters = useWatch({ control, name: "chapters" }) as TourFormValues["chapters"];
-  const chapter = chapters[chapterIndex];
-  const dayNumberOffset = chapters.slice(0, chapterIndex).reduce((sum, c) => sum + c.days.length, 0);
-  const chapterTitle = chapter?.title?.trim() || `Chapitre ${chapterIndex + 1}`;
-  const dayCount = chapter?.days.length ?? 0;
-
   return (
-    <div className="space-y-3">
-      <SubCollapsible title={`${chapterTitle} — informations`}>
-        <div className="space-y-4">
-          <TrilingualField control={control} baseName={`${baseName}.title`} label="Titre du chapitre" />
-          <TrilingualField control={control} baseName={`${baseName}.intro`} label="Introduction" multiline />
-          <FormField
-            control={control}
-            name={`${baseName}.galleryImages`}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Images de la galerie (une URL par ligne)</FormLabel>
-                <FormControl>
-                  <Textarea {...field} rows={3} />
-                </FormControl>
-              </FormItem>
-            )}
-          />
-          <div className="grid grid-cols-2 gap-4">
-            <FormField
-              control={control}
-              name={`${baseName}.mapMarkerX`}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Position sur la carte — X (0-100)</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      {...field}
-                      onChange={(e) => field.onChange(e.target.valueAsNumber || 0)}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={control}
-              name={`${baseName}.mapMarkerY`}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Position sur la carte — Y (0-100)</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      {...field}
-                      onChange={(e) => field.onChange(e.target.valueAsNumber || 0)}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-          </div>
-        </div>
-      </SubCollapsible>
-
-      <div>
-        <span className="mb-2 block text-sm font-medium">
-          Jours de ce chapitre <span className="text-muted-foreground">({dayCount})</span>
-        </span>
-        <RepeatableList
+    <div className="space-y-4">
+      <TrilingualField control={control} baseName={`${baseName}.title`} label="Titre du chapitre" />
+      <TrilingualField control={control} baseName={`${baseName}.intro`} label="Introduction" multiline />
+      <FormField
+        control={control}
+        name={`${baseName}.galleryImages`}
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Images de la galerie (une URL par ligne)</FormLabel>
+            <FormControl>
+              <Textarea {...field} rows={3} />
+            </FormControl>
+          </FormItem>
+        )}
+      />
+      <div className="grid grid-cols-2 gap-4">
+        <FormField
           control={control}
-          name={`${baseName}.days`}
-          addLabel="Ajouter un jour"
-          newItem={newDay}
-          renderItem={(dayIndex) => {
-            const day = chapter?.days[dayIndex];
-            const dayNumber = dayNumberOffset + dayIndex + 1;
-            const dayTitle = day?.title?.trim() || day?.location?.trim() || "Sans titre";
-            return (
-              <SubCollapsible title={`Jour ${dayNumber} — ${dayTitle}`}>
-                <div className="space-y-3">
-                  <p className="text-xs text-muted-foreground">
-                    Numéro de jour calculé automatiquement à partir de la position du jour dans le
-                    voyage (réordonnez les chapitres ou les jours pour le changer).
-                  </p>
-                  <TrilingualField control={control} baseName={`${baseName}.days.${dayIndex}.location`} label="Lieu" />
-                  <FormField
-                    control={control}
-                    name={`${baseName}.days.${dayIndex}.hotel`}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Hôtel</FormLabel>
-                        <FormControl>
-                          <Input {...field} />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-                  <TrilingualField control={control} baseName={`${baseName}.days.${dayIndex}.title`} label="Titre" />
-                  <TrilingualField
-                    control={control}
-                    baseName={`${baseName}.days.${dayIndex}.description`}
-                    label="Description"
-                    multiline
-                  />
-                  <MediaUploadField
-                    control={control}
-                    name={`${baseName}.days.${dayIndex}.image`}
-                    label="Image"
-                    folder="tours"
-                  />
-                  <FormField
-                    control={control}
-                    name={`${baseName}.days.${dayIndex}.images`}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Carrousel du jour (une URL par ligne)</FormLabel>
-                        <FormControl>
-                          <Textarea {...field} rows={2} />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-                </div>
-              </SubCollapsible>
-            );
-          }}
+          name={`${baseName}.mapMarkerX`}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Position sur la carte — X (0-100)</FormLabel>
+              <FormControl>
+                <Input type="number" {...field} onChange={(e) => field.onChange(e.target.valueAsNumber || 0)} />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={control}
+          name={`${baseName}.mapMarkerY`}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Position sur la carte — Y (0-100)</FormLabel>
+              <FormControl>
+                <Input type="number" {...field} onChange={(e) => field.onChange(e.target.valueAsNumber || 0)} />
+              </FormControl>
+            </FormItem>
+          )}
         />
       </div>
     </div>
+  );
+}
+
+// The days list for one chapter — shown inside the "Jours" dialog from <ChaptersManager>.
+// Each day is still its own <SubCollapsible> (a chapter can hold several days), but since
+// this list is now the *only* thing in its dialog — no chapter-info fields competing for
+// space above it — there's no more "wall of forms" problem even with several days open.
+function ChapterDaysFields({
+  control,
+  baseName,
+  dayNumberOffset,
+  days,
+}: {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  control: any;
+  baseName: string;
+  dayNumberOffset: number;
+  days: TourFormValues["chapters"][number]["days"];
+}) {
+  return (
+    <RepeatableList
+      control={control}
+      name={`${baseName}.days`}
+      addLabel="Ajouter un jour"
+      newItem={newDay}
+      renderItem={(dayIndex) => {
+        const day = days[dayIndex];
+        const dayNumber = dayNumberOffset + dayIndex + 1;
+        const dayTitle = day?.title?.trim() || day?.location?.trim() || "Sans titre";
+        return (
+          <SubCollapsible title={`Jour ${dayNumber} — ${dayTitle}`}>
+            <div className="space-y-3">
+              <p className="text-xs text-muted-foreground">
+                Numéro de jour calculé automatiquement à partir de la position du jour dans le
+                voyage (réordonnez les chapitres ou les jours pour le changer).
+              </p>
+              <TrilingualField control={control} baseName={`${baseName}.days.${dayIndex}.location`} label="Lieu" />
+              <FormField
+                control={control}
+                name={`${baseName}.days.${dayIndex}.hotel`}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Hôtel</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              <TrilingualField control={control} baseName={`${baseName}.days.${dayIndex}.title`} label="Titre" />
+              <TrilingualField
+                control={control}
+                baseName={`${baseName}.days.${dayIndex}.description`}
+                label="Description"
+                multiline
+              />
+              <MediaUploadField control={control} name={`${baseName}.days.${dayIndex}.image`} label="Image" folder="tours" />
+              <FormField
+                control={control}
+                name={`${baseName}.days.${dayIndex}.images`}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Carrousel du jour (une URL par ligne)</FormLabel>
+                    <FormControl>
+                      <Textarea {...field} rows={2} />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+            </div>
+          </SubCollapsible>
+        );
+      }}
+    />
+  );
+}
+
+// Chapters as a plain list — each row just shows a title/day-count summary and two buttons
+// that open a dialog, rather than rendering every chapter's (and every day's) full form
+// inline. Both dialogs edit the *same* `chapters.N...` fields as before, through the same
+// `control` — they're a different way of showing the form, not a separate save step, so
+// there's no submit button inside either dialog; "Enregistrer" at the top of the page still
+// saves everything, chapters/days included.
+function ChaptersManager({
+  control,
+}: {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  control: any;
+}) {
+  const chapters = useWatch({ control, name: "chapters" }) as TourFormValues["chapters"];
+  const [editingInfoIndex, setEditingInfoIndex] = useState<number | null>(null);
+  const [editingDaysIndex, setEditingDaysIndex] = useState<number | null>(null);
+
+  const dayNumberOffsetFor = (chapterIndex: number) =>
+    chapters.slice(0, chapterIndex).reduce((sum, c) => sum + c.days.length, 0);
+
+  return (
+    <>
+      <RepeatableList
+        control={control}
+        name="chapters"
+        addLabel="Ajouter un chapitre"
+        newItem={newChapter}
+        renderItem={(index) => {
+          const chapter = chapters[index];
+          const title = chapter?.title?.trim() || `Chapitre ${index + 1}`;
+          const dayCount = chapter?.days.length ?? 0;
+          return (
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="min-w-0">
+                <p className="truncate text-sm font-medium text-foreground">{title}</p>
+                <p className="text-xs text-muted-foreground">
+                  {dayCount} jour{dayCount > 1 ? "s" : ""}
+                </p>
+              </div>
+              <div className="flex shrink-0 gap-2">
+                <Button type="button" variant="outline" size="sm" onClick={() => setEditingInfoIndex(index)}>
+                  Modifier
+                </Button>
+                <Button type="button" variant="outline" size="sm" onClick={() => setEditingDaysIndex(index)}>
+                  Jours ({dayCount})
+                </Button>
+              </div>
+            </div>
+          );
+        }}
+      />
+
+      <Dialog open={editingInfoIndex !== null} onOpenChange={(open) => !open && setEditingInfoIndex(null)}>
+        <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle>
+              {editingInfoIndex !== null
+                ? chapters[editingInfoIndex]?.title?.trim() || `Chapitre ${editingInfoIndex + 1}`
+                : ""}
+            </DialogTitle>
+          </DialogHeader>
+          {editingInfoIndex !== null && (
+            <ChapterInfoFields control={control} baseName={`chapters.${editingInfoIndex}`} />
+          )}
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={editingDaysIndex !== null} onOpenChange={(open) => !open && setEditingDaysIndex(null)}>
+        <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>
+              Jours —{" "}
+              {editingDaysIndex !== null
+                ? chapters[editingDaysIndex]?.title?.trim() || `Chapitre ${editingDaysIndex + 1}`
+                : ""}
+            </DialogTitle>
+          </DialogHeader>
+          {editingDaysIndex !== null && (
+            <ChapterDaysFields
+              control={control}
+              baseName={`chapters.${editingDaysIndex}`}
+              dayNumberOffset={dayNumberOffsetFor(editingDaysIndex)}
+              days={chapters[editingDaysIndex]?.days ?? []}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
 
@@ -749,15 +824,7 @@ export function TourForm({
                 title="Chapitres"
                 badge={<Badge variant="outline">{values.chapters.length}</Badge>}
               >
-                <RepeatableList
-                  control={form.control}
-                  name="chapters"
-                  addLabel="Ajouter un chapitre"
-                  newItem={newChapter}
-                  renderItem={(index) => (
-                    <ChapterFields control={form.control} baseName={`chapters.${index}`} chapterIndex={index} />
-                  )}
-                />
+                <ChaptersManager control={form.control} />
               </CollapsibleSection>
             </TabsContent>
           </Tabs>
