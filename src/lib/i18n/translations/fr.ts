@@ -1,9 +1,7 @@
 export const fr = {
   nav: {
     home: "Accueil",
-    tours: "Excursions",
-    multiDay: "Séjours multi-jours",
-    transfers: "Transferts aéroport",
+    tours: "Trip Finder",
     about: "À propos",
     blog: "Journal",
     contact: "Contact",
@@ -223,8 +221,6 @@ export const fr = {
     whoSoloDesc: "Parfois, on veut partir seul — découvrir le monde à son propre rythme. Nous vous aidons à voyager en solo, où que vous vouliez aller.",
     whatEyebrow: "QUE VOULEZ-VOUS FAIRE ?",
     whatTitle: "Pas où, mais quoi ?",
-    whatMultiDay: "Voyages multi-jours",
-    whatMultiDayDesc: "Des itinéraires complets qui traversent un pays de bout en bout — plusieurs étapes, un seul fil conducteur.",
     whatSafari: "Safaris en Afrique",
     whatSafariDesc: "La grande migration, les lions du Masai Mara, un lever de soleil qui ne s'oublie pas.",
     whatTrains: "Trains panoramiques",

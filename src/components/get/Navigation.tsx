@@ -13,8 +13,6 @@ import { LocaleLink } from "@/components/get/LocaleLink";
 // Everything that isn't Excursions / Expériences / About lives behind the hamburger — mirrors
 // Black Tomato's own header, which only ever surfaces 3 top-level links.
 const MORE_LINKS = [
-  { labelKey: "nav.multiDay", href: "/sejours-multi-jours" },
-  { labelKey: "nav.transfers", href: "/transferts-aeroport" },
   { labelKey: "nav.blog", href: "/blog" },
   { labelKey: "nav.contact", href: "/contact" },
 ] as const;
@@ -146,7 +144,6 @@ export function Navigation({
     { key: "culture", image: `${R2}/experiences/what-culture.jpg`, title: t("menu.culture"), desc: t("menu.cultureDesc"), href: "/experience-types/cultural-holidays" },
     { key: "relax", image: `${R2}/experiences/what-relax.jpg`, title: t("menu.relax"), desc: t("menu.relaxDesc"), href: "/experience-types/wellness-holidays" },
     { key: "family", image: `${R2}/experiences/what-family.jpg`, title: t("menu.family"), desc: t("menu.familyDesc"), href: "/experience-types/family-experiences" },
-    { key: "multiDay", image: `${R2}/experiences/what-multiday.jpg`, title: t("experienceTypes.whatMultiDay"), desc: t("experienceTypes.whatMultiDayDesc"), href: "/sejours-multi-jours" },
     { key: "safari", image: `${R2}/destinations/kenya.jpg`, title: t("experienceTypes.whatSafari"), desc: t("experienceTypes.whatSafariDesc"), href: "/experience-types/safari-holidays" },
     { key: "trains", image: `${R2}/destinations/suisse-hero.jpg`, title: t("experienceTypes.whatTrains"), desc: t("experienceTypes.whatTrainsDesc"), href: "/experience-types/train-journeys" },
     { key: "desert", image: `${R2}/destinations/maroc.jpg`, title: t("experienceTypes.whatDesert"), desc: t("experienceTypes.whatDesertDesc"), href: "/experience-types/desert-holidays" },

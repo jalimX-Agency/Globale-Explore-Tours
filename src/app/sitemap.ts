@@ -40,8 +40,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { path: "", priority: 1.0 },
     { path: "/trouver-mon-voyage", priority: 0.9 },
     { path: "/experience-types", priority: 0.8 },
-    { path: "/sejours-multi-jours", priority: 0.8 },
-    { path: "/transferts-aeroport", priority: 0.6 },
     { path: "/a-propos", priority: 0.7 },
     { path: "/blog", priority: 0.7 },
     { path: "/contact", priority: 0.6 },

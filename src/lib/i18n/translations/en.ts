@@ -1,9 +1,7 @@
 export const en = {
   nav: {
     home: "Home",
-    tours: "Excursions",
-    multiDay: "Multi-day Trips",
-    transfers: "Airport Transfers",
+    tours: "Trip Finder",
     about: "About",
     blog: "Journal",
     contact: "Contact",
@@ -223,8 +221,6 @@ export const en = {
     whoSoloDesc: "Sometimes you want to go it alone — to see the world at your own pace. We'll help you travel solo, wherever you're headed.",
     whatEyebrow: "WHAT DO YOU WANT TO DO?",
     whatTitle: "Not where, but what?",
-    whatMultiDay: "Multi-day journeys",
-    whatMultiDayDesc: "Full itineraries that cross a country end to end — several stops, one throughline.",
     whatSafari: "African safaris",
     whatSafariDesc: "The Great Migration, the lions of the Masai Mara, a sunrise you don't forget.",
     whatTrains: "Panoramic trains",

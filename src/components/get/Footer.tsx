@@ -8,8 +8,6 @@ import { LocaleLink } from "@/components/get/LocaleLink";
 
 const EXPLORE = [
   { labelKey: "nav.tours", href: "/trouver-mon-voyage" },
-  { labelKey: "nav.multiDay", href: "/sejours-multi-jours" },
-  { labelKey: "nav.transfers", href: "/transferts-aeroport" },
   { labelKey: "nav.blog", href: "/blog" },
 ];
 

@@ -1133,7 +1133,7 @@ export const TRAVELER_TYPE_PAGES: TravelerTypePage[] = [
             image: `${R2}/destinations/grece-hero.jpg`,
             title: { fr: "Lune de miel multi-étapes", en: "Multi-centre honeymoon", es: "Luna de miel de varias etapas" },
             desc: { fr: "Deux ou trois destinations, une seule histoire.", en: "Two or three destinations, one single story.", es: "Dos o tres destinos, una sola historia." },
-            href: "/sejours-multi-jours",
+            href: "/trouver-mon-voyage",
           },
           {
             key: "mini-moon",

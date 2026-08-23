@@ -1,9 +1,7 @@
 export const es = {
   nav: {
     home: "Inicio",
-    tours: "Excursiones",
-    multiDay: "Viajes de varios días",
-    transfers: "Traslados al aeropuerto",
+    tours: "Trip Finder",
     about: "Nosotros",
     blog: "Diario",
     contact: "Contacto",
@@ -223,8 +221,6 @@ export const es = {
     whoSoloDesc: "A veces quiere viajar solo — ver el mundo a su propio ritmo. Le ayudamos a viajar en solitario, adonde quiera que vaya.",
     whatEyebrow: "¿QUÉ DESEA HACER?",
     whatTitle: "No dónde, sino qué",
-    whatMultiDay: "Viajes de varios días",
-    whatMultiDayDesc: "Itinerarios completos que recorren un país de punta a punta — varias etapas, un solo hilo conductor.",
     whatSafari: "Safaris en África",
     whatSafariDesc: "La gran migración, los leones del Masai Mara, un amanecer que no se olvida.",
     whatTrains: "Trenes panorámicos",
