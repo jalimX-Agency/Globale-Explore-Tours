@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { extractR2Urls, cleanupOrphanedR2Urls } from "@/lib/r2";
 import { tourFormSchema, type TourFormValues } from "./schema";
 
 async function assertAdmin() {
@@ -117,6 +118,15 @@ export async function updateTour(id: string, raw: TourFormValues) {
   await assertAdmin();
   const values = tourFormSchema.parse(raw);
 
+  // Snapshot every R2 URL this tour references before the write, so any image/video the
+  // admin removed or replaced (cover, gallery, chapter galleries, day photos...) can be
+  // deleted from R2 once the save has actually succeeded — never before, so a removal never
+  // orphans a still-saved DB pointer if the save itself fails.
+  const before = await db.tour.findUnique({
+    where: { id },
+    include: { chapters: true, hotels: true, itineraryDays: true },
+  });
+
   await db.$transaction(
     async (tx) => {
       await tx.tour.update({ where: { id }, data: tourData(values) });
@@ -125,18 +135,28 @@ export async function updateTour(id: string, raw: TourFormValues) {
     { timeout: 15000 }
   );
 
+  if (before) await cleanupOrphanedR2Urls(extractR2Urls(before), extractR2Urls(values));
+
   revalidatePath("/admin/destinations");
   revalidatePath("/[locale]", "layout");
 }
 
 export async function deleteTour(id: string) {
   await assertAdmin();
+  const before = await db.tour.findUnique({
+    where: { id },
+    include: { chapters: true, hotels: true, itineraryDays: true },
+  });
+
   // See the note on syncChildren above — itineraryDay rows must go before the tour itself
   // since that relation has no cascade rule.
   await db.$transaction(async (tx) => {
     await tx.itineraryDay.deleteMany({ where: { tourId: id } });
     await tx.tour.delete({ where: { id } });
   });
+
+  if (before) await cleanupOrphanedR2Urls(extractR2Urls(before), new Set());
+
   revalidatePath("/admin/destinations");
   revalidatePath("/[locale]", "layout");
 }

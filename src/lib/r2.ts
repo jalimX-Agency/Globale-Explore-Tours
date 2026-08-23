@@ -128,13 +128,34 @@ export async function getPresignedUploadUrl(
   return `${ENDPOINT}/${BUCKET}/${key}?${canonicalQueryString}&X-Amz-Signature=${signature}`;
 }
 
-export async function deleteR2Urls(urls: string): Promise<void> {
-  const list = urls.split(",").map((u) => u.trim()).filter(Boolean);
-  for (const url of list) {
-    if (url.startsWith(PUBLIC_URL + "/")) {
-      const key = url.slice((PUBLIC_URL + "/").length);
-      await deleteFromR2(key).catch(() => {});
+// Recursively walks any form-values or Prisma-record shape and collects every R2 URL it
+// references — including inside comma-joined multi-image fields (Tour.images,
+// JourneyChapter.galleryImages, ItineraryDay.images...). This is what lets admin actions
+// diff "URLs referenced before this save" against "URLs referenced after" without each
+// action needing to know its own field names: any string field that happens to be an R2
+// URL is picked up automatically, on every entity.
+export function extractR2Urls(value: unknown, out: Set<string> = new Set()): Set<string> {
+  if (typeof value === "string") {
+    for (const part of value.split(",")) {
+      const trimmed = part.trim();
+      if (trimmed.startsWith(PUBLIC_URL + "/")) out.add(trimmed);
     }
+  } else if (Array.isArray(value)) {
+    for (const item of value) extractR2Urls(item, out);
+  } else if (value && typeof value === "object") {
+    for (const v of Object.values(value)) extractR2Urls(v, out);
+  }
+  return out;
+}
+
+// Deletes whichever `before` URLs are no longer present in `after` — the actual R2 cleanup
+// step, run once a save/delete has already succeeded in the database. Errors are swallowed
+// per-URL: a transient R2 failure must never surface as a failed save, worst case a file is
+// orphaned and can be cleaned up manually later.
+export async function cleanupOrphanedR2Urls(before: Set<string>, after: Set<string>): Promise<void> {
+  for (const url of before) {
+    if (after.has(url)) continue;
+    await deleteFromR2(url.slice((PUBLIC_URL + "/").length)).catch(() => {});
   }
 }
 

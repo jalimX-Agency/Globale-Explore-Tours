@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { extractR2Urls, cleanupOrphanedR2Urls } from "@/lib/r2";
 import { regionFormSchema, type RegionFormValues } from "./schema";
 
 async function assertAdmin() {
@@ -18,7 +19,11 @@ export async function updateRegion(id: string, raw: RegionFormValues) {
   await assertAdmin();
   const values = regionFormSchema.parse(raw);
 
+  const before = await db.region.findUnique({ where: { id } });
+
   await db.region.update({ where: { id }, data: values });
+
+  if (before) await cleanupOrphanedR2Urls(extractR2Urls(before), extractR2Urls(values));
 
   revalidatePath("/admin/regions");
   revalidatePath("/[locale]", "layout");

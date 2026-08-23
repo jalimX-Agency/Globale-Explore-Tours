@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { extractR2Urls, cleanupOrphanedR2Urls } from "@/lib/r2";
 import { experienceTypeFormSchema, type ExperienceTypeFormValues } from "./schema";
 
 async function assertAdmin() {
@@ -97,6 +98,11 @@ export async function updateExperienceType(id: string, raw: ExperienceTypeFormVa
   await assertAdmin();
   const values = experienceTypeFormSchema.parse(raw);
 
+  const before = await db.experienceType.findUnique({
+    where: { id },
+    include: { contentBlocks: true },
+  });
+
   await db.$transaction(async (tx) => {
     await tx.experienceType.update({
       where: { id },
@@ -129,13 +135,23 @@ export async function updateExperienceType(id: string, raw: ExperienceTypeFormVa
     await syncChildren(id, values, tx);
   }, { timeout: 15000 });
 
+  if (before) await cleanupOrphanedR2Urls(extractR2Urls(before), extractR2Urls(values));
+
   revalidatePath("/admin/experiences");
   revalidatePath("/[locale]", "layout");
 }
 
 export async function deleteExperienceType(id: string) {
   await assertAdmin();
+  const before = await db.experienceType.findUnique({
+    where: { id },
+    include: { contentBlocks: true },
+  });
+
   await db.experienceType.delete({ where: { id } });
+
+  if (before) await cleanupOrphanedR2Urls(extractR2Urls(before), new Set());
+
   revalidatePath("/admin/experiences");
   revalidatePath("/[locale]", "layout");
 }

@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { extractR2Urls, cleanupOrphanedR2Urls } from "@/lib/r2";
 import { destinationFormSchema, type DestinationFormValues } from "./schema";
 
 async function assertAdmin() {
@@ -99,6 +100,14 @@ export async function updateDestination(id: string, raw: DestinationFormValues) 
   await assertAdmin();
   const values = destinationFormSchema.parse(raw);
 
+  // Snapshot every R2 URL this destination references before the write (hero image, content
+  // block images, team photos) so anything removed or replaced can be cleaned up from R2
+  // once the save has actually succeeded.
+  const before = await db.destination.findUnique({
+    where: { id },
+    include: { contentBlocks: true, team: true },
+  });
+
   // See the matching comment in createDestination above for why this needs a longer
   // timeout than Prisma's 5s default.
   await db.$transaction(async (tx) => {
@@ -130,13 +139,23 @@ export async function updateDestination(id: string, raw: DestinationFormValues) 
     await syncChildren(id, values, tx);
   }, { timeout: 15000 });
 
+  if (before) await cleanupOrphanedR2Urls(extractR2Urls(before), extractR2Urls(values));
+
   revalidatePath("/admin/destinations");
   revalidatePath("/[locale]", "layout");
 }
 
 export async function deleteDestination(id: string) {
   await assertAdmin();
+  const before = await db.destination.findUnique({
+    where: { id },
+    include: { contentBlocks: true, team: true },
+  });
+
   await db.destination.delete({ where: { id } });
+
+  if (before) await cleanupOrphanedR2Urls(extractR2Urls(before), new Set());
+
   revalidatePath("/admin/destinations");
   revalidatePath("/[locale]", "layout");
 }
