@@ -3,14 +3,17 @@
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { SlidersHorizontal, X, ArrowRight } from "lucide-react";
+import { SlidersHorizontal, X } from "lucide-react";
 import { useLanguage } from "@/lib/i18n/context";
-import { LocaleLink } from "@/components/get/LocaleLink";
-import { TourCard, type TourCardData } from "@/components/get/TourCard";
+import { TripFinderCard } from "@/components/get/TripFinderCard";
+import { type TourCardData } from "@/components/get/TourCard";
 import { loadMoreTripFinderResults } from "@/app/[locale]/trouver-mon-voyage/resultats/actions";
 import type { TripFinderSort } from "@/app/[locale]/trouver-mon-voyage/resultats/lib";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
+
+const R2 = "https://pub-6777907d6a4e4378b16e81847f00f2d2.r2.dev";
+const CUSTOM_TRIP_IMAGE = `${R2}/destinations/maldives.jpg`;
 
 const FEELING_KEYS = ["revitalized", "freedom", "distraction", "challenged", "contentment"] as const;
 
@@ -31,11 +34,17 @@ const MONTH_KEYS = [
 
 const SORTS: TripFinderSort[] = ["recommended", "price-asc", "price-desc"];
 
-// Mirrors the source Trip Finder results page's anatomy: SHOW FILTERS toggle revealing a
-// feeling/month panel, SORT BY, active-filter pills with CLEAR ALL, a card grid ending in a
-// "build your own trip" CTA tile, and an appending LOAD MORE (not URL-driven pagination —
-// filters/sort changes still go through the URL so results stay server-rendered/shareable,
-// but "more of the same query" doesn't need a full navigation).
+function localized(language: string, fr: string, en: string, es: string) {
+  if (language === "en") return en || fr;
+  if (language === "es") return es || fr;
+  return fr;
+}
+
+// Mirrors the source Trip Finder results page's anatomy: light background, a centered
+// "TRIP FINDER" heading with a dynamic result count underneath, SHOW FILTERS toggle
+// revealing a feeling/month panel, SORT BY, active-filter pills with CLEAR ALL, a 4-column
+// grid of full-bleed photo cards ending in a "build your own trip" tile styled exactly like
+// the other cards (not a separate dashed box), and an appending LOAD MORE.
 export function TripFinderResultsClient({
   initialTours,
   totalCount,
@@ -95,16 +104,20 @@ export function TripFinderResultsClient({
   ].filter(Boolean) as { key: string; label: string; clear: () => void }[];
 
   return (
-    <main className="min-h-screen bg-[#FAF9F6] pb-24">
-      <section className="bg-neutral-900 py-16 text-center text-white sm:py-20">
-        <span className="label-eyebrow text-neutral-400 tracking-[0.25em]">{t("tripFinder.resultsEyebrow")}</span>
-        <h1 className="font-display mt-4 text-3xl font-light tracking-wide sm:text-4xl">
-          {t("tripFinder.resultsTitle")}
+    <main className="min-h-screen bg-white pb-24">
+      <div className="mx-auto max-w-7xl px-6 pt-16 pb-8 text-center lg:px-10">
+        <h1 className="font-display text-3xl font-bold tracking-wide text-neutral-900 uppercase sm:text-4xl">
+          {t("tripFinder.resultsEyebrow")}
         </h1>
-      </section>
+        <p className="label-eyebrow mt-3 text-neutral-400">
+          {tours.length > 0 || totalCount > 0
+            ? t("tripFinder.resultsFound").replace("{count}", String(totalCount))
+            : t("tripFinder.resultsSearching")}
+        </p>
+      </div>
 
       <section className="mx-auto max-w-7xl px-6 lg:px-10">
-        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-neutral-200/60 py-6">
+        <div className="flex flex-wrap items-center justify-between gap-4 border-t border-neutral-200 py-5">
           <button
             type="button"
             onClick={() => setShowFilters((v) => !v)}
@@ -114,45 +127,45 @@ export function TripFinderResultsClient({
             {showFilters ? t("tripFinder.hideFilters") : t("tripFinder.showFilters")}
           </button>
 
-          <div className="flex items-center gap-3">
-            <span className="label-eyebrow text-neutral-400">{t("tripFinder.sortBy")}</span>
-            <Select value={sort} onValueChange={(v) => pushParams({ sort: v ?? "recommended" })} items={sortItems}>
-              <SelectTrigger className="h-9 w-auto min-w-[10rem]">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {SORTS.map((s) => (
-                  <SelectItem key={s} value={s}>
-                    {sortItems[s]}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
+          <div className="flex flex-wrap items-center gap-3">
+            <div className="flex items-center gap-2">
+              <span className="label-eyebrow text-neutral-400">{t("tripFinder.sortBy")}</span>
+              <Select value={sort} onValueChange={(v) => pushParams({ sort: v ?? "recommended" })} items={sortItems}>
+                <SelectTrigger className="h-9 w-auto min-w-[10rem] border-0 shadow-none">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {SORTS.map((s) => (
+                    <SelectItem key={s} value={s}>
+                      {sortItems[s]}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
 
-        {activePills.length > 0 && (
-          <div className="flex flex-wrap items-center gap-2 pb-6">
             {activePills.map((pill) => (
               <button
                 key={pill.key}
                 type="button"
                 onClick={pill.clear}
-                className="font-body inline-flex items-center gap-1.5 rounded-full border border-neutral-300 bg-white px-3 py-1.5 text-xs text-neutral-700 hover:border-neutral-400"
+                className="font-body inline-flex items-center gap-1.5 rounded-full bg-neutral-900 px-3.5 py-1.5 text-xs text-white hover:bg-neutral-700"
               >
                 {pill.label}
                 <X className="h-3 w-3" />
               </button>
             ))}
-            <button
-              type="button"
-              onClick={() => pushParams({ feeling: "", when: "" })}
-              className="font-body text-xs font-medium text-neutral-400 underline hover:text-neutral-600"
-            >
-              {t("tripFinder.clearAll")}
-            </button>
+            {activePills.length > 0 && (
+              <button
+                type="button"
+                onClick={() => pushParams({ feeling: "", when: "" })}
+                className="font-body text-xs font-medium text-neutral-400 underline hover:text-neutral-600"
+              >
+                {t("tripFinder.clearAll")}
+              </button>
+            )}
           </div>
-        )}
+        </div>
 
         <AnimatePresence>
           {showFilters && (
@@ -162,7 +175,7 @@ export function TripFinderResultsClient({
               exit={{ opacity: 0, height: 0 }}
               className="overflow-hidden"
             >
-              <div className="mb-8 grid grid-cols-1 gap-8 rounded-xl border border-neutral-100 bg-white p-6 sm:grid-cols-2">
+              <div className="mb-8 grid grid-cols-1 gap-8 rounded-xl border border-neutral-100 bg-[#FAF9F6] p-6 sm:grid-cols-2">
                 <div>
                   <p className="label-eyebrow mb-3 text-neutral-500">{t("tripFinder.feelingLabel")}</p>
                   <div className="space-y-2">
@@ -207,23 +220,34 @@ export function TripFinderResultsClient({
             <p className="font-body text-lg text-neutral-400">{t("tripFinder.noResults")}</p>
           </div>
         ) : (
-          <motion.div layout className="grid grid-cols-1 gap-x-8 gap-y-16 pt-6 sm:grid-cols-2 lg:grid-cols-3">
-            {tours.map((tour, i) => (
-              <TourCard key={tour.slug} tour={tour} index={i} />
-            ))}
+          <motion.div layout className="grid grid-cols-2 gap-4 pt-2 sm:gap-6 lg:grid-cols-4">
+            {tours.map((tour) => {
+              const name = localized(language, tour.name, tour.nameEn, tour.nameEs);
+              const tagline = localized(language, tour.tagline, tour.taglineEn, tour.taglineEs);
+              const duration = localized(language, tour.duration, tour.durationEn, tour.durationEs);
+              return (
+                <TripFinderCard
+                  key={tour.slug}
+                  href={`/excursions/${tour.slug}`}
+                  image={tour.image}
+                  badge={duration}
+                  title={name}
+                  description={tagline}
+                  price={`${t("featured.from")} ${tour.price}€${t("featured.perPerson")}`}
+                  ctaLabel={t("destinationsPage.exploreTrip")}
+                />
+              );
+            })}
 
-            <LocaleLink
+            <TripFinderCard
               href="/faire-une-demande"
-              className="group flex flex-col items-start justify-center rounded-sm border border-dashed border-neutral-300 p-8 text-left transition-colors hover:border-neutral-500"
-            >
-              <span className="label-eyebrow text-neutral-400">{t("tripFinder.customTripEyebrow")}</span>
-              <p className="font-display mt-2 text-lg text-neutral-900">{t("tripFinder.customTripTitle")}</p>
-              <p className="font-body mt-2 text-sm text-neutral-500">{t("tripFinder.customTripBody")}</p>
-              <span className="font-body mt-4 inline-flex items-center gap-1 text-xs font-semibold uppercase tracking-wider text-[var(--brand-accent)]">
-                {t("tripFinder.customTripCta")}
-                <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
-              </span>
-            </LocaleLink>
+              image={CUSTOM_TRIP_IMAGE}
+              badge={t("tripFinder.customTripsBadge")}
+              title={t("tripFinder.customTripTitle")}
+              description={t("tripFinder.customTripBody")}
+              ctaLabel={t("tripFinder.customTripCta")}
+              ctaSolid
+            />
           </motion.div>
         )}
 
