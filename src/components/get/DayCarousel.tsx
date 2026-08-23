@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { isVideoUrl } from "@/lib/media";
 
 export function DayCarousel({ images, alt }: { images: string[]; alt: string }) {
   const [index, setIndex] = useState(0);
@@ -15,13 +16,24 @@ export function DayCarousel({ images, alt }: { images: string[]; alt: string }) 
 
   return (
     <div className="group/carousel relative h-full w-full overflow-hidden">
-      <Image
-        src={images[index]}
-        alt={alt}
-        fill
-        className="object-cover"
-        sizes="(min-width: 640px) 40vw, 100vw"
-      />
+      {isVideoUrl(images[index]) ? (
+        <video
+          src={images[index]}
+          className="absolute inset-0 h-full w-full object-cover"
+          autoPlay
+          muted
+          loop
+          playsInline
+        />
+      ) : (
+        <Image
+          src={images[index]}
+          alt={alt}
+          fill
+          className="object-cover"
+          sizes="(min-width: 640px) 40vw, 100vw"
+        />
+      )}
 
       {images.length > 1 && (
         <>

@@ -6,14 +6,9 @@ import { toast } from "sonner";
 import { Loader2, Upload, X, ImageIcon, Video } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { isVideoUrl } from "@/lib/media";
 
-const VIDEO_EXTENSIONS = [".mp4", ".webm", ".mov"];
-
-function isVideoUrl(url: string) {
-  return VIDEO_EXTENSIONS.some((ext) => url.toLowerCase().endsWith(ext));
-}
-
-async function uploadImage(file: File, folder: string): Promise<string> {
+export async function uploadImage(file: File, folder: string): Promise<string> {
   const formData = new FormData();
   formData.append("file", file);
   formData.append("folder", folder);
@@ -23,7 +18,7 @@ async function uploadImage(file: File, folder: string): Promise<string> {
   return url as string;
 }
 
-async function uploadVideo(file: File, folder: string): Promise<string> {
+export async function uploadVideo(file: File, folder: string): Promise<string> {
   const res = await fetch("/api/admin/upload-url", {
     method: "POST",
     headers: { "Content-Type": "application/json" },

@@ -33,6 +33,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 
 import { TrilingualField } from "@/components/admin/trilingual-field";
 import { MediaUploadField } from "@/components/admin/media-upload-field";
+import { MediaUploadListField } from "@/components/admin/media-upload-list-field";
 import { RepeatableList } from "@/components/admin/repeatable-list";
 import { CollapsibleSection } from "@/components/admin/collapsible-section";
 import { LangProvider, LangSwitcher } from "@/components/admin/lang-context";
@@ -172,17 +173,11 @@ function ChapterInfoFields({
     <div className="space-y-4">
       <TrilingualField control={control} baseName={`${baseName}.title`} label="Titre du chapitre" />
       <TrilingualField control={control} baseName={`${baseName}.intro`} label="Introduction" multiline />
-      <FormField
+      <MediaUploadListField
         control={control}
         name={`${baseName}.galleryImages`}
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Images de la galerie (une URL par ligne)</FormLabel>
-            <FormControl>
-              <Textarea {...field} rows={3} />
-            </FormControl>
-          </FormItem>
-        )}
+        label="Images de la galerie"
+        folder="tours"
       />
       <div className="grid grid-cols-2 gap-4">
         <FormField
@@ -268,17 +263,11 @@ function ChapterDaysFields({
                 multiline
               />
               <MediaUploadField control={control} name={`${baseName}.days.${dayIndex}.image`} label="Image" folder="tours" />
-              <FormField
+              <MediaUploadListField
                 control={control}
                 name={`${baseName}.days.${dayIndex}.images`}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Carrousel du jour (une URL par ligne)</FormLabel>
-                    <FormControl>
-                      <Textarea {...field} rows={2} />
-                    </FormControl>
-                  </FormItem>
-                )}
+                label="Carrousel du jour"
+                folder="tours"
               />
             </div>
           </SubCollapsible>
