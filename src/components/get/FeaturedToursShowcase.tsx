@@ -12,7 +12,7 @@ export function FeaturedToursShowcase({ tours }: { tours: TourCardData[] }) {
       heading={t("featured.title")}
       blurb={t("featured.subtitle")}
       ctaLabel={t("featured.viewAll")}
-      ctaHref="/excursions"
+      ctaHref="/trouver-mon-voyage"
       tours={tours}
     />
   );

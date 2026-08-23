@@ -41,7 +41,7 @@ export function Hero() {
           <p className="label-eyebrow mt-5 text-white/85">{t("hero.tagline")}</p>
 
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-            <LocaleLink href="/excursions" className="btn-outline text-white hover:border-white/70">
+            <LocaleLink href="/trouver-mon-voyage" className="btn-outline text-white hover:border-white/70">
               {t("hero.cta")}
             </LocaleLink>
             <LocaleLink href="/faire-une-demande" className="btn-primary">

@@ -150,7 +150,7 @@ export function ExperiencesPageClient({
           heading={t("experienceTypes.howTitle")}
           blurb={t("experienceTypes.howBody")}
           ctaLabel={t("experienceTypes.howCta")}
-          ctaHref="/excursions"
+          ctaHref="/trouver-mon-voyage"
           tours={tours}
         />
       </section>

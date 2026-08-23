@@ -17,7 +17,7 @@ export const en = {
   hero: {
     title: "The world, lived like a local",
     tagline: "Tailor-made travel · Guided by local experts · Destinations worldwide",
-    cta: "Explore our excursions",
+    cta: "Find my trip",
     bookCta: "Plan My Trip",
     scroll: "Scroll",
   },

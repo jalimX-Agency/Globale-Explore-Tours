@@ -57,7 +57,7 @@ export function FamilySubPageClient({
         heading={t("experienceTypes.subnavHow")}
         blurb={t("experienceTypes.howBody")}
         ctaLabel={t("experienceTypes.howCta")}
-        ctaHref="/excursions?travelers=family"
+        ctaHref="/trouver-mon-voyage"
         tours={tours}
       />
 

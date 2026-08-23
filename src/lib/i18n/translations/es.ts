@@ -17,7 +17,7 @@ export const es = {
   hero: {
     title: "El mundo, vivido como un local",
     tagline: "Viajes a medida · Guiados por expertos locales · Destinos en todo el mundo",
-    cta: "Descubrir nuestras excursiones",
+    cta: "Encontrar mi viaje",
     bookCta: "Planificar Mi Viaje",
     scroll: "Desplazar",
   },

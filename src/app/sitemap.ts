@@ -38,7 +38,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
   const staticRoutes = [
     { path: "", priority: 1.0 },
-    { path: "/excursions", priority: 0.9 },
+    { path: "/trouver-mon-voyage", priority: 0.9 },
     { path: "/experience-types", priority: 0.8 },
     { path: "/sejours-multi-jours", priority: 0.8 },
     { path: "/transferts-aeroport", priority: 0.6 },

@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { SlidersHorizontal, X } from "lucide-react";
 import { useLanguage } from "@/lib/i18n/context";
 import { TripFinderCard } from "@/components/get/TripFinderCard";
-import { type TourCardData } from "@/components/get/TourCard";
+import { tourHref, type TourCardData } from "@/components/get/TourCard";
 import { loadMoreTripFinderResults } from "@/app/[locale]/trouver-mon-voyage/resultats/actions";
 import type { TripFinderSort } from "@/app/[locale]/trouver-mon-voyage/resultats/lib";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -228,7 +228,7 @@ export function TripFinderResultsClient({
               return (
                 <TripFinderCard
                   key={tour.slug}
-                  href={`/excursions/${tour.slug}`}
+                  href={tourHref(tour)}
                   image={tour.image}
                   badge={duration}
                   title={name}

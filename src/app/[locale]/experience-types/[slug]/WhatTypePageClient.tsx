@@ -59,7 +59,7 @@ export function WhatTypePageClient({
         heading={t("experienceTypes.subnavHow")}
         blurb={t("experienceTypes.howBody")}
         ctaLabel={t("experienceTypes.howCta")}
-        ctaHref="/excursions"
+        ctaHref="/trouver-mon-voyage"
         tours={tours}
       />
 

@@ -152,7 +152,7 @@ export function TravelerTypePageClient({
             heading={t("experienceTypes.subnavHow")}
             blurb={t("experienceTypes.howBody")}
             ctaLabel={t("experienceTypes.howCta")}
-            ctaHref="/excursions"
+            ctaHref="/trouver-mon-voyage"
             tours={tours}
           />
         </section>
