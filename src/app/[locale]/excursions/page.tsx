@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 const VALID_THEMES = ["adventure", "culture", "relax", "family"];
 const VALID_TRAVELERS = ["family", "couples", "groups", "honeymoon", "solo"];
-const PAGE_SIZE = 24;
+const PAGE_SIZE = 10;
 
 export default async function ExcursionsPage({
   searchParams,

@@ -19,7 +19,7 @@ export type TripOption = {
 
 type StatusFilter = "all" | "matched" | "unmatched";
 
-const PAGE_SIZE = 20;
+const PAGE_SIZE = 10;
 
 function isMatched(travelerTypes: string, key: string) {
   return travelerTypes

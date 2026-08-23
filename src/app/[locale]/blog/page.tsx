@@ -14,7 +14,7 @@ function pick(locale: Locale, frText: string, enText: string, esText: string) {
   return frText;
 }
 
-const PAGE_SIZE = 12;
+const PAGE_SIZE = 10;
 
 export default async function BlogIndexPage({
   params,

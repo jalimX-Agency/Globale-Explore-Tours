@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from "@/components/ui/table";
 import { Search, ChevronRight, ChevronLeft, X, Inbox } from "lucide-react";
 
-const PAGE_SIZE = 20;
+const PAGE_SIZE = 10;
 
 // The full (already-filtered-by-the-server) list is still fetched and searched client-side —
 // data scale here is small enough for that (~111 destinations, ~150 tours) — but only one
