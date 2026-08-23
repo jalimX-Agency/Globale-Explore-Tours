@@ -1,12 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { useTransition } from "react";
-import { useForm } from "react-hook-form";
+import { useState, useTransition } from "react";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { ArrowLeft, Trash2 } from "lucide-react";
+import { ArrowLeft, ChevronDown, Trash2 } from "lucide-react";
+import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "@/components/ui/collapsible";
+import { cn } from "@/lib/utils";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -129,134 +131,172 @@ function computeIncomplete(values: TourFormValues) {
   };
 }
 
+// A lighter-weight collapsible than <CollapsibleSection> — that one wraps its own <Card>,
+// which looks wrong nested a second time inside a chapter/day that's already boxed by
+// <RepeatableList>'s own numbered card. This is just a trigger row + a border, closed by
+// default so a multi-chapter, multi-day journey trip doesn't render as one giant wall of
+// always-open forms (the original complaint this whole file was built to fix).
+function SubCollapsible({
+  title,
+  defaultOpen = false,
+  children,
+}: {
+  title: React.ReactNode;
+  defaultOpen?: boolean;
+  children: React.ReactNode;
+}) {
+  const [open, setOpen] = useState(defaultOpen);
+  return (
+    <Collapsible open={open} onOpenChange={setOpen} className="rounded-lg border border-border">
+      <CollapsibleTrigger className="flex w-full cursor-pointer items-center justify-between gap-3 px-3 py-2.5 text-left transition-colors hover:bg-muted/40">
+        <span className="truncate text-sm font-medium text-foreground">{title}</span>
+        <ChevronDown className={cn("size-4 shrink-0 text-muted-foreground transition-transform", open && "rotate-180")} />
+      </CollapsibleTrigger>
+      <CollapsibleContent className="border-t border-border p-3">{children}</CollapsibleContent>
+    </Collapsible>
+  );
+}
+
 // A chapter's own fields plus a nested RepeatableList for that chapter's days — nesting
 // works because useFieldArray follows dotted paths like `chapters.2.days` without any
-// special support needed from <RepeatableList> itself.
+// special support needed from <RepeatableList> itself. Day numbers are no longer a hand-typed
+// field: they're derived live from each day's position across every chapter (chapter 2's
+// first day continues right after chapter 1's last one), shown as a read-only label, and the
+// same computation runs again in onSubmit so the saved value always matches — see there for
+// why it isn't just synced into form state via an effect.
 function ChapterFields({
   control,
   baseName,
+  chapterIndex,
 }: {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   control: any;
   baseName: string;
+  chapterIndex: number;
 }) {
-  return (
-    <div className="space-y-4">
-      <TrilingualField control={control} baseName={`${baseName}.title`} label="Titre du chapitre" />
-      <TrilingualField control={control} baseName={`${baseName}.intro`} label="Introduction" multiline />
-      <FormField
-        control={control}
-        name={`${baseName}.galleryImages`}
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Images de la galerie (une URL par ligne)</FormLabel>
-            <FormControl>
-              <Textarea {...field} rows={3} />
-            </FormControl>
-          </FormItem>
-        )}
-      />
-      <div className="grid grid-cols-2 gap-4">
-        <FormField
-          control={control}
-          name={`${baseName}.mapMarkerX`}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Position sur la carte — X (0-100)</FormLabel>
-              <FormControl>
-                <Input
-                  type="number"
-                  {...field}
-                  onChange={(e) => field.onChange(e.target.valueAsNumber || 0)}
-                />
-              </FormControl>
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={control}
-          name={`${baseName}.mapMarkerY`}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Position sur la carte — Y (0-100)</FormLabel>
-              <FormControl>
-                <Input
-                  type="number"
-                  {...field}
-                  onChange={(e) => field.onChange(e.target.valueAsNumber || 0)}
-                />
-              </FormControl>
-            </FormItem>
-          )}
-        />
-      </div>
+  const chapters = useWatch({ control, name: "chapters" }) as TourFormValues["chapters"];
+  const chapter = chapters[chapterIndex];
+  const dayNumberOffset = chapters.slice(0, chapterIndex).reduce((sum, c) => sum + c.days.length, 0);
+  const chapterTitle = chapter?.title?.trim() || `Chapitre ${chapterIndex + 1}`;
+  const dayCount = chapter?.days.length ?? 0;
 
-      <div className="border-t border-border pt-4">
-        <span className="mb-3 block text-sm font-medium">Jours de ce chapitre</span>
+  return (
+    <div className="space-y-3">
+      <SubCollapsible title={`${chapterTitle} — informations`}>
+        <div className="space-y-4">
+          <TrilingualField control={control} baseName={`${baseName}.title`} label="Titre du chapitre" />
+          <TrilingualField control={control} baseName={`${baseName}.intro`} label="Introduction" multiline />
+          <FormField
+            control={control}
+            name={`${baseName}.galleryImages`}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Images de la galerie (une URL par ligne)</FormLabel>
+                <FormControl>
+                  <Textarea {...field} rows={3} />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+          <div className="grid grid-cols-2 gap-4">
+            <FormField
+              control={control}
+              name={`${baseName}.mapMarkerX`}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Position sur la carte — X (0-100)</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      {...field}
+                      onChange={(e) => field.onChange(e.target.valueAsNumber || 0)}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={control}
+              name={`${baseName}.mapMarkerY`}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Position sur la carte — Y (0-100)</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      {...field}
+                      onChange={(e) => field.onChange(e.target.valueAsNumber || 0)}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+          </div>
+        </div>
+      </SubCollapsible>
+
+      <div>
+        <span className="mb-2 block text-sm font-medium">
+          Jours de ce chapitre <span className="text-muted-foreground">({dayCount})</span>
+        </span>
         <RepeatableList
           control={control}
           name={`${baseName}.days`}
           addLabel="Ajouter un jour"
           newItem={newDay}
-          renderItem={(dayIndex) => (
-            <div className="space-y-3">
-              <FormField
-                control={control}
-                name={`${baseName}.days.${dayIndex}.dayNumber`}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Jour n°</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="number"
-                        {...field}
-                        onChange={(e) => field.onChange(e.target.valueAsNumber || 0)}
-                        className="w-20"
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-              <TrilingualField control={control} baseName={`${baseName}.days.${dayIndex}.location`} label="Lieu" />
-              <FormField
-                control={control}
-                name={`${baseName}.days.${dayIndex}.hotel`}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Hôtel</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-              <TrilingualField control={control} baseName={`${baseName}.days.${dayIndex}.title`} label="Titre" />
-              <TrilingualField
-                control={control}
-                baseName={`${baseName}.days.${dayIndex}.description`}
-                label="Description"
-                multiline
-              />
-              <MediaUploadField
-                control={control}
-                name={`${baseName}.days.${dayIndex}.image`}
-                label="Image"
-                folder="tours"
-              />
-              <FormField
-                control={control}
-                name={`${baseName}.days.${dayIndex}.images`}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Carrousel du jour (une URL par ligne)</FormLabel>
-                    <FormControl>
-                      <Textarea {...field} rows={2} />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-            </div>
-          )}
+          renderItem={(dayIndex) => {
+            const day = chapter?.days[dayIndex];
+            const dayNumber = dayNumberOffset + dayIndex + 1;
+            const dayTitle = day?.title?.trim() || day?.location?.trim() || "Sans titre";
+            return (
+              <SubCollapsible title={`Jour ${dayNumber} — ${dayTitle}`}>
+                <div className="space-y-3">
+                  <p className="text-xs text-muted-foreground">
+                    Numéro de jour calculé automatiquement à partir de la position du jour dans le
+                    voyage (réordonnez les chapitres ou les jours pour le changer).
+                  </p>
+                  <TrilingualField control={control} baseName={`${baseName}.days.${dayIndex}.location`} label="Lieu" />
+                  <FormField
+                    control={control}
+                    name={`${baseName}.days.${dayIndex}.hotel`}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Hôtel</FormLabel>
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                  <TrilingualField control={control} baseName={`${baseName}.days.${dayIndex}.title`} label="Titre" />
+                  <TrilingualField
+                    control={control}
+                    baseName={`${baseName}.days.${dayIndex}.description`}
+                    label="Description"
+                    multiline
+                  />
+                  <MediaUploadField
+                    control={control}
+                    name={`${baseName}.days.${dayIndex}.image`}
+                    label="Image"
+                    folder="tours"
+                  />
+                  <FormField
+                    control={control}
+                    name={`${baseName}.days.${dayIndex}.images`}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Carrousel du jour (une URL par ligne)</FormLabel>
+                        <FormControl>
+                          <Textarea {...field} rows={2} />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </SubCollapsible>
+            );
+          }}
         />
       </div>
     </div>
@@ -280,7 +320,20 @@ export function TourForm({
     defaultValues,
   });
 
-  function onSubmit(values: TourFormValues) {
+  function onSubmit(rawValues: TourFormValues) {
+    // Day numbers are read-only in the UI (see ChapterFields/SubCollapsible) — computed here,
+    // once, from final chapter/day order, rather than kept in sync with an effect while the
+    // admin is still reordering things mid-edit.
+    const values: TourFormValues = {
+      ...rawValues,
+      chapters: (() => {
+        let n = 0;
+        return rawValues.chapters.map((c) => ({
+          ...c,
+          days: c.days.map((d) => ({ ...d, dayNumber: ++n })),
+        }));
+      })(),
+    };
     startTransition(async () => {
       try {
         if (tourId) {
@@ -702,7 +755,7 @@ export function TourForm({
                   addLabel="Ajouter un chapitre"
                   newItem={newChapter}
                   renderItem={(index) => (
-                    <ChapterFields control={form.control} baseName={`chapters.${index}`} />
+                    <ChapterFields control={form.control} baseName={`chapters.${index}`} chapterIndex={index} />
                   )}
                 />
               </CollapsibleSection>
