@@ -12,7 +12,6 @@ import { cn } from "@/lib/utils";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -693,18 +692,7 @@ export function TourForm({
               </CollapsibleSection>
 
               <CollapsibleSection title="Galerie">
-                <FormField
-                  control={form.control}
-                  name="images"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Images de la galerie (une URL par ligne)</FormLabel>
-                      <FormControl>
-                        <Textarea {...field} rows={4} />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
+                <MediaUploadListField control={form.control} name="images" label="Images de la galerie" folder="tours" />
               </CollapsibleSection>
 
               <CollapsibleSection title="Paramètres">

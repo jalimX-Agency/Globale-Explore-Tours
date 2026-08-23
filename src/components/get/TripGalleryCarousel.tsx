@@ -3,6 +3,7 @@
 import { useLayoutEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { isVideoUrl } from "@/lib/media";
 
 const PEEK = "9vw";
 
@@ -92,7 +93,11 @@ export function TripGalleryCarousel({ images, caption }: { images: string[]; cap
             className="relative aspect-[16/9] flex-shrink-0 snap-center overflow-hidden"
             style={{ width: `calc(100% - ${PEEK} - ${PEEK})` }}
           >
-            <Image src={src} alt="" fill priority={i === 1} className="object-cover" sizes="100vw" />
+            {isVideoUrl(src) ? (
+              <video src={src} className="absolute inset-0 h-full w-full object-cover" autoPlay muted loop playsInline />
+            ) : (
+              <Image src={src} alt="" fill priority={i === 1} className="object-cover" sizes="100vw" />
+            )}
           </div>
         ))}
       </div>
