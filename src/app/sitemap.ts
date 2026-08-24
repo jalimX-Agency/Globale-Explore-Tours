@@ -1,9 +1,7 @@
 import { db } from "@/lib/db";
 import { MetadataRoute } from "next";
 import { LOCALES } from "@/lib/i18n/locales";
-import { TRAVELER_TYPE_PAGES } from "@/lib/experienceTypesData";
 import { FAMILY_SUB_PAGES } from "@/lib/familySubPagesData";
-import { WHAT_TYPE_PAGES } from "@/lib/whatTypesData";
 
 const BASE = "https://www.globaleexploretours.com";
 
@@ -26,13 +24,14 @@ function withLocales(
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [tours, blogPosts, regions, destinations] = await Promise.all([
+  const [tours, blogPosts, regions, destinations, experienceTypes] = await Promise.all([
     db.tour.findMany({
       select: { slug: true, updatedAt: true, destination: { select: { slug: true, regionSlug: true } } },
     }),
     db.blogPost.findMany({ select: { slug: true, updatedAt: true } }),
     db.region.findMany({ select: { slug: true, updatedAt: true } }),
     db.destination.findMany({ select: { slug: true, regionSlug: true, updatedAt: true } }),
+    db.experienceType.findMany({ select: { slug: true, updatedAt: true } }),
   ]);
 
   const now = new Date();
@@ -60,15 +59,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     withLocales(`/destinations/${d.regionSlug}/${d.slug}`, d.updatedAt, "weekly", 0.85)
   );
 
-  const travelerTypeRoutes = TRAVELER_TYPE_PAGES.flatMap((p) =>
-    withLocales(`/experience-types/${p.slug}`, now, "monthly", 0.75)
+  const experienceTypeRoutes = experienceTypes.flatMap((e) =>
+    withLocales(`/experience-types/${e.slug}`, e.updatedAt, "monthly", 0.75)
   );
 
   const familySubPageRoutes = FAMILY_SUB_PAGES.flatMap((p) =>
     withLocales(`/experience-types/family-holidays/${p.slug}`, now, "monthly", 0.6)
   );
-
-  const whatTypeRoutes = WHAT_TYPE_PAGES.flatMap((p) => withLocales(`/experience-types/${p.slug}`, now, "monthly", 0.7));
 
   return [
     ...staticRoutes,
@@ -76,8 +73,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...blogRoutes,
     ...regionRoutes,
     ...destinationRoutes,
-    ...travelerTypeRoutes,
+    ...experienceTypeRoutes,
     ...familySubPageRoutes,
-    ...whatTypeRoutes,
   ];
 }

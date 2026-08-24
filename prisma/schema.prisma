@@ -37,6 +37,7 @@ model Destination {
   contentBlocks     ContentBlock[]
   faqs              Faq[]
   team              TeamMember[]
+  filterForExperienceTypes ExperienceType[]
 }
 
 // ── Region — page content for /destinations/[region] (grouping key: Destination.regionSlug) ──
@@ -120,16 +121,22 @@ model Faq {
   experienceType   ExperienceType? @relation(fields: [experienceTypeId], references: [id])
 }
 
-// ── ExperienceType — "/experience-types/[slug]" traveler-type pages (family-holidays,
-//    couples-holidays, luxury-group-holidays, solo-holidays, luxury-honeymoons). The trip
-//    cards shown on each page are a live query against Tour.travelerTypes, matched via
-//    travelerTypeKey — not stored here. Each page's category-carousel and "explore further"
-//    link-card sections stay in src/lib/experienceTypesData.ts for now (page-structure
-//    config, not day-to-day editorial content). ──
+// ── ExperienceType — "/experience-types/[slug]" pages, both the "Who's travelling" kind
+//    (family-holidays, couples-holidays...) and the "What do you want to do" kind
+//    (adventure-holidays, safari-holidays...) — same shape, distinguished by `kind`. Trip
+//    cards are always a live query: "who" pages match Tour.travelerTypes against
+//    travelerTypeKey; "what" pages match either Tour.theme (filterTheme) or a specific
+//    Destination (filterDestinationId) — never both. Each page's category-carousel and
+//    "explore further" link-card sections stay in src/lib/experienceTypesData.ts for now
+//    (page-structure config, not day-to-day editorial content). ──
 model ExperienceType {
   id                String         @id @default(cuid())
   slug              String         @unique
-  travelerTypeKey   String         @default("") // family | couples | groups | honeymoon | solo
+  kind              String         @default("who") // "who" | "what"
+  travelerTypeKey   String         @default("") // "who" only: family | couples | groups | honeymoon | solo
+  filterTheme       String         @default("") // "what" only: adventure | culture | relax | family
+  filterDestinationId String?
+  filterDestination Destination?   @relation(fields: [filterDestinationId], references: [id])
   // Small card shown in the nav mega-menu, the homepage "By traveller" section, and the
   // /experience-types hub — deliberately separate from heroImage/heroTitle below (a short
   // card label + one-line desc reads very differently from a full page hero).

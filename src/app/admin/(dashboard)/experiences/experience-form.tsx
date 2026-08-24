@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
@@ -31,7 +31,12 @@ import { RepeatableList } from "@/components/admin/repeatable-list";
 import { LangProvider, LangSwitcher } from "@/components/admin/lang-context";
 import { CollapsibleSection } from "@/components/admin/collapsible-section";
 
-import { experienceTypeFormSchema, TRAVELER_TYPE_KEYS, type ExperienceTypeFormValues } from "./schema";
+import {
+  experienceTypeFormSchema,
+  TRAVELER_TYPE_KEYS,
+  THEME_FILTER_KEYS,
+  type ExperienceTypeFormValues,
+} from "./schema";
 import { createExperienceType, updateExperienceType, deleteExperienceType } from "./actions";
 import { ExperienceTripsPanel, type TripOption } from "./experience-trips-panel";
 
@@ -42,6 +47,15 @@ const TRAVELER_TYPE_LABELS: Record<(typeof TRAVELER_TYPE_KEYS)[number], string> 
   honeymoon: "Lune de miel",
   solo: "Solo",
 };
+
+const THEME_FILTER_LABELS: Record<(typeof THEME_FILTER_KEYS)[number], string> = {
+  adventure: "Aventure",
+  culture: "Culture",
+  relax: "Détente",
+  family: "Famille",
+};
+
+const KIND_LABELS = { who: "Qui voyage (Who)", what: "Que faire (What)" };
 
 function computeIncomplete(values: ExperienceTypeFormValues) {
   const triples: { fr: string; en: string; es: string }[] = [
@@ -70,7 +84,7 @@ function computeIncomplete(values: ExperienceTypeFormValues) {
   };
 }
 
-type DestinationOption = { slug: string; name: string; regionSlug: string };
+type DestinationOption = { id: string; slug: string; name: string; regionSlug: string };
 
 export function ExperienceTypeForm({
   experienceTypeId,
@@ -90,6 +104,9 @@ export function ExperienceTypeForm({
     resolver: zodResolver(experienceTypeFormSchema),
     defaultValues,
   });
+  const [whatFilterMode, setWhatFilterMode] = useState<"theme" | "destination">(
+    defaultValues.filterDestinationId ? "destination" : "theme"
+  );
 
   function onSubmit(values: ExperienceTypeFormValues) {
     startTransition(async () => {
@@ -184,7 +201,7 @@ export function ExperienceTypeForm({
               </TabsTrigger>
               <TabsTrigger value="reassurance">Réassurance ({values.reassurance.length})</TabsTrigger>
               <TabsTrigger value="faqs">FAQ ({values.faqs.length})</TabsTrigger>
-              {trips && <TabsTrigger value="trips">Voyages</TabsTrigger>}
+              {trips && values.kind === "who" && <TabsTrigger value="trips">Voyages</TabsTrigger>}
             </TabsList>
 
             <TabsContent value="basic" className="space-y-5 pt-5">
@@ -208,34 +225,151 @@ export function ExperienceTypeForm({
                     />
                     <FormField
                       control={form.control}
-                      name="travelerTypeKey"
+                      name="kind"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>
-                            Type de voyageur (clé) <span className="text-brand-accent">*</span>
-                          </FormLabel>
-                          <FormControl>
-                            <Input {...field} dir="ltr" list="traveler-type-key-options" placeholder="family" />
-                          </FormControl>
-                          <datalist id="traveler-type-key-options">
-                            {TRAVELER_TYPE_KEYS.map((key) => (
-                              <option key={key} value={key}>
-                                {TRAVELER_TYPE_LABELS[key]}
-                              </option>
-                            ))}
-                          </datalist>
-                          <FormMessage />
+                          <FormLabel>Type de page</FormLabel>
+                          <Select value={field.value} onValueChange={(v) => v && field.onChange(v)} items={KIND_LABELS}>
+                            <FormControl>
+                              <SelectTrigger className="w-full">
+                                <SelectValue />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="who">{KIND_LABELS.who}</SelectItem>
+                              <SelectItem value="what">{KIND_LABELS.what}</SelectItem>
+                            </SelectContent>
+                          </Select>
                         </FormItem>
                       )}
                     />
                   </div>
-                  <p className="text-xs text-muted-foreground">
-                    Cette clé détermine quels voyages du catalogue s&apos;affichent sur cette page
-                    (ceux dont le champ « Types de voyageurs » dans la fiche Voyage la contient) —
-                    utilisez une des valeurs suggérées, ou tapez-en une nouvelle pour créer un type
-                    entièrement inédit. Vous pourrez ensuite choisir précisément quels voyages y
-                    correspondent depuis l&apos;onglet « Voyages ».
-                  </p>
+
+                  {values.kind === "who" && (
+                    <>
+                      <FormField
+                        control={form.control}
+                        name="travelerTypeKey"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>
+                              Type de voyageur (clé) <span className="text-brand-accent">*</span>
+                            </FormLabel>
+                            <FormControl>
+                              <Input {...field} dir="ltr" list="traveler-type-key-options" placeholder="family" />
+                            </FormControl>
+                            <datalist id="traveler-type-key-options">
+                              {TRAVELER_TYPE_KEYS.map((key) => (
+                                <option key={key} value={key}>
+                                  {TRAVELER_TYPE_LABELS[key]}
+                                </option>
+                              ))}
+                            </datalist>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <p className="text-xs text-muted-foreground">
+                        Cette clé détermine quels voyages du catalogue s&apos;affichent sur cette page
+                        (ceux dont le champ « Types de voyageurs » dans la fiche Voyage la contient) —
+                        utilisez une des valeurs suggérées, ou tapez-en une nouvelle pour créer un type
+                        entièrement inédit. Vous pourrez ensuite choisir précisément quels voyages y
+                        correspondent depuis l&apos;onglet « Voyages ».
+                      </p>
+                    </>
+                  )}
+
+                  {values.kind === "what" && (
+                    <div className="space-y-3 rounded-lg border border-border p-3">
+                      <p className="text-xs text-muted-foreground">
+                        Les voyages affichés sur cette page sont ceux qui correspondent soit à un
+                        thème, soit à une destination précise — choisissez l&apos;un ou l&apos;autre.
+                      </p>
+                      <div className="flex gap-2">
+                        <Button
+                          type="button"
+                          variant={whatFilterMode === "theme" ? "default" : "outline"}
+                          size="sm"
+                          onClick={() => {
+                            setWhatFilterMode("theme");
+                            form.setValue("filterDestinationId", "");
+                          }}
+                        >
+                          Par thème
+                        </Button>
+                        <Button
+                          type="button"
+                          variant={whatFilterMode === "destination" ? "default" : "outline"}
+                          size="sm"
+                          onClick={() => {
+                            setWhatFilterMode("destination");
+                            form.setValue("filterTheme", "");
+                          }}
+                        >
+                          Par destination
+                        </Button>
+                      </div>
+
+                      {whatFilterMode === "theme" ? (
+                        <FormField
+                          control={form.control}
+                          name="filterTheme"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Thème</FormLabel>
+                              <Select
+                                value={field.value}
+                                onValueChange={(v) => field.onChange(v ?? "")}
+                                items={THEME_FILTER_LABELS}
+                              >
+                                <FormControl>
+                                  <SelectTrigger className="w-full">
+                                    <SelectValue placeholder="Choisir un thème..." />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  {THEME_FILTER_KEYS.map((key) => (
+                                    <SelectItem key={key} value={key}>
+                                      {THEME_FILTER_LABELS[key]}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      ) : (
+                        <FormField
+                          control={form.control}
+                          name="filterDestinationId"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Destination</FormLabel>
+                              <Select
+                                value={field.value}
+                                onValueChange={(v) => field.onChange(v ?? "")}
+                                items={Object.fromEntries(destinations.map((d) => [d.id, d.name]))}
+                              >
+                                <FormControl>
+                                  <SelectTrigger className="w-full">
+                                    <SelectValue placeholder="Choisir une destination..." />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  {destinations.map((d) => (
+                                    <SelectItem key={d.id} value={d.id}>
+                                      {d.name}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            </FormItem>
+                          )}
+                        />
+                      )}
+                    </div>
+                  )}
                 </div>
               </CollapsibleSection>
 
@@ -437,7 +571,7 @@ export function ExperienceTypeForm({
               />
             </TabsContent>
 
-            {trips && (
+            {trips && values.kind === "who" && (
               <TabsContent value="trips" className="pt-5">
                 <ExperienceTripsPanel travelerTypeKey={values.travelerTypeKey} trips={trips} />
               </TabsContent>

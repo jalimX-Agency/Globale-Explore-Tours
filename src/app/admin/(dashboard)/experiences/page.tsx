@@ -13,7 +13,10 @@ export default async function ExperiencesListPage() {
       id: true,
       slug: true,
       heroTitle: true,
+      kind: true,
       travelerTypeKey: true,
+      filterTheme: true,
+      filterDestination: { select: { name: true } },
       order: true,
       _count: { select: { contentBlocks: true, faqs: true } },
     },
@@ -23,7 +26,7 @@ export default async function ExperiencesListPage() {
     <div className="space-y-6">
       <PageHeader
         title="Expériences"
-        description={`${experienceTypes.length} pages « selon le type de voyageur »`}
+        description={`${experienceTypes.length} pages « Qui voyage » et « Que faire »`}
         action={
           <Button render={<Link href="/admin/experiences/new" />} nativeButton={false}>
             <Plus className="size-3.5" />

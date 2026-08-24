@@ -50,6 +50,7 @@ export default async function ExperienceTypesPage() {
       orderBy: { order: "asc" },
       select: {
         slug: true,
+        kind: true,
         cardImage: true,
         cardTitle: true,
         cardTitleEn: true,

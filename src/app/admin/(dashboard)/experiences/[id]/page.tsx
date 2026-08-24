@@ -24,14 +24,17 @@ export default async function EditExperienceTypePage({ params }: { params: Promi
         destination: { select: { name: true, region: true, regionSlug: true } },
       },
     }),
-    db.destination.findMany({ orderBy: { name: "asc" }, select: { slug: true, name: true, regionSlug: true } }),
+    db.destination.findMany({ orderBy: { name: "asc" }, select: { id: true, slug: true, name: true, regionSlug: true } }),
   ]);
 
   if (!experienceType) notFound();
 
   const defaultValues: ExperienceTypeFormValues = {
     slug: experienceType.slug,
+    kind: experienceType.kind === "what" ? "what" : "who",
     travelerTypeKey: experienceType.travelerTypeKey,
+    filterTheme: experienceType.filterTheme,
+    filterDestinationId: experienceType.filterDestinationId ?? "",
     cardImage: experienceType.cardImage,
     cardTitle: experienceType.cardTitle,
     cardTitleEn: experienceType.cardTitleEn,

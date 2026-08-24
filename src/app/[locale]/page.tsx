@@ -10,6 +10,7 @@ import { ClosingCta } from "@/components/get/ClosingCta";
 
 export default async function Home() {
   const experienceTypes = await db.experienceType.findMany({
+    where: { kind: "who" },
     orderBy: { order: "asc" },
     select: { slug: true, cardImage: true, cardTitle: true, cardTitleEn: true, cardTitleEs: true },
   });

@@ -4,7 +4,10 @@ import type { ExperienceTypeFormValues } from "../schema";
 
 const emptyValues: ExperienceTypeFormValues = {
   slug: "",
+  kind: "who",
   travelerTypeKey: "family",
+  filterTheme: "",
+  filterDestinationId: "",
   cardImage: "",
   cardTitle: "",
   cardTitleEn: "",
@@ -34,7 +37,7 @@ const emptyValues: ExperienceTypeFormValues = {
 export default async function NewExperienceTypePage() {
   const destinations = await db.destination.findMany({
     orderBy: { name: "asc" },
-    select: { slug: true, name: true, regionSlug: true },
+    select: { id: true, slug: true, name: true, regionSlug: true },
   });
   return <ExperienceTypeForm defaultValues={emptyValues} destinations={destinations} />;
 }

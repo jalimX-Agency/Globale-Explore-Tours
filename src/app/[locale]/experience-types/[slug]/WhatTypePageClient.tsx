@@ -8,9 +8,16 @@ import { Testimonials } from "@/components/get/Testimonials";
 import { TripsShowcase } from "@/components/get/TripsShowcase";
 import { LinkedContentGrid } from "@/components/get/LinkedContentGrid";
 import type { TourCardData } from "@/components/get/TourCard";
-import type { WhatTypePage } from "@/lib/whatTypesData";
+import type { Localized } from "@/lib/experienceTypesData";
 
-function localized(language: string, l: { fr: string; en: string; es: string }) {
+export type WhatTypeContent = {
+  slug: string;
+  heroImage: string;
+  heroTitle: Localized;
+  overviewBody: Localized;
+};
+
+function localized(language: string, l: Localized) {
   if (language === "en") return l.en || l.fr;
   if (language === "es") return l.es || l.fr;
   return l.fr;
@@ -22,9 +29,9 @@ export function WhatTypePageClient({
   related,
   breadcrumb,
 }: {
-  content: WhatTypePage;
+  content: WhatTypeContent;
   tours: TourCardData[];
-  related: WhatTypePage[];
+  related: WhatTypeContent[];
   breadcrumb: BreadcrumbItem[];
 }) {
   const { language, t } = useLanguage();
@@ -37,7 +44,7 @@ export function WhatTypePageClient({
         <div className="absolute inset-0 bg-black/35" />
         <div className="relative z-10 flex flex-col items-center px-6 text-center text-white">
           <h1 className="font-display max-w-2xl text-3xl leading-tight sm:text-4xl lg:text-5xl">
-            {localized(language, content.title)}
+            {localized(language, content.heroTitle)}
           </h1>
         </div>
       </section>
@@ -48,7 +55,7 @@ export function WhatTypePageClient({
 
       {/* ── Intro ── */}
       <section className="mx-auto max-w-3xl px-6 py-14 text-center">
-        <p className="font-body text-base leading-relaxed text-neutral-600">{localized(language, content.intro)}</p>
+        <p className="font-body text-base leading-relaxed text-neutral-600">{localized(language, content.overviewBody)}</p>
         <LocaleLink href="/contact" className="btn-primary mt-8 inline-flex">
           {t("experienceTypes.introCta")}
         </LocaleLink>
@@ -72,8 +79,8 @@ export function WhatTypePageClient({
               cards={related.map((r) => ({
                 key: r.slug,
                 image: r.heroImage,
-                title: localized(language, r.title),
-                desc: localized(language, r.intro).split(".")[0] + ".",
+                title: localized(language, r.heroTitle),
+                desc: localized(language, r.overviewBody).split(".")[0] + ".",
                 href: `/experience-types/${r.slug}`,
               }))}
             />

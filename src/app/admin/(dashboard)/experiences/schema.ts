@@ -32,28 +32,44 @@ export const experienceFaqSchema = z.object({
 // with whatever key is typed), so this stays a free-text field rather than a closed enum.
 export const TRAVELER_TYPE_KEYS = ["family", "couples", "groups", "honeymoon", "solo"] as const;
 
-export const experienceTypeFormSchema = z.object({
-  slug: z
-    .string()
-    .min(1, "Le lien (slug) est requis")
-    .regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, "Lettres minuscules, chiffres et tirets uniquement"),
-  travelerTypeKey: z
-    .string()
-    .min(1, "Le type de voyageur est requis")
-    .regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, "Lettres minuscules, chiffres et tirets uniquement"),
-  cardImage: z.string(),
-  ...trilingual("cardTitle"),
-  ...trilingual("cardDescription"),
-  heroImage: z.string(),
-  ...trilingual("heroTitle"),
-  ...trilingual("heroSubtitle"),
-  ...trilingual("overviewTitle"),
-  ...trilingual("overviewBody"),
-  order: z.number().int(),
-  bestDestinations: z.array(destinationCardSchema),
-  reassurance: z.array(reassuranceCardSchema),
-  faqs: z.array(experienceFaqSchema),
-});
+// "who" pages match tours by travelerTypeKey (a Tour.travelerTypes tag); "what" pages match
+// by either a theme or a specific destination — never both, enforced below.
+export const EXPERIENCE_KINDS = ["who", "what"] as const;
+export const THEME_FILTER_KEYS = ["adventure", "culture", "relax", "family"] as const;
+
+export const experienceTypeFormSchema = z
+  .object({
+    slug: z
+      .string()
+      .min(1, "Le lien (slug) est requis")
+      .regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, "Lettres minuscules, chiffres et tirets uniquement"),
+    kind: z.enum(EXPERIENCE_KINDS),
+    travelerTypeKey: z
+      .string()
+      .regex(/^[a-z0-9]*(-[a-z0-9]+)*$/, "Lettres minuscules, chiffres et tirets uniquement"),
+    filterTheme: z.string(),
+    filterDestinationId: z.string(),
+    cardImage: z.string(),
+    ...trilingual("cardTitle"),
+    ...trilingual("cardDescription"),
+    heroImage: z.string(),
+    ...trilingual("heroTitle"),
+    ...trilingual("heroSubtitle"),
+    ...trilingual("overviewTitle"),
+    ...trilingual("overviewBody"),
+    order: z.number().int(),
+    bestDestinations: z.array(destinationCardSchema),
+    reassurance: z.array(reassuranceCardSchema),
+    faqs: z.array(experienceFaqSchema),
+  })
+  .superRefine((values, ctx) => {
+    if (values.kind === "who" && !values.travelerTypeKey.trim()) {
+      ctx.addIssue({ code: "custom", path: ["travelerTypeKey"], message: "Le type de voyageur est requis" });
+    }
+    if (values.kind === "what" && !values.filterTheme.trim() && !values.filterDestinationId.trim()) {
+      ctx.addIssue({ code: "custom", path: ["filterTheme"], message: "Choisissez un thème ou une destination" });
+    }
+  });
 
 export type ExperienceTypeFormValues = z.infer<typeof experienceTypeFormSchema>;
 export type DestinationCardValues = z.infer<typeof destinationCardSchema>;

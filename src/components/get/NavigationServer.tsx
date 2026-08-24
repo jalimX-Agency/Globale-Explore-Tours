@@ -23,6 +23,7 @@ export async function NavigationServer() {
       orderBy: { order: "asc" },
       select: {
         slug: true,
+        kind: true,
         cardImage: true,
         cardTitle: true,
         cardTitleEn: true,

@@ -12,6 +12,7 @@ const R2 = "https://pub-6777907d6a4e4378b16e81847f00f2d2.r2.dev";
 
 export type ExperienceTypeLite = {
   slug: string;
+  kind: string;
   cardImage: string;
   cardTitle: string;
   cardTitleEn: string;
@@ -48,20 +49,10 @@ export function ExperiencesPageClient({
 }) {
   const { t, language } = useLanguage();
 
-  // Admin-editable (see /admin/experiences) — adding a new ExperienceType row adds a card
-  // here automatically, no code change needed.
-  const whoCards: ExperienceCard[] = experienceTypes.map((e) => localizedCard(e, language));
-
-  const whatCards: ExperienceCard[] = [
-    { key: "adventure", image: `${R2}/experiences/what-adventure.jpg`, title: t("menu.adventure"), desc: t("menu.adventureDesc"), href: "/experience-types/adventure-holidays" },
-    { key: "culture", image: `${R2}/experiences/what-culture.jpg`, title: t("menu.culture"), desc: t("menu.cultureDesc"), href: "/experience-types/cultural-holidays" },
-    { key: "relax", image: `${R2}/experiences/what-relax.jpg`, title: t("menu.relax"), desc: t("menu.relaxDesc"), href: "/experience-types/wellness-holidays" },
-    { key: "family", image: `${R2}/experiences/what-family.jpg`, title: t("menu.family"), desc: t("menu.familyDesc"), href: "/experience-types/family-experiences" },
-    { key: "safari", image: `${R2}/destinations/kenya.jpg`, title: t("experienceTypes.whatSafari"), desc: t("experienceTypes.whatSafariDesc"), href: "/experience-types/safari-holidays" },
-    { key: "trains", image: `${R2}/destinations/suisse-hero.jpg`, title: t("experienceTypes.whatTrains"), desc: t("experienceTypes.whatTrainsDesc"), href: "/experience-types/train-journeys" },
-    { key: "desert", image: `${R2}/destinations/maroc.jpg`, title: t("experienceTypes.whatDesert"), desc: t("experienceTypes.whatDesertDesc"), href: "/experience-types/desert-holidays" },
-    { key: "islands", image: `${R2}/destinations/maldives.jpg`, title: t("experienceTypes.whatIslands"), desc: t("experienceTypes.whatIslandsDesc"), href: "/experience-types/island-holidays" },
-  ];
+  // Admin-editable (see /admin/experiences) — adding a new ExperienceType row (either kind)
+  // adds a card here automatically, no code change needed.
+  const whoCards: ExperienceCard[] = experienceTypes.filter((e) => e.kind !== "what").map((e) => localizedCard(e, language));
+  const whatCards: ExperienceCard[] = experienceTypes.filter((e) => e.kind === "what").map((e) => localizedCard(e, language));
 
   return (
     <div className="bg-white text-neutral-900">

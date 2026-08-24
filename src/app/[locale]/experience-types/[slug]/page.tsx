@@ -5,10 +5,9 @@ import { isLocale, DEFAULT_LOCALE, type Locale } from "@/lib/i18n/locales";
 import { fr } from "@/lib/i18n/translations/fr";
 import { en } from "@/lib/i18n/translations/en";
 import { es } from "@/lib/i18n/translations/es";
-import { getTravelerTypePage, TRAVELER_TYPE_PAGES, type TravelerTypePage } from "@/lib/experienceTypesData";
-import { getWhatTypePage, WHAT_TYPE_PAGES } from "@/lib/whatTypesData";
+import { getTravelerTypePage, type TravelerTypePage } from "@/lib/experienceTypesData";
 import { TravelerTypePageClient } from "./TravelerTypePageClient";
-import { WhatTypePageClient } from "./WhatTypePageClient";
+import { WhatTypePageClient, type WhatTypeContent } from "./WhatTypePageClient";
 
 const NAV_EXPERIENCES = { fr: fr.nav.experiences, en: en.nav.experiences, es: es.nav.experiences };
 
@@ -43,18 +42,8 @@ const TOUR_CARD_SELECT = {
 // TravelerTypePageClient already expects, so that component stays untouched. categorySections
 // and linkCardGroups are page-structure config, not day-to-day editorial content, and stay
 // sourced from src/lib/experienceTypesData.ts for now.
-async function getTravelerTypeContent(slug: string): Promise<TravelerTypePage | null> {
-  const row = await db.experienceType.findUnique({
-    where: { slug },
-    include: {
-      contentBlocks: { orderBy: { order: "asc" } },
-      faqs: { orderBy: { order: "asc" } },
-    },
-  });
-  if (!row) return null;
-
-  const staticExtras = getTravelerTypePage(slug);
-
+async function getTravelerTypeContent(row: NonNullable<Awaited<ReturnType<typeof getExperienceTypeRow>>>): Promise<TravelerTypePage> {
+  const staticExtras = getTravelerTypePage(row.slug);
   return {
     slug: row.slug,
     travelerTypeKey: row.travelerTypeKey as TravelerTypePage["travelerTypeKey"],
@@ -87,8 +76,29 @@ async function getTravelerTypeContent(slug: string): Promise<TravelerTypePage | 
   };
 }
 
-export function generateStaticParams() {
-  return [...TRAVELER_TYPE_PAGES.map((p) => ({ slug: p.slug })), ...WHAT_TYPE_PAGES.map((p) => ({ slug: p.slug }))];
+function toWhatTypeContent(row: NonNullable<Awaited<ReturnType<typeof getExperienceTypeRow>>>): WhatTypeContent {
+  return {
+    slug: row.slug,
+    heroImage: row.heroImage,
+    heroTitle: { fr: row.heroTitle, en: row.heroTitleEn, es: row.heroTitleEs },
+    overviewBody: { fr: row.overviewBody, en: row.overviewBodyEn, es: row.overviewBodyEs },
+  };
+}
+
+function getExperienceTypeRow(slug: string) {
+  return db.experienceType.findUnique({
+    where: { slug },
+    include: {
+      contentBlocks: { orderBy: { order: "asc" } },
+      faqs: { orderBy: { order: "asc" } },
+      filterDestination: { select: { slug: true, regionSlug: true } },
+    },
+  });
+}
+
+export async function generateStaticParams() {
+  const rows = await db.experienceType.findMany({ select: { slug: true } });
+  return rows.map((r) => ({ slug: r.slug }));
 }
 
 export async function generateMetadata({
@@ -99,15 +109,13 @@ export async function generateMetadata({
   const { locale: rawLocale, slug } = await params;
   const locale = isLocale(rawLocale) ? rawLocale : DEFAULT_LOCALE;
 
-  const travelerContent = await getTravelerTypeContent(slug);
-  if (travelerContent) {
-    return { title: pick(locale, travelerContent.heroTitle), description: pick(locale, travelerContent.heroSubtitle) };
-  }
-  const whatContent = getWhatTypePage(slug);
-  if (whatContent) {
-    return { title: pick(locale, whatContent.title), description: pick(locale, whatContent.intro) };
-  }
-  return { title: "Experience" };
+  const row = await getExperienceTypeRow(slug);
+  if (!row) return { title: "Experience" };
+
+  return {
+    title: pick(locale, { fr: row.heroTitle, en: row.heroTitleEn, es: row.heroTitleEs }),
+    description: pick(locale, { fr: row.heroSubtitle || row.overviewBody, en: row.heroSubtitleEn || row.overviewBodyEn, es: row.heroSubtitleEs || row.overviewBodyEs }),
+  };
 }
 
 export default async function ExperienceTypePage({
@@ -118,14 +126,14 @@ export default async function ExperienceTypePage({
   const { locale: rawLocale, slug } = await params;
   const locale = isLocale(rawLocale) ? rawLocale : DEFAULT_LOCALE;
 
-  const travelerContent = await getTravelerTypeContent(slug);
-  const whatContent = !travelerContent ? getWhatTypePage(slug) : undefined;
-
-  if (!travelerContent && !whatContent) notFound();
+  const row = await getExperienceTypeRow(slug);
+  if (!row) notFound();
 
   const experiencesLabel = pick(locale, NAV_EXPERIENCES);
 
-  if (travelerContent) {
+  if (row.kind === "who") {
+    const travelerContent = await getTravelerTypeContent(row);
+
     const tours = await db.tour.findMany({
       where: { travelerTypes: { contains: travelerContent.travelerTypeKey } },
       orderBy: [{ featured: "desc" }, { order: "asc" }],
@@ -177,12 +185,10 @@ export default async function ExperienceTypePage({
     );
   }
 
-  // whatContent branch
-  const content = whatContent!;
+  // kind === "what"
+  const content = toWhatTypeContent(row);
   const tours = await db.tour.findMany({
-    where: content.destinationSlug
-      ? { destination: { slug: content.destinationSlug } }
-      : { theme: content.themeParam },
+    where: row.filterDestinationId ? { destinationId: row.filterDestinationId } : { theme: row.filterTheme },
     orderBy: [{ featured: "desc" }, { order: "asc" }],
     take: 8,
     select: TOUR_CARD_SELECT,
@@ -194,10 +200,35 @@ export default async function ExperienceTypePage({
     regionSlug: tour.destination?.regionSlug,
   }));
 
-  const idx = WHAT_TYPE_PAGES.findIndex((p) => p.slug === content.slug);
-  const related = [1, 2, 3].map((offset) => WHAT_TYPE_PAGES[(idx + offset) % WHAT_TYPE_PAGES.length]);
+  const allWhatRows = await db.experienceType.findMany({
+    where: { kind: "what" },
+    orderBy: { order: "asc" },
+    select: {
+      slug: true,
+      heroImage: true,
+      heroTitle: true,
+      heroTitleEn: true,
+      heroTitleEs: true,
+      overviewBody: true,
+      overviewBodyEn: true,
+      overviewBodyEs: true,
+    },
+  });
+  const idx = allWhatRows.findIndex((p) => p.slug === row.slug);
+  const related: WhatTypeContent[] =
+    idx === -1 || allWhatRows.length <= 1
+      ? []
+      : [1, 2, 3].map((offset) => {
+          const r = allWhatRows[(idx + offset) % allWhatRows.length];
+          return {
+            slug: r.slug,
+            heroImage: r.heroImage,
+            heroTitle: { fr: r.heroTitle, en: r.heroTitleEn, es: r.heroTitleEs },
+            overviewBody: { fr: r.overviewBody, en: r.overviewBodyEn, es: r.overviewBodyEs },
+          };
+        });
 
-  const pageTitle = pick(locale, content.title);
+  const pageTitle = pick(locale, content.heroTitle);
 
   return (
     <WhatTypePageClient

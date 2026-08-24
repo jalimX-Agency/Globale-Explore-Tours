@@ -61,7 +61,10 @@ export async function createExperienceType(raw: ExperienceTypeFormValues) {
     const created = await tx.experienceType.create({
       data: {
         slug: values.slug,
+        kind: values.kind,
         travelerTypeKey: values.travelerTypeKey,
+        filterTheme: values.filterTheme,
+        filterDestinationId: values.filterDestinationId || null,
         cardImage: values.cardImage,
         cardTitle: values.cardTitle,
         cardTitleEn: values.cardTitleEn,
@@ -108,7 +111,10 @@ export async function updateExperienceType(id: string, raw: ExperienceTypeFormVa
       where: { id },
       data: {
         slug: values.slug,
+        kind: values.kind,
         travelerTypeKey: values.travelerTypeKey,
+        filterTheme: values.filterTheme,
+        filterDestinationId: values.filterDestinationId || null,
         cardImage: values.cardImage,
         cardTitle: values.cardTitle,
         cardTitleEn: values.cardTitleEn,

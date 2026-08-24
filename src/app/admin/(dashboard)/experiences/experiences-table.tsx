@@ -11,11 +11,21 @@ const TRAVELER_TYPE_LABELS: Record<string, string> = {
   solo: "Solo",
 };
 
+const THEME_FILTER_LABELS: Record<string, string> = {
+  adventure: "Aventure",
+  culture: "Culture",
+  relax: "Détente",
+  family: "Famille",
+};
+
 type Row = {
   id: string;
   slug: string;
   heroTitle: string;
+  kind: string;
   travelerTypeKey: string;
+  filterTheme: string;
+  filterDestination: { name: string } | null;
   order: number;
   _count: { contentBlocks: number; faqs: number };
 };
@@ -38,12 +48,19 @@ export function ExperiencesTable({ data }: { data: Row[] }) {
           ),
         },
         {
-          header: "Type de voyageur",
-          cell: (e) => (
-            <Badge variant="outline" className="border-sky-200 bg-sky-50 text-sky-700">
-              {TRAVELER_TYPE_LABELS[e.travelerTypeKey] ?? e.travelerTypeKey}
-            </Badge>
-          ),
+          header: "Type",
+          cell: (e) =>
+            e.kind === "what" ? (
+              <Badge variant="outline" className="border-violet-200 bg-violet-50 text-violet-700">
+                {e.filterDestination
+                  ? `Destination : ${e.filterDestination.name}`
+                  : `Thème : ${THEME_FILTER_LABELS[e.filterTheme] ?? e.filterTheme}`}
+              </Badge>
+            ) : (
+              <Badge variant="outline" className="border-sky-200 bg-sky-50 text-sky-700">
+                {TRAVELER_TYPE_LABELS[e.travelerTypeKey] ?? e.travelerTypeKey}
+              </Badge>
+            ),
         },
         { header: "Ordre", className: "text-right tabular-nums text-muted-foreground", cell: (e) => e.order },
       ]}
