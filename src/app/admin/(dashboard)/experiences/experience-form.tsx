@@ -11,6 +11,7 @@ import { ArrowLeft, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import {
   AlertDialog,
@@ -69,14 +70,18 @@ function computeIncomplete(values: ExperienceTypeFormValues) {
   };
 }
 
+type DestinationOption = { slug: string; name: string; regionSlug: string };
+
 export function ExperienceTypeForm({
   experienceTypeId,
   defaultValues,
   trips,
+  destinations,
 }: {
   experienceTypeId?: string;
   defaultValues: ExperienceTypeFormValues;
   trips?: TripOption[];
+  destinations: DestinationOption[];
 }) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
@@ -116,6 +121,11 @@ export function ExperienceTypeForm({
 
   const values = form.watch();
   const incomplete = computeIncomplete(values);
+
+  const destinationHrefOptions = destinations.map((d) => ({
+    value: `/destinations/${d.regionSlug}/${d.slug}`,
+    label: d.name,
+  }));
 
   return (
     <Form {...form}>
@@ -342,10 +352,25 @@ export function ExperienceTypeForm({
                       name={`bestDestinations.${index}.ctaHref`}
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Lien (ex. /destinations/afrique/maroc)</FormLabel>
-                          <FormControl>
-                            <Input {...field} dir="ltr" placeholder="/destinations/afrique/maroc" />
-                          </FormControl>
+                          <FormLabel>Destination liée</FormLabel>
+                          <Select
+                            value={field.value}
+                            onValueChange={(v) => field.onChange(v ?? "")}
+                            items={Object.fromEntries(destinationHrefOptions.map((o) => [o.value, o.label]))}
+                          >
+                            <FormControl>
+                              <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Choisir une destination..." />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {destinationHrefOptions.map((o) => (
+                                <SelectItem key={o.value} value={o.value}>
+                                  {o.label}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
                         </FormItem>
                       )}
                     />

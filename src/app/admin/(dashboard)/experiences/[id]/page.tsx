@@ -6,7 +6,7 @@ import type { ExperienceTypeFormValues } from "../schema";
 export default async function EditExperienceTypePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
 
-  const [experienceType, trips] = await Promise.all([
+  const [experienceType, trips, destinations] = await Promise.all([
     db.experienceType.findUnique({
       where: { id },
       include: {
@@ -24,6 +24,7 @@ export default async function EditExperienceTypePage({ params }: { params: Promi
         destination: { select: { name: true, region: true, regionSlug: true } },
       },
     }),
+    db.destination.findMany({ orderBy: { name: "asc" }, select: { slug: true, name: true, regionSlug: true } }),
   ]);
 
   if (!experienceType) notFound();
@@ -94,6 +95,11 @@ export default async function EditExperienceTypePage({ params }: { params: Promi
   }));
 
   return (
-    <ExperienceTypeForm experienceTypeId={experienceType.id} defaultValues={defaultValues} trips={tripOptions} />
+    <ExperienceTypeForm
+      experienceTypeId={experienceType.id}
+      defaultValues={defaultValues}
+      trips={tripOptions}
+      destinations={destinations}
+    />
   );
 }

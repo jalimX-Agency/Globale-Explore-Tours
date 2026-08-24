@@ -5,7 +5,15 @@ import type { BlogPostFormValues } from "../schema";
 
 export default async function EditBlogPostPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const post = await db.blogPost.findUnique({ where: { id } });
+  const [post, categories] = await Promise.all([
+    db.blogPost.findUnique({ where: { id } }),
+    db.blogPost.findMany({
+      distinct: ["category"],
+      where: { category: { not: "" } },
+      select: { category: true },
+      orderBy: { category: "asc" },
+    }),
+  ]);
   if (!post) notFound();
 
   const defaultValues: BlogPostFormValues = {
@@ -26,5 +34,5 @@ export default async function EditBlogPostPage({ params }: { params: Promise<{ i
     order: post.order,
   };
 
-  return <BlogForm postId={post.id} defaultValues={defaultValues} />;
+  return <BlogForm postId={post.id} defaultValues={defaultValues} categories={categories.map((c) => c.category)} />;
 }

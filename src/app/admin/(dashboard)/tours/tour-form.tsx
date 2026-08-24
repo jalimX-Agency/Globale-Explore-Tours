@@ -31,6 +31,7 @@ import {
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 import { TrilingualField } from "@/components/admin/trilingual-field";
+import { TrilingualChipListField } from "@/components/admin/trilingual-chip-list-field";
 import { MediaUploadField } from "@/components/admin/media-upload-field";
 import { MediaUploadListField } from "@/components/admin/media-upload-list-field";
 import { RepeatableList } from "@/components/admin/repeatable-list";
@@ -39,6 +40,7 @@ import { LangProvider, LangSwitcher } from "@/components/admin/lang-context";
 
 import { tourFormSchema, type TourFormValues } from "./schema";
 import { createTour, updateTour, deleteTour } from "./actions";
+import { formatWhenLabel } from "@/lib/tourFormatting";
 
 type Destination = { id: string; name: string };
 
@@ -79,6 +81,27 @@ const MONTHS = [
   { value: "october", label: "Octobre" },
   { value: "november", label: "Novembre" },
   { value: "december", label: "Décembre" },
+];
+
+const DURATION_UNITS = [
+  { value: "days", label: "Jours" },
+  { value: "nights", label: "Nuits" },
+  { value: "hours", label: "Heures" },
+];
+
+const TRAVELER_TYPES = [
+  { value: "family", label: "Famille" },
+  { value: "couples", label: "Couples" },
+  { value: "groups", label: "Groupes" },
+  { value: "honeymoon", label: "Lune de miel" },
+  { value: "solo", label: "Solo" },
+];
+
+const CURRENCIES = [
+  { value: "EUR", label: "EUR — Euro" },
+  { value: "USD", label: "USD — Dollar" },
+  { value: "GBP", label: "GBP — Livre sterling" },
+  { value: "MAD", label: "MAD — Dirham" },
 ];
 
 function newDay() {
@@ -130,9 +153,7 @@ function computeIncomplete(values: TourFormValues) {
     { fr: values.tagline, en: values.taglineEn, es: values.taglineEs },
     { fr: values.description, en: values.descriptionEn, es: values.descriptionEs },
     { fr: values.longDescription, en: values.longDescriptionEn, es: values.longDescriptionEs },
-    { fr: values.duration, en: values.durationEn, es: values.durationEs },
     { fr: values.includes, en: values.includesEn, es: values.includesEs },
-    { fr: values.whenLabel, en: values.whenLabelEn, es: values.whenLabelEs },
   ];
   for (const s of values.sections) {
     triples.push({ fr: s.heading, en: s.headingEn, es: s.headingEs });
@@ -663,15 +684,73 @@ export function TourForm({
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Devise</FormLabel>
-                        <FormControl>
-                          <Input {...field} dir="ltr" className="w-24" />
-                        </FormControl>
+                        <Select
+                          value={field.value}
+                          onValueChange={(v) => field.onChange(v ?? "EUR")}
+                          items={Object.fromEntries(CURRENCIES.map((c) => [c.value, c.label]))}
+                        >
+                          <FormControl>
+                            <SelectTrigger className="w-full">
+                              <SelectValue />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {CURRENCIES.map((c) => (
+                              <SelectItem key={c.value} value={c.value}>
+                                {c.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                       </FormItem>
                     )}
                   />
                 </div>
-                <div className="mt-4">
-                  <TrilingualField control={form.control} baseName="duration" label="Durée (ex. « 2 jours »)" />
+                <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <FormField
+                    control={form.control}
+                    name="durationValue"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Durée</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="number"
+                            min={1}
+                            {...field}
+                            onChange={(e) => field.onChange(Math.max(1, e.target.valueAsNumber || 1))}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="durationUnit"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Unité</FormLabel>
+                        <Select
+                          value={field.value}
+                          onValueChange={(v) => field.onChange(v ?? "days")}
+                          items={Object.fromEntries(DURATION_UNITS.map((u) => [u.value, u.label]))}
+                        >
+                          <FormControl>
+                            <SelectTrigger className="w-full">
+                              <SelectValue />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {DURATION_UNITS.map((u) => (
+                              <SelectItem key={u.value} value={u.value}>
+                                {u.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormItem>
+                    )}
+                  />
                 </div>
                 <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <FormField
@@ -707,14 +786,30 @@ export function TourForm({
                 <FormField
                   control={form.control}
                   name="travelerTypes"
-                  render={({ field }) => (
-                    <FormItem className="mt-4">
-                      <FormLabel>Types de voyageurs (séparés par des virgules)</FormLabel>
-                      <FormControl>
-                        <Input {...field} dir="ltr" placeholder="family,couples,groups,honeymoon,solo" />
-                      </FormControl>
-                    </FormItem>
-                  )}
+                  render={({ field }) => {
+                    const selected = field.value ? field.value.split(",").map((s) => s.trim()).filter(Boolean) : [];
+                    return (
+                      <FormItem className="mt-4">
+                        <FormLabel>Types de voyageurs</FormLabel>
+                        <div className="flex flex-wrap gap-x-4 gap-y-2">
+                          {TRAVELER_TYPES.map((tt) => (
+                            <label key={tt.value} className="flex items-center gap-2 text-sm font-normal">
+                              <Checkbox
+                                checked={selected.includes(tt.value)}
+                                onCheckedChange={(checked) => {
+                                  const next = checked
+                                    ? [...selected, tt.value]
+                                    : selected.filter((v) => v !== tt.value);
+                                  field.onChange(next.join(","));
+                                }}
+                              />
+                              {tt.label}
+                            </label>
+                          ))}
+                        </div>
+                      </FormItem>
+                    );
+                  }}
                 />
               </CollapsibleSection>
 
@@ -762,11 +857,7 @@ export function TourForm({
                     label="Description détaillée"
                     multiline
                   />
-                  <TrilingualField
-                    control={form.control}
-                    baseName="includes"
-                    label="Inclus (séparés par des virgules)"
-                  />
+                  <TrilingualChipListField control={form.control} baseName="includes" label="Inclus" />
                 </div>
               </CollapsibleSection>
 
@@ -873,11 +964,13 @@ export function TourForm({
               </CollapsibleSection>
 
               <CollapsibleSection title="Période">
-                <TrilingualField
-                  control={form.control}
-                  baseName="whenLabel"
-                  label="Période de voyage (ex. « Mars à juin | Sept à nov »)"
-                />
+                <p className="text-sm text-muted-foreground">
+                  Générée automatiquement à partir de « Meilleure période » (onglet
+                  Informations) :{" "}
+                  <span className="font-medium text-foreground">
+                    {formatWhenLabel(values.bestMonths).fr || "—"}
+                  </span>
+                </p>
               </CollapsibleSection>
 
               <CollapsibleSection

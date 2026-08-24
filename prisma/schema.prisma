@@ -179,7 +179,9 @@ model Tour {
   price             Float            @default(0)
   originalPrice     Float            @default(0)
   currency          String           @default("EUR")
-  duration          String           @default("") // e.g. "1 jour", "2 heures"
+  durationValue     Int              @default(1) // admin-editable source of truth; duration*/below are generated from this + durationUnit
+  durationUnit      String           @default("days") // "days" | "nights" | "hours"
+  duration          String           @default("") // generated display string, e.g. "1 jour" — do not hand-edit, see formatDuration()
   durationEn        String           @default("")
   durationEs        String           @default("")
   includes          String           @default("") // comma-separated
@@ -200,7 +202,7 @@ model Tour {
   order             Int              @default(0)
   format            String           @default("standard") // "standard" | "journey" — picks the trip-detail page template
   mapImage          String           @default("") // journey-format only: illustrated route-map background
-  whenLabel         String           @default("") // journey-format stats row, e.g. "March to June | Sept to Nov"
+  whenLabel         String           @default("") // generated from bestMonths, e.g. "March to June | Sept to Nov" — do not hand-edit, see formatWhenLabel()
   whenLabelEn       String           @default("")
   whenLabelEs       String           @default("")
   createdAt         DateTime         @default(now())

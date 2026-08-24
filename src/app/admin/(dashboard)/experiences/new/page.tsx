@@ -1,3 +1,4 @@
+import { db } from "@/lib/db";
 import { ExperienceTypeForm } from "../experience-form";
 import type { ExperienceTypeFormValues } from "../schema";
 
@@ -30,6 +31,10 @@ const emptyValues: ExperienceTypeFormValues = {
   faqs: [],
 };
 
-export default function NewExperienceTypePage() {
-  return <ExperienceTypeForm defaultValues={emptyValues} />;
+export default async function NewExperienceTypePage() {
+  const destinations = await db.destination.findMany({
+    orderBy: { name: "asc" },
+    select: { slug: true, name: true, regionSlug: true },
+  });
+  return <ExperienceTypeForm defaultValues={emptyValues} destinations={destinations} />;
 }

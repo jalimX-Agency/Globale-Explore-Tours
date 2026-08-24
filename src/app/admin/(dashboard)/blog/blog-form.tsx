@@ -47,9 +47,11 @@ function computeIncomplete(values: BlogPostFormValues) {
 export function BlogForm({
   postId,
   defaultValues,
+  categories = [],
 }: {
   postId?: string;
   defaultValues: BlogPostFormValues;
+  categories?: string[];
 }) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
@@ -160,8 +162,13 @@ export function BlogForm({
                       <FormItem>
                         <FormLabel>Catégorie</FormLabel>
                         <FormControl>
-                          <Input {...field} />
+                          <Input {...field} list="blog-category-options" />
                         </FormControl>
+                        <datalist id="blog-category-options">
+                          {categories.map((c) => (
+                            <option key={c} value={c} />
+                          ))}
+                        </datalist>
                       </FormItem>
                     )}
                   />

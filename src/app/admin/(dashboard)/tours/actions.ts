@@ -6,6 +6,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { extractR2Urls, cleanupOrphanedR2Urls } from "@/lib/r2";
+import { formatDuration, formatWhenLabel } from "@/lib/tourFormatting";
 import { tourFormSchema, type TourFormValues } from "./schema";
 
 async function assertAdmin() {
@@ -15,7 +16,13 @@ async function assertAdmin() {
 
 type TransactionClient = Parameters<Parameters<typeof db.$transaction>[0]>[0];
 
+// duration/whenLabel and their En/Es siblings are generated here, never taken directly from
+// admin input — the admin only ever edits durationValue+durationUnit and bestMonths (a Select
+// and a checkbox grid), which can't be typo'd into an inconsistent or unparseable string the
+// way free text could.
 function tourData(values: TourFormValues) {
+  const duration = formatDuration(values.durationValue, values.durationUnit);
+  const whenLabel = formatWhenLabel(values.bestMonths);
   return {
     name: values.name,
     nameEn: values.nameEn,
@@ -33,9 +40,11 @@ function tourData(values: TourFormValues) {
     price: values.price,
     originalPrice: values.originalPrice,
     currency: values.currency,
-    duration: values.duration,
-    durationEn: values.durationEn,
-    durationEs: values.durationEs,
+    durationValue: values.durationValue,
+    durationUnit: values.durationUnit,
+    duration: duration.fr,
+    durationEn: duration.en,
+    durationEs: duration.es,
     includes: values.includes,
     includesEn: values.includesEn,
     includesEs: values.includesEs,
@@ -52,9 +61,9 @@ function tourData(values: TourFormValues) {
     order: values.order,
     format: values.format,
     mapImage: values.mapImage,
-    whenLabel: values.whenLabel,
-    whenLabelEn: values.whenLabelEn,
-    whenLabelEs: values.whenLabelEs,
+    whenLabel: whenLabel.fr,
+    whenLabelEn: whenLabel.en,
+    whenLabelEs: whenLabel.es,
   };
 }
 
