@@ -1,7 +1,6 @@
 import { db } from "@/lib/db";
 import { MetadataRoute } from "next";
 import { LOCALES } from "@/lib/i18n/locales";
-import { FAMILY_SUB_PAGES } from "@/lib/familySubPagesData";
 
 const BASE = "https://www.globaleexploretours.com";
 
@@ -63,10 +62,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     withLocales(`/experience-types/${e.slug}`, e.updatedAt, "monthly", 0.75)
   );
 
-  const familySubPageRoutes = FAMILY_SUB_PAGES.flatMap((p) =>
-    withLocales(`/experience-types/family-holidays/${p.slug}`, now, "monthly", 0.6)
-  );
-
   return [
     ...staticRoutes,
     ...tourRoutes,
@@ -74,6 +69,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...regionRoutes,
     ...destinationRoutes,
     ...experienceTypeRoutes,
-    ...familySubPageRoutes,
   ];
 }

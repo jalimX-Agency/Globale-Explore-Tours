@@ -51,7 +51,7 @@ export function ExperiencesPageClient({
 
   // Admin-editable (see /admin/experiences) — adding a new ExperienceType row (either kind)
   // adds a card here automatically, no code change needed.
-  const whoCards: ExperienceCard[] = experienceTypes.filter((e) => e.kind !== "what").map((e) => localizedCard(e, language));
+  const whoCards: ExperienceCard[] = experienceTypes.filter((e) => e.kind === "who").map((e) => localizedCard(e, language));
   const whatCards: ExperienceCard[] = experienceTypes.filter((e) => e.kind === "what").map((e) => localizedCard(e, language));
 
   return (

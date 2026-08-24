@@ -8,13 +8,14 @@ import { Testimonials } from "@/components/get/Testimonials";
 import { TripsShowcase } from "@/components/get/TripsShowcase";
 import { LinkedContentGrid } from "@/components/get/LinkedContentGrid";
 import type { TourCardData } from "@/components/get/TourCard";
-import type { Localized } from "@/lib/experienceTypesData";
+import type { Localized, LinkCardGroup } from "@/lib/experienceTypesData";
 
 export type WhatTypeContent = {
   slug: string;
   heroImage: string;
   heroTitle: Localized;
   overviewBody: Localized;
+  subPageGroups?: LinkCardGroup[];
 };
 
 function localized(language: string, l: Localized) {
@@ -60,6 +61,24 @@ export function WhatTypePageClient({
           {t("experienceTypes.introCta")}
         </LocaleLink>
       </section>
+
+      {/* ── Sub-pages (Private Travel's own services, or a future "what" page with children) ── */}
+      {content.subPageGroups?.map((group, i) => (
+        <section key={i} className={i === 0 ? "border-t border-neutral-100 bg-[var(--brand-sand)] py-16" : "py-16"}>
+          <div className="mx-auto max-w-7xl px-6">
+            <LinkedContentGrid
+              title={localized(language, group.heading)}
+              cards={group.cards.map((card) => ({
+                key: card.key,
+                image: card.image,
+                title: localized(language, card.title),
+                desc: localized(language, card.desc),
+                href: card.href,
+              }))}
+            />
+          </div>
+        </section>
+      ))}
 
       {/* ── Signature trips ── */}
       <TripsShowcase

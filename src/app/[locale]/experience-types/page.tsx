@@ -47,6 +47,7 @@ export default async function ExperienceTypesPage() {
       select: TOUR_CARD_SELECT,
     }),
     db.experienceType.findMany({
+      where: { parentId: null }, // sub-pages surface only via their parent's own page, not this hub
       orderBy: { order: "asc" },
       select: {
         slug: true,

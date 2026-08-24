@@ -7,6 +7,7 @@ import { authOptions } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { extractR2Urls, cleanupOrphanedR2Urls } from "@/lib/r2";
 import { experienceTypeFormSchema, type ExperienceTypeFormValues } from "./schema";
+import { SUB_PAGE_TEMPLATES } from "./subPageTemplates";
 
 async function assertAdmin() {
   const session = await getServerSession(authOptions);
@@ -62,8 +63,10 @@ export async function createExperienceType(raw: ExperienceTypeFormValues) {
       data: {
         slug: values.slug,
         kind: values.kind,
+        parentId: values.parentId || null,
         travelerTypeKey: values.travelerTypeKey,
         filterTheme: values.filterTheme,
+        filterMonths: values.filterMonths,
         filterDestinationId: values.filterDestinationId || null,
         cardImage: values.cardImage,
         cardTitle: values.cardTitle,
@@ -112,8 +115,10 @@ export async function updateExperienceType(id: string, raw: ExperienceTypeFormVa
       data: {
         slug: values.slug,
         kind: values.kind,
+        parentId: values.parentId || null,
         travelerTypeKey: values.travelerTypeKey,
         filterTheme: values.filterTheme,
+        filterMonths: values.filterMonths,
         filterDestinationId: values.filterDestinationId || null,
         cardImage: values.cardImage,
         cardTitle: values.cardTitle,
@@ -147,11 +152,14 @@ export async function updateExperienceType(id: string, raw: ExperienceTypeFormVa
   revalidatePath("/[locale]", "layout");
 }
 
+// Deleting a page cascades to its sub-pages (onDelete: Cascade on parentId) — so the R2
+// cleanup snapshot has to cover the whole subtree's images too, not just this one row's,
+// otherwise a deleted parent's children's card/hero images would leak as orphans.
 export async function deleteExperienceType(id: string) {
   await assertAdmin();
   const before = await db.experienceType.findUnique({
     where: { id },
-    include: { contentBlocks: true },
+    include: { contentBlocks: true, children: { include: { contentBlocks: true } } },
   });
 
   await db.experienceType.delete({ where: { id } });
@@ -160,6 +168,44 @@ export async function deleteExperienceType(id: string) {
 
   revalidatePath("/admin/experiences");
   revalidatePath("/[locale]", "layout");
+}
+
+// One-click bulk creation for the known sub-page sets (see subPageTemplates.ts) — saves the
+// admin from manually creating a dozen near-identical child pages one at a time. Skips any
+// leaf slug that already exists under this parent (safe to click again after a partial run).
+export async function createStandardSubPages(parentId: string, templateKey: string) {
+  await assertAdmin();
+  const template = SUB_PAGE_TEMPLATES[templateKey];
+  if (!template) throw new Error("Modèle de sous-pages inconnu");
+
+  const parent = await db.experienceType.findUniqueOrThrow({ where: { id: parentId } });
+  const existingSlugs = new Set(
+    (await db.experienceType.findMany({ where: { parentId }, select: { slug: true } })).map((r) => r.slug)
+  );
+
+  const rows = template
+    .map((item) => ({ ...item, slug: `${parent.slug}/${item.leafSlug}` }))
+    .filter((item) => !existingSlugs.has(item.slug));
+
+  if (rows.length) {
+    await db.experienceType.createMany({
+      data: rows.map((item, i) => ({
+        slug: item.slug,
+        kind: parent.kind,
+        parentId: parent.id,
+        travelerTypeKey: parent.kind === "who" && !item.filterTheme && !item.filterMonths ? parent.travelerTypeKey : "",
+        filterTheme: item.filterTheme ?? "",
+        filterMonths: item.filterMonths ?? "",
+        cardTitle: item.cardTitle,
+        heroTitle: item.heroTitle,
+        order: i,
+      })),
+    });
+  }
+
+  revalidatePath("/admin/experiences");
+  revalidatePath("/[locale]", "layout");
+  return { created: rows.length, skipped: template.length - rows.length };
 }
 
 // Which trips "belong" to a traveler-type page isn't a separate relation — it's whichever

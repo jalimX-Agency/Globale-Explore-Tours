@@ -5,13 +5,19 @@ import { isLocale, DEFAULT_LOCALE, type Locale } from "@/lib/i18n/locales";
 import { fr } from "@/lib/i18n/translations/fr";
 import { en } from "@/lib/i18n/translations/en";
 import { es } from "@/lib/i18n/translations/es";
-import { getTravelerTypePage, type TravelerTypePage } from "@/lib/experienceTypesData";
+import { getTravelerTypePage, type TravelerTypePage, type Localized, type LinkCardGroup } from "@/lib/experienceTypesData";
 import { TravelerTypePageClient } from "./TravelerTypePageClient";
 import { WhatTypePageClient, type WhatTypeContent } from "./WhatTypePageClient";
 
 const NAV_EXPERIENCES = { fr: fr.nav.experiences, en: en.nav.experiences, es: es.nav.experiences };
 
-function pick(locale: Locale, l: { fr: string; en: string; es: string }) {
+const SUB_PAGE_GROUP_HEADINGS = {
+  when: { fr: "Quand partir ?", en: "When to travel?", es: "¿Cuándo viajar?" },
+  type: { fr: "Quel type de séjour ?", en: "What type of trip?", es: "¿Qué tipo de viaje?" },
+  persona: { fr: "Qui voyage ?", en: "Who's travelling?", es: "¿Quién viaja?" },
+} satisfies Record<string, Localized>;
+
+function pick(locale: Locale, l: Localized) {
   if (locale === "en") return l.en || l.fr;
   if (locale === "es") return l.es || l.fr;
   return l.fr;
@@ -37,13 +43,46 @@ const TOUR_CARD_SELECT = {
   destination: { select: { slug: true, regionSlug: true } },
 } as const;
 
+type ExperienceTypeRow = NonNullable<Awaited<ReturnType<typeof getExperienceTypeRow>>>;
+type ChildRow = ExperienceTypeRow["children"][number];
+
+// Groups a page's DB children into up to 3 card grids by which filter dimension they use —
+// matches Black Tomato's real family-holidays/luxury-honeymoons pages, each of which shows
+// several such grids ("Who is travelling?" / "When are you travelling?" / "What type of
+// trip?") rather than one flat list. A child with none of its own filters set (an "age" or
+// "persona" sub-page — toddlers, teens... — nothing in Tour distinguishes those) falls into
+// the last bucket.
+function buildSubPageGroups(children: ChildRow[]): LinkCardGroup[] {
+  if (children.length === 0) return [];
+  const buckets: Record<keyof typeof SUB_PAGE_GROUP_HEADINGS, ChildRow[]> = { when: [], type: [], persona: [] };
+  for (const child of children) {
+    if (child.filterMonths) buckets.when.push(child);
+    else if (child.filterTheme) buckets.type.push(child);
+    else buckets.persona.push(child);
+  }
+  return (Object.keys(buckets) as (keyof typeof buckets)[])
+    .filter((key) => buckets[key].length > 0)
+    .map((key) => ({
+      heading: SUB_PAGE_GROUP_HEADINGS[key],
+      cards: buckets[key].map((child) => ({
+        key: child.id,
+        image: child.cardImage || child.heroImage,
+        title: { fr: child.cardTitle || child.heroTitle, en: child.cardTitleEn || child.heroTitleEn, es: child.cardTitleEs || child.heroTitleEs },
+        desc: { fr: child.cardDescription, en: child.cardDescriptionEn, es: child.cardDescriptionEs },
+        href: `/experience-types/${child.slug}`,
+      })),
+    }));
+}
+
 // Hero/overview/best-destinations/reassurance/FAQ content is admin-editable (ExperienceType +
 // ContentBlock + Faq rows) — this adapts the DB row back into the TravelerTypePage shape
 // TravelerTypePageClient already expects, so that component stays untouched. categorySections
-// and linkCardGroups are page-structure config, not day-to-day editorial content, and stay
-// sourced from src/lib/experienceTypesData.ts for now.
-async function getTravelerTypeContent(row: NonNullable<Awaited<ReturnType<typeof getExperienceTypeRow>>>): Promise<TravelerTypePage> {
+// stays sourced from src/lib/experienceTypesData.ts for now (page-structure config, not
+// day-to-day editorial content) — linkCardGroups, though, is fully DB-driven once a page has
+// real sub-pages, overriding whatever static groups experienceTypesData.ts still has for it.
+async function getTravelerTypeContent(row: ExperienceTypeRow): Promise<TravelerTypePage> {
   const staticExtras = getTravelerTypePage(row.slug);
+  const subPageGroups = buildSubPageGroups(row.children);
   return {
     slug: row.slug,
     travelerTypeKey: row.travelerTypeKey as TravelerTypePage["travelerTypeKey"],
@@ -53,7 +92,7 @@ async function getTravelerTypeContent(row: NonNullable<Awaited<ReturnType<typeof
     overviewTitle: { fr: row.overviewTitle, en: row.overviewTitleEn, es: row.overviewTitleEs },
     overviewBody: { fr: row.overviewBody, en: row.overviewBodyEn, es: row.overviewBodyEs },
     categorySections: staticExtras?.categorySections,
-    linkCardGroups: staticExtras?.linkCardGroups,
+    linkCardGroups: subPageGroups.length > 0 ? subPageGroups : staticExtras?.linkCardGroups,
     bestDestinations: row.contentBlocks
       .filter((b) => b.section === "bestDestinations")
       .map((b) => ({
@@ -76,12 +115,13 @@ async function getTravelerTypeContent(row: NonNullable<Awaited<ReturnType<typeof
   };
 }
 
-function toWhatTypeContent(row: NonNullable<Awaited<ReturnType<typeof getExperienceTypeRow>>>): WhatTypeContent {
+function toWhatTypeContent(row: ExperienceTypeRow): WhatTypeContent {
   return {
     slug: row.slug,
     heroImage: row.heroImage,
     heroTitle: { fr: row.heroTitle, en: row.heroTitleEn, es: row.heroTitleEs },
     overviewBody: { fr: row.overviewBody, en: row.overviewBodyEn, es: row.overviewBodyEs },
+    subPageGroups: buildSubPageGroups(row.children),
   };
 }
 
@@ -92,24 +132,58 @@ function getExperienceTypeRow(slug: string) {
       contentBlocks: { orderBy: { order: "asc" } },
       faqs: { orderBy: { order: "asc" } },
       filterDestination: { select: { slug: true, regionSlug: true } },
+      parent: {
+        select: {
+          slug: true,
+          heroTitle: true,
+          heroTitleEn: true,
+          heroTitleEs: true,
+          travelerTypeKey: true,
+          filterTheme: true,
+          filterMonths: true,
+          filterDestinationId: true,
+        },
+      },
+      children: { orderBy: { order: "asc" } },
     },
   });
 }
 
+// A tour "belongs" to a page if it matches every filter field the page actually has set
+// (AND across dimensions) — a sub-page with none of its own set simply falls back to
+// whichever ones its parent has, so e.g. "toddlers" (no filters of its own) shows the same
+// trips as "family-holidays" until someone tightens it from the admin.
+function tourWhereForRow(row: ExperienceTypeRow) {
+  const travelerTypeKey = row.travelerTypeKey || row.parent?.travelerTypeKey;
+  const filterTheme = row.filterTheme || row.parent?.filterTheme;
+  const filterMonths = row.filterMonths || row.parent?.filterMonths;
+  const filterDestinationId = row.filterDestinationId || row.parent?.filterDestinationId;
+
+  const where: Record<string, unknown> = {};
+  if (travelerTypeKey) where.travelerTypes = { contains: travelerTypeKey };
+  if (filterTheme) where.theme = filterTheme;
+  if (filterDestinationId) where.destinationId = filterDestinationId;
+  if (filterMonths) {
+    const months = filterMonths.split(",").map((m: string) => m.trim()).filter(Boolean);
+    where.OR = months.map((m: string) => ({ bestMonths: { contains: m } }));
+  }
+  return where;
+}
+
 export async function generateStaticParams() {
   const rows = await db.experienceType.findMany({ select: { slug: true } });
-  return rows.map((r) => ({ slug: r.slug }));
+  return rows.map((r) => ({ slug: r.slug.split("/") }));
 }
 
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ locale: string; slug: string }>;
+  params: Promise<{ locale: string; slug: string[] }>;
 }): Promise<Metadata> {
   const { locale: rawLocale, slug } = await params;
   const locale = isLocale(rawLocale) ? rawLocale : DEFAULT_LOCALE;
 
-  const row = await getExperienceTypeRow(slug);
+  const row = await getExperienceTypeRow(slug.join("/"));
   if (!row) return { title: "Experience" };
 
   return {
@@ -121,21 +195,29 @@ export async function generateMetadata({
 export default async function ExperienceTypePage({
   params,
 }: {
-  params: Promise<{ locale: string; slug: string }>;
+  params: Promise<{ locale: string; slug: string[] }>;
 }) {
   const { locale: rawLocale, slug } = await params;
   const locale = isLocale(rawLocale) ? rawLocale : DEFAULT_LOCALE;
 
-  const row = await getExperienceTypeRow(slug);
+  const row = await getExperienceTypeRow(slug.join("/"));
   if (!row) notFound();
 
   const experiencesLabel = pick(locale, NAV_EXPERIENCES);
+  const breadcrumb = [{ label: experiencesLabel, href: "/experience-types" }];
+  if (row.parent) {
+    breadcrumb.push({
+      label: pick(locale, { fr: row.parent.heroTitle, en: row.parent.heroTitleEn, es: row.parent.heroTitleEs }),
+      href: `/experience-types/${row.parent.slug}`,
+    });
+  }
 
   if (row.kind === "who") {
     const travelerContent = await getTravelerTypeContent(row);
+    const where = tourWhereForRow(row);
 
     const tours = await db.tour.findMany({
-      where: { travelerTypes: { contains: travelerContent.travelerTypeKey } },
+      where,
       orderBy: [{ featured: "desc" }, { order: "asc" }],
       take: 8,
       select: TOUR_CARD_SELECT,
@@ -152,10 +234,7 @@ export default async function ExperienceTypePage({
       const entries = await Promise.all(
         travelerContent.categorySections.map(async (section) => {
           const sectionTours = await db.tour.findMany({
-            where: {
-              travelerTypes: { contains: travelerContent.travelerTypeKey },
-              ...(section.themeParam ? { theme: section.themeParam } : {}),
-            },
+            where: { ...where, ...(section.themeParam ? { theme: section.themeParam } : {}) },
             orderBy: [{ featured: "desc" }, { order: "asc" }],
             take: 6,
             select: TOUR_CARD_SELECT,
@@ -180,19 +259,22 @@ export default async function ExperienceTypePage({
         content={travelerContent}
         tours={toursWithHref}
         categoryTours={categoryTours}
-        breadcrumb={[{ label: experiencesLabel, href: "/experience-types" }, { label: pageTitle }]}
+        breadcrumb={[...breadcrumb, { label: pageTitle }]}
       />
     );
   }
 
-  // kind === "what"
+  // kind === "what" | "private"
   const content = toWhatTypeContent(row);
-  const tours = await db.tour.findMany({
-    where: row.filterDestinationId ? { destinationId: row.filterDestinationId } : { theme: row.filterTheme },
-    orderBy: [{ featured: "desc" }, { order: "asc" }],
-    take: 8,
-    select: TOUR_CARD_SELECT,
-  });
+  const where = tourWhereForRow(row);
+  const tours = Object.keys(where).length > 0
+    ? await db.tour.findMany({
+        where,
+        orderBy: [{ featured: "desc" }, { order: "asc" }],
+        take: 8,
+        select: TOUR_CARD_SELECT,
+      })
+    : [];
 
   const toursWithHref = tours.map((tour) => ({
     ...tour,
@@ -200,8 +282,8 @@ export default async function ExperienceTypePage({
     regionSlug: tour.destination?.regionSlug,
   }));
 
-  const allWhatRows = await db.experienceType.findMany({
-    where: { kind: "what" },
+  const siblingRows = await db.experienceType.findMany({
+    where: { kind: row.kind, parentId: row.parentId },
     orderBy: { order: "asc" },
     select: {
       slug: true,
@@ -214,12 +296,12 @@ export default async function ExperienceTypePage({
       overviewBodyEs: true,
     },
   });
-  const idx = allWhatRows.findIndex((p) => p.slug === row.slug);
+  const idx = siblingRows.findIndex((p) => p.slug === row.slug);
   const related: WhatTypeContent[] =
-    idx === -1 || allWhatRows.length <= 1
+    idx === -1 || siblingRows.length <= 1
       ? []
       : [1, 2, 3].map((offset) => {
-          const r = allWhatRows[(idx + offset) % allWhatRows.length];
+          const r = siblingRows[(idx + offset) % siblingRows.length];
           return {
             slug: r.slug,
             heroImage: r.heroImage,
@@ -235,7 +317,7 @@ export default async function ExperienceTypePage({
       content={content}
       tours={toursWithHref}
       related={related}
-      breadcrumb={[{ label: experiencesLabel, href: "/experience-types" }, { label: pageTitle }]}
+      breadcrumb={[...breadcrumb, { label: pageTitle }]}
     />
   );
 }

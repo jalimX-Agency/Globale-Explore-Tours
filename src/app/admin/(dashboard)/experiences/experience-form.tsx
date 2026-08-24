@@ -10,6 +10,8 @@ import { ArrowLeft, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
@@ -35,9 +37,11 @@ import {
   experienceTypeFormSchema,
   TRAVELER_TYPE_KEYS,
   THEME_FILTER_KEYS,
+  MONTH_FILTER_KEYS,
   type ExperienceTypeFormValues,
 } from "./schema";
-import { createExperienceType, updateExperienceType, deleteExperienceType } from "./actions";
+import { createExperienceType, updateExperienceType, deleteExperienceType, createStandardSubPages } from "./actions";
+import { SUB_PAGE_TEMPLATE_KEYS, SUB_PAGE_TEMPLATE_LABELS } from "./subPageTemplates";
 import { ExperienceTripsPanel, type TripOption } from "./experience-trips-panel";
 
 const TRAVELER_TYPE_LABELS: Record<(typeof TRAVELER_TYPE_KEYS)[number], string> = {
@@ -55,7 +59,25 @@ const THEME_FILTER_LABELS: Record<(typeof THEME_FILTER_KEYS)[number], string> = 
   family: "Famille",
 };
 
-const KIND_LABELS = { who: "Qui voyage (Who)", what: "Que faire (What)" };
+const MONTH_FILTER_LABELS: Record<(typeof MONTH_FILTER_KEYS)[number], string> = {
+  january: "Janvier",
+  february: "Février",
+  march: "Mars",
+  april: "Avril",
+  may: "Mai",
+  june: "Juin",
+  july: "Juillet",
+  august: "Août",
+  september: "Septembre",
+  october: "Octobre",
+  november: "Novembre",
+  december: "Décembre",
+};
+
+const KIND_LABELS = { who: "Qui voyage (Who)", what: "Que faire (What)", private: "Voyage privé (Private Travel)" };
+
+type ParentOption = { id: string; slug: string; heroTitle: string; kind: string };
+type ChildOption = { id: string; slug: string; heroTitle: string };
 
 function computeIncomplete(values: ExperienceTypeFormValues) {
   const triples: { fr: string; en: string; es: string }[] = [
@@ -91,22 +113,48 @@ export function ExperienceTypeForm({
   defaultValues,
   trips,
   destinations,
+  parentOptions = [],
+  childPages = [],
 }: {
   experienceTypeId?: string;
   defaultValues: ExperienceTypeFormValues;
   trips?: TripOption[];
   destinations: DestinationOption[];
+  parentOptions?: ParentOption[];
+  childPages?: ChildOption[];
 }) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
+  const [subPageTemplate, setSubPageTemplate] = useState(SUB_PAGE_TEMPLATE_KEYS[0] ?? "");
 
   const form = useForm<ExperienceTypeFormValues>({
     resolver: zodResolver(experienceTypeFormSchema),
     defaultValues,
   });
-  const [whatFilterMode, setWhatFilterMode] = useState<"theme" | "destination">(
-    defaultValues.filterDestinationId ? "destination" : "theme"
+  type FilterMode = "none" | "theme" | "months" | "destination";
+  const [filterMode, setFilterMode] = useState<FilterMode>(
+    defaultValues.filterDestinationId ? "destination" : defaultValues.filterMonths ? "months" : defaultValues.filterTheme ? "theme" : "none"
   );
+
+  const parentSlug = parentOptions.find((p) => p.id === defaultValues.parentId)?.slug ?? "";
+  const [leafSlug, setLeafSlug] = useState(() =>
+    parentSlug && defaultValues.slug.startsWith(`${parentSlug}/`) ? defaultValues.slug.slice(parentSlug.length + 1) : defaultValues.slug
+  );
+
+  function generateSubPages() {
+    if (!experienceTypeId || !subPageTemplate) return;
+    startTransition(async () => {
+      try {
+        const { created, skipped } = await createStandardSubPages(experienceTypeId, subPageTemplate);
+        toast.success(
+          skipped > 0 ? `${created} sous-page(s) créée(s), ${skipped} déjà existante(s)` : `${created} sous-page(s) créée(s)`
+        );
+        router.refresh();
+      } catch (err) {
+        toast.error(err instanceof Error ? err.message : "Une erreur est survenue");
+      }
+    });
+  }
 
   function onSubmit(values: ExperienceTypeFormValues) {
     startTransition(async () => {
@@ -175,7 +223,17 @@ export function ExperienceTypeForm({
                         <AlertDialogDescription>
                           La page et tout son contenu associé (destinations mises en avant,
                           réassurance, questions fréquentes) seront supprimés. La page publique
-                          correspondante cessera de fonctionner. Cette action est irréversible.
+                          correspondante cessera de fonctionner.
+                          {childPages.length > 0 && (
+                            <>
+                              {" "}
+                              <strong className="text-destructive">
+                                Ses {childPages.length} sous-page{childPages.length > 1 ? "s" : ""} seront
+                                également supprimée{childPages.length > 1 ? "s" : ""}.
+                              </strong>
+                            </>
+                          )}{" "}
+                          Cette action est irréversible.
                         </AlertDialogDescription>
                       </AlertDialogHeader>
                       <AlertDialogFooter>
@@ -202,6 +260,7 @@ export function ExperienceTypeForm({
               <TabsTrigger value="reassurance">Réassurance ({values.reassurance.length})</TabsTrigger>
               <TabsTrigger value="faqs">FAQ ({values.faqs.length})</TabsTrigger>
               {trips && values.kind === "who" && <TabsTrigger value="trips">Voyages</TabsTrigger>}
+              {experienceTypeId && <TabsTrigger value="subpages">Sous-pages ({childPages.length})</TabsTrigger>}
             </TabsList>
 
             <TabsContent value="basic" className="space-y-5 pt-5">
@@ -210,16 +269,38 @@ export function ExperienceTypeForm({
                   <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <FormField
                       control={form.control}
-                      name="slug"
+                      name="parentId"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>
-                            Lien (slug) <span className="text-brand-accent">*</span>
-                          </FormLabel>
-                          <FormControl>
-                            <Input {...field} dir="ltr" placeholder="family-holidays" />
-                          </FormControl>
-                          <FormMessage />
+                          <FormLabel>Page parente</FormLabel>
+                          <Select
+                            value={field.value || "none"}
+                            onValueChange={(v) => {
+                              const nextParentId = v === "none" ? "" : (v ?? "");
+                              field.onChange(nextParentId);
+                              const nextParent = parentOptions.find((p) => p.id === nextParentId);
+                              form.setValue("slug", nextParent ? `${nextParent.slug}/${leafSlug}` : leafSlug);
+                              if (nextParent) form.setValue("kind", nextParent.kind === "what" || nextParent.kind === "private" ? nextParent.kind : "who");
+                            }}
+                            items={{
+                              none: "Aucune (page principale)",
+                              ...Object.fromEntries(parentOptions.map((p) => [p.id, p.heroTitle || p.slug])),
+                            }}
+                          >
+                            <FormControl>
+                              <SelectTrigger className="w-full">
+                                <SelectValue />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="none">Aucune (page principale)</SelectItem>
+                              {parentOptions.map((p) => (
+                                <SelectItem key={p.id} value={p.id}>
+                                  {p.heroTitle || p.slug}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
                         </FormItem>
                       )}
                     />
@@ -238,12 +319,58 @@ export function ExperienceTypeForm({
                             <SelectContent>
                               <SelectItem value="who">{KIND_LABELS.who}</SelectItem>
                               <SelectItem value="what">{KIND_LABELS.what}</SelectItem>
+                              <SelectItem value="private">{KIND_LABELS.private}</SelectItem>
                             </SelectContent>
                           </Select>
                         </FormItem>
                       )}
                     />
                   </div>
+
+                  {values.parentId ? (
+                    <FormItem>
+                      <FormLabel>
+                        Lien (dans /{parentOptions.find((p) => p.id === values.parentId)?.slug}/...)
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          value={leafSlug}
+                          dir="ltr"
+                          placeholder="travel-pre-school-children"
+                          onChange={(e) => {
+                            setLeafSlug(e.target.value);
+                            const parent = parentOptions.find((p) => p.id === values.parentId);
+                            form.setValue("slug", parent ? `${parent.slug}/${e.target.value}` : e.target.value);
+                          }}
+                        />
+                      </FormControl>
+                      <FormMessage>{form.formState.errors.slug?.message}</FormMessage>
+                    </FormItem>
+                  ) : (
+                    <FormField
+                      control={form.control}
+                      name="slug"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>
+                            Lien (slug) <span className="text-brand-accent">*</span>
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              {...field}
+                              dir="ltr"
+                              placeholder="family-holidays"
+                              onChange={(e) => {
+                                field.onChange(e);
+                                setLeafSlug(e.target.value);
+                              }}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  )}
 
                   {values.kind === "who" && (
                     <>
@@ -253,7 +380,7 @@ export function ExperienceTypeForm({
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>
-                              Type de voyageur (clé) <span className="text-brand-accent">*</span>
+                              Type de voyageur (clé) {!values.parentId && <span className="text-brand-accent">*</span>}
                             </FormLabel>
                             <FormControl>
                               <Input {...field} dir="ltr" list="traveler-type-key-options" placeholder="family" />
@@ -275,42 +402,45 @@ export function ExperienceTypeForm({
                         utilisez une des valeurs suggérées, ou tapez-en une nouvelle pour créer un type
                         entièrement inédit. Vous pourrez ensuite choisir précisément quels voyages y
                         correspondent depuis l&apos;onglet « Voyages ».
+                        {values.parentId && " Laissez vide pour hériter des voyages de la page parente."}
                       </p>
                     </>
                   )}
 
-                  {values.kind === "what" && (
+                  {values.kind !== "private" && (
                     <div className="space-y-3 rounded-lg border border-border p-3">
                       <p className="text-xs text-muted-foreground">
-                        Les voyages affichés sur cette page sont ceux qui correspondent soit à un
-                        thème, soit à une destination précise — choisissez l&apos;un ou l&apos;autre.
+                        {values.parentId
+                          ? "Optionnel — affinez les voyages affichés sur cette sous-page par thème, période ou destination. Laissez sur « Aucun » pour hériter de la page parente."
+                          : "Les voyages affichés sur cette page sont ceux qui correspondent à un thème, une période, ou une destination précise."}
                       </p>
-                      <div className="flex gap-2">
-                        <Button
-                          type="button"
-                          variant={whatFilterMode === "theme" ? "default" : "outline"}
-                          size="sm"
-                          onClick={() => {
-                            setWhatFilterMode("theme");
-                            form.setValue("filterDestinationId", "");
-                          }}
-                        >
-                          Par thème
-                        </Button>
-                        <Button
-                          type="button"
-                          variant={whatFilterMode === "destination" ? "default" : "outline"}
-                          size="sm"
-                          onClick={() => {
-                            setWhatFilterMode("destination");
-                            form.setValue("filterTheme", "");
-                          }}
-                        >
-                          Par destination
-                        </Button>
+                      <div className="flex flex-wrap gap-2">
+                        {(
+                          [
+                            ["none", "Aucun"],
+                            ["theme", "Par thème"],
+                            ["months", "Par période"],
+                            ["destination", "Par destination"],
+                          ] as const
+                        ).map(([mode, label]) => (
+                          <Button
+                            key={mode}
+                            type="button"
+                            variant={filterMode === mode ? "default" : "outline"}
+                            size="sm"
+                            onClick={() => {
+                              setFilterMode(mode);
+                              if (mode !== "theme") form.setValue("filterTheme", "");
+                              if (mode !== "months") form.setValue("filterMonths", "");
+                              if (mode !== "destination") form.setValue("filterDestinationId", "");
+                            }}
+                          >
+                            {label}
+                          </Button>
+                        ))}
                       </div>
 
-                      {whatFilterMode === "theme" ? (
+                      {filterMode === "theme" && (
                         <FormField
                           control={form.control}
                           name="filterTheme"
@@ -339,7 +469,38 @@ export function ExperienceTypeForm({
                             </FormItem>
                           )}
                         />
-                      ) : (
+                      )}
+
+                      {filterMode === "months" && (
+                        <FormField
+                          control={form.control}
+                          name="filterMonths"
+                          render={({ field }) => {
+                            const selected = field.value ? field.value.split(",").map((s) => s.trim()).filter(Boolean) : [];
+                            return (
+                              <FormItem>
+                                <FormLabel>Mois</FormLabel>
+                                <div className="flex flex-wrap gap-x-4 gap-y-2">
+                                  {MONTH_FILTER_KEYS.map((key) => (
+                                    <label key={key} className="flex items-center gap-2 text-sm font-normal">
+                                      <Checkbox
+                                        checked={selected.includes(key)}
+                                        onCheckedChange={(checked) => {
+                                          const next = checked ? [...selected, key] : selected.filter((v) => v !== key);
+                                          field.onChange(next.join(","));
+                                        }}
+                                      />
+                                      {MONTH_FILTER_LABELS[key]}
+                                    </label>
+                                  ))}
+                                </div>
+                              </FormItem>
+                            );
+                          }}
+                        />
+                      )}
+
+                      {filterMode === "destination" && (
                         <FormField
                           control={form.control}
                           name="filterDestinationId"
@@ -574,6 +735,57 @@ export function ExperienceTypeForm({
             {trips && values.kind === "who" && (
               <TabsContent value="trips" className="pt-5">
                 <ExperienceTripsPanel travelerTypeKey={values.travelerTypeKey} trips={trips} />
+              </TabsContent>
+            )}
+
+            {experienceTypeId && (
+              <TabsContent value="subpages" className="space-y-5 pt-5">
+                {SUB_PAGE_TEMPLATE_KEYS.length > 0 && (
+                  <div className="flex flex-wrap items-end gap-3 rounded-lg border border-border p-3">
+                    <div className="space-y-1.5">
+                      <span className="text-sm leading-none font-medium">Générer les sous-pages standard</span>
+                      <Select value={subPageTemplate} onValueChange={(v) => v && setSubPageTemplate(v)} items={SUB_PAGE_TEMPLATE_LABELS}>
+                        <SelectTrigger className="w-72">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {SUB_PAGE_TEMPLATE_KEYS.map((key) => (
+                            <SelectItem key={key} value={key}>
+                              {SUB_PAGE_TEMPLATE_LABELS[key]}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <Button type="button" variant="outline" onClick={generateSubPages} disabled={pending}>
+                      Générer
+                    </Button>
+                  </div>
+                )}
+
+                {childPages.length === 0 ? (
+                  <p className="text-sm text-muted-foreground">Aucune sous-page pour l&apos;instant.</p>
+                ) : (
+                  <div className="divide-y divide-border rounded-lg border border-border">
+                    {childPages.map((child) => (
+                      <Link
+                        key={child.id}
+                        href={`/admin/experiences/${child.id}`}
+                        className="flex items-center justify-between gap-3 px-4 py-2.5 transition-colors hover:bg-muted/50"
+                      >
+                        <div className="min-w-0">
+                          <p className="truncate text-sm font-medium text-foreground">{child.heroTitle || "(sans titre)"}</p>
+                          <p className="truncate text-xs text-muted-foreground">/{child.slug}</p>
+                        </div>
+                        <Badge variant="outline">Modifier</Badge>
+                      </Link>
+                    ))}
+                  </div>
+                )}
+
+                <Button render={<Link href={`/admin/experiences/new?parent=${experienceTypeId}`} />} nativeButton={false} variant="outline">
+                  + Ajouter une sous-page
+                </Button>
               </TabsContent>
             )}
           </Tabs>

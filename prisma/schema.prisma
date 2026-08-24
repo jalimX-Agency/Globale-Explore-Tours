@@ -121,20 +121,30 @@ model Faq {
   experienceType   ExperienceType? @relation(fields: [experienceTypeId], references: [id])
 }
 
-// ── ExperienceType — "/experience-types/[slug]" pages, both the "Who's travelling" kind
-//    (family-holidays, couples-holidays...) and the "What do you want to do" kind
-//    (adventure-holidays, safari-holidays...) — same shape, distinguished by `kind`. Trip
-//    cards are always a live query: "who" pages match Tour.travelerTypes against
-//    travelerTypeKey; "what" pages match either Tour.theme (filterTheme) or a specific
-//    Destination (filterDestinationId) — never both. Each page's category-carousel and
-//    "explore further" link-card sections stay in src/lib/experienceTypesData.ts for now
-//    (page-structure config, not day-to-day editorial content). ──
+// ── ExperienceType — "/experience-types/[...slug]" pages: "Who's travelling" (family-holidays,
+//    couples-holidays...), "What do you want to do" (adventure-holidays, safari-holidays...),
+//    and "private" (Private Travel's own services) — same shape, distinguished by `kind`. Any
+//    row can also be a sub-page of another via `parentId` (e.g. family-holidays's age/season/
+//    type pages, luxury-honeymoons's month pages) — `slug` always holds the FULL path from
+//    /experience-types/ (e.g. "family-holidays/travel-pre-school-children"), so routing is a
+//    single findUnique on the joined URL segments, never a parent-chain walk. Trip cards are
+//    always a live query, every filter field below combined with AND when set: travelerTypeKey
+//    matches Tour.travelerTypes (manual curation via the "Voyages" tab), filterTheme matches
+//    Tour.theme, filterMonths matches an overlap with Tour.bestMonths, filterDestinationId
+//    matches one Destination. A sub-page with none of its own set simply inherits its parent's
+//    tour list. Each page's category-carousel and "explore further" link-card sections stay in
+//    src/lib/experienceTypesData.ts for now (page-structure config, not day-to-day editorial
+//    content). ──
 model ExperienceType {
   id                String         @id @default(cuid())
   slug              String         @unique
-  kind              String         @default("who") // "who" | "what"
-  travelerTypeKey   String         @default("") // "who" only: family | couples | groups | honeymoon | solo
-  filterTheme       String         @default("") // "what" only: adventure | culture | relax | family
+  kind              String         @default("who") // "who" | "what" | "private"
+  parentId          String?
+  parent            ExperienceType?  @relation("ExperienceTypeTree", fields: [parentId], references: [id], onDelete: Cascade)
+  children          ExperienceType[] @relation("ExperienceTypeTree")
+  travelerTypeKey   String         @default("") // family | couples | groups | honeymoon | solo — or a page-specific key for manually-curated sub-pages
+  filterTheme       String         @default("") // adventure | culture | relax | family
+  filterMonths      String         @default("") // comma-separated month keys (same convention as Tour.bestMonths) — for season/month sub-pages
   filterDestinationId String?
   filterDestination Destination?   @relation(fields: [filterDestinationId], references: [id])
   // Small card shown in the nav mega-menu, the homepage "By traveller" section, and the

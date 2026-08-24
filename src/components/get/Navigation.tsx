@@ -137,7 +137,7 @@ export function Navigation({
     desc: localizedCardDescription(e, language),
     href: `/experience-types/${e.slug}`,
   });
-  const whoCards = experienceTypes.filter((e) => e.kind !== "what").map(toCard);
+  const whoCards = experienceTypes.filter((e) => e.kind === "who").map(toCard);
   const whatCards = experienceTypes.filter((e) => e.kind === "what").map(toCard);
 
   const activeExperienceCards = activeExperienceTab === "who" ? whoCards : whatCards;

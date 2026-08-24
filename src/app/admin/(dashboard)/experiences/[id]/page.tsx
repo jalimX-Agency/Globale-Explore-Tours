@@ -6,7 +6,7 @@ import type { ExperienceTypeFormValues } from "../schema";
 export default async function EditExperienceTypePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
 
-  const [experienceType, trips, destinations] = await Promise.all([
+  const [experienceType, trips, destinations, allPages, childPages] = await Promise.all([
     db.experienceType.findUnique({
       where: { id },
       include: {
@@ -25,15 +25,27 @@ export default async function EditExperienceTypePage({ params }: { params: Promi
       },
     }),
     db.destination.findMany({ orderBy: { name: "asc" }, select: { id: true, slug: true, name: true, regionSlug: true } }),
+    db.experienceType.findMany({
+      where: { id: { not: id }, parentId: null }, // a page can only be nested one level deep for now
+      orderBy: { slug: "asc" },
+      select: { id: true, slug: true, heroTitle: true, kind: true },
+    }),
+    db.experienceType.findMany({
+      where: { parentId: id },
+      orderBy: { order: "asc" },
+      select: { id: true, slug: true, heroTitle: true },
+    }),
   ]);
 
   if (!experienceType) notFound();
 
   const defaultValues: ExperienceTypeFormValues = {
     slug: experienceType.slug,
-    kind: experienceType.kind === "what" ? "what" : "who",
+    kind: experienceType.kind === "what" || experienceType.kind === "private" ? experienceType.kind : "who",
+    parentId: experienceType.parentId ?? "",
     travelerTypeKey: experienceType.travelerTypeKey,
     filterTheme: experienceType.filterTheme,
+    filterMonths: experienceType.filterMonths,
     filterDestinationId: experienceType.filterDestinationId ?? "",
     cardImage: experienceType.cardImage,
     cardTitle: experienceType.cardTitle,
@@ -103,6 +115,8 @@ export default async function EditExperienceTypePage({ params }: { params: Promi
       defaultValues={defaultValues}
       trips={tripOptions}
       destinations={destinations}
+      parentOptions={allPages}
+      childPages={childPages}
     />
   );
 }

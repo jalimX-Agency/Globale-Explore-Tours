@@ -20,6 +20,7 @@ export async function NavigationServer() {
       },
     }),
     db.experienceType.findMany({
+      where: { parentId: null }, // sub-pages surface only via their parent's own page, not the top-level menus
       orderBy: { order: "asc" },
       select: {
         slug: true,
