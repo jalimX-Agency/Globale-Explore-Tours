@@ -1,4 +1,4 @@
-const R2 = "https://pub-6777907d6a4e4378b16e81847f00f2d2.r2.dev";
+const R2 = process.env.NEXT_PUBLIC_R2_URL!;
 
 export type Localized = { fr: string; en: string; es: string };
 
@@ -539,9 +539,9 @@ export const TRAVELER_TYPE_PAGES: TravelerTypePage[] = [
         image: `${R2}/destinations/maroc.jpg`,
         name: { fr: "Maroc", en: "Morocco", es: "Marruecos" },
         blurb: {
-          fr: "Notre terrain de jeu logistique préféré — les riads se prêtent bien aux grandes tablées, les excursions en groupe (buggy, quad, désert) sont déjà notre spécialité, et Marrakech comme Agadir offrent largement de quoi occuper dix ou vingt personnes sans jamais s'ennuyer.",
-          en: "Our favourite destination logistically — riads suit large groups well, group excursions (buggy, quad, desert) are already our specialty, and both Marrakech and Agadir offer more than enough to keep ten or twenty people entertained without ever running dry.",
-          es: "Nuestro destino favorito a nivel logístico — los riads se adaptan bien a grupos grandes, las excursiones en grupo (buggy, quad, desierto) ya son nuestra especialidad, y tanto Marrakech como Agadir ofrecen de sobra para mantener entretenidas a diez o veinte personas sin agotarse nunca.",
+          fr: "Notre terrain de jeu logistique préféré — les riads se prêtent bien aux grandes tablées, les excursions en groupe (buggy, quad, désert) sont déjà notre spécialité, et Marrakech comme Essaouira offrent largement de quoi occuper dix ou vingt personnes sans jamais s'ennuyer.",
+          en: "Our favourite destination logistically — riads suit large groups well, group excursions (buggy, quad, desert) are already our specialty, and both Marrakech and Essaouira offer more than enough to keep ten or twenty people entertained without ever running dry.",
+          es: "Nuestro destino favorito a nivel logístico — los riads se adaptan bien a grupos grandes, las excursiones en grupo (buggy, quad, desierto) ya son nuestra especialidad, y tanto Marrakech como Essaouira ofrecen de sobra para mantener entretenidas a diez o veinte personas sin agotarse nunca.",
         },
         href: "/destinations/afrique/maroc",
       },

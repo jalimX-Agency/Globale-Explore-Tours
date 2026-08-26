@@ -5,9 +5,8 @@ import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { extractR2Urls, cleanupOrphanedR2Urls } from "@/lib/r2";
+import { extractR2Urls, cleanupOrphanedR2Urls, uploadToR2, R2_PUBLIC_URL } from "@/lib/r2";
 import { experienceTypeFormSchema, type ExperienceTypeFormValues } from "./schema";
-import { SUB_PAGE_TEMPLATES } from "./subPageTemplates";
 
 async function assertAdmin() {
   const session = await getServerSession(authOptions);
@@ -170,42 +169,118 @@ export async function deleteExperienceType(id: string) {
   revalidatePath("/[locale]", "layout");
 }
 
-// One-click bulk creation for the known sub-page sets (see subPageTemplates.ts) — saves the
-// admin from manually creating a dozen near-identical child pages one at a time. Skips any
-// leaf slug that already exists under this parent (safe to click again after a partial run).
-export async function createStandardSubPages(parentId: string, templateKey: string) {
-  await assertAdmin();
-  const template = SUB_PAGE_TEMPLATES[templateKey];
-  if (!template) throw new Error("Modèle de sous-pages inconnu");
+// Re-uploads an R2-hosted image under a fresh key, so a duplicated row never shares an R2
+// object with its source — cleanupOrphanedR2Urls (used by every update/delete action) deletes
+// whatever URL disappears from a row's own before/after diff without checking whether another
+// row still references it, so two rows sharing one URL would let deleting either one silently
+// break the other's image. Leaves non-R2 or already-empty values untouched.
+async function duplicateImage(url: string, folder: string): Promise<string> {
+  if (!url || !url.startsWith(R2_PUBLIC_URL + "/")) return url;
+  const res = await fetch(url);
+  if (!res.ok) return url; // source image missing — keep the (broken) reference rather than fail the whole duplicate
+  const buffer = Buffer.from(await res.arrayBuffer());
+  const contentType = res.headers.get("content-type") ?? "image/jpeg";
+  const ext = url.split(".").pop()?.split(/[?#]/)[0] || "jpg";
+  const key = `${folder}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+  await uploadToR2(key, buffer, contentType);
+  return `${R2_PUBLIC_URL}/${key}`;
+}
 
-  const parent = await db.experienceType.findUniqueOrThrow({ where: { id: parentId } });
-  const existingSlugs = new Set(
-    (await db.experienceType.findMany({ where: { parentId }, select: { slug: true } })).map((r) => r.slug)
+// Shallow duplicate: copies the parent's own content (scalar fields + its own contentBlocks/
+// faqs) but never its children — a duplicated page starts as a plain new page, sub-pages are
+// added afterward the same way as for any other new page.
+export async function duplicateExperienceType(id: string) {
+  await assertAdmin();
+  const source = await db.experienceType.findUniqueOrThrow({
+    where: { id },
+    include: { contentBlocks: { orderBy: { order: "asc" } }, faqs: { orderBy: { order: "asc" } } },
+  });
+
+  let slug = `${source.slug}-copie`;
+  let suffix = 2;
+  while (await db.experienceType.findUnique({ where: { slug }, select: { id: true } })) {
+    slug = `${source.slug}-copie-${suffix}`;
+    suffix += 1;
+  }
+
+  const [cardImage, heroImage] = await Promise.all([
+    duplicateImage(source.cardImage, "experiences"),
+    duplicateImage(source.heroImage, "experiences"),
+  ]);
+  const contentBlocks = await Promise.all(
+    source.contentBlocks.map(async (b) => ({
+      section: b.section,
+      title: b.title,
+      titleEn: b.titleEn,
+      titleEs: b.titleEs,
+      description: b.description,
+      descriptionEn: b.descriptionEn,
+      descriptionEs: b.descriptionEs,
+      image: await duplicateImage(b.image, "content-blocks"),
+      ctaLabel: b.ctaLabel,
+      ctaLabelEn: b.ctaLabelEn,
+      ctaLabelEs: b.ctaLabelEs,
+      ctaHref: b.ctaHref,
+      order: b.order,
+    }))
   );
 
-  const rows = template
-    .map((item) => ({ ...item, slug: `${parent.slug}/${item.leafSlug}` }))
-    .filter((item) => !existingSlugs.has(item.slug));
-
-  if (rows.length) {
-    await db.experienceType.createMany({
-      data: rows.map((item, i) => ({
-        slug: item.slug,
-        kind: parent.kind,
-        parentId: parent.id,
-        travelerTypeKey: parent.kind === "who" && !item.filterTheme && !item.filterMonths ? parent.travelerTypeKey : "",
-        filterTheme: item.filterTheme ?? "",
-        filterMonths: item.filterMonths ?? "",
-        cardTitle: item.cardTitle,
-        heroTitle: item.heroTitle,
-        order: i,
-      })),
+  const created = await db.$transaction(async (tx) => {
+    const row = await tx.experienceType.create({
+      data: {
+        slug,
+        kind: source.kind,
+        parentId: source.parentId,
+        travelerTypeKey: source.travelerTypeKey,
+        filterTheme: source.filterTheme,
+        filterMonths: source.filterMonths,
+        filterDestinationId: source.filterDestinationId,
+        cardImage,
+        cardTitle: source.cardTitle,
+        cardTitleEn: source.cardTitleEn,
+        cardTitleEs: source.cardTitleEs,
+        cardDescription: source.cardDescription,
+        cardDescriptionEn: source.cardDescriptionEn,
+        cardDescriptionEs: source.cardDescriptionEs,
+        heroImage,
+        heroTitle: source.heroTitle,
+        heroTitleEn: source.heroTitleEn,
+        heroTitleEs: source.heroTitleEs,
+        heroSubtitle: source.heroSubtitle,
+        heroSubtitleEn: source.heroSubtitleEn,
+        heroSubtitleEs: source.heroSubtitleEs,
+        overviewTitle: source.overviewTitle,
+        overviewTitleEn: source.overviewTitleEn,
+        overviewTitleEs: source.overviewTitleEs,
+        overviewBody: source.overviewBody,
+        overviewBodyEn: source.overviewBodyEn,
+        overviewBodyEs: source.overviewBodyEs,
+        order: source.order,
+      },
     });
-  }
+    if (contentBlocks.length) {
+      await tx.contentBlock.createMany({ data: contentBlocks.map((b) => ({ ...b, experienceTypeId: row.id })) });
+    }
+    if (source.faqs.length) {
+      await tx.faq.createMany({
+        data: source.faqs.map((f) => ({
+          question: f.question,
+          questionEn: f.questionEn,
+          questionEs: f.questionEs,
+          answer: f.answer,
+          answerEn: f.answerEn,
+          answerEs: f.answerEs,
+          order: f.order,
+          experienceTypeId: row.id,
+        })),
+      });
+    }
+    return row;
+  }, { timeout: 15000 });
 
   revalidatePath("/admin/experiences");
   revalidatePath("/[locale]", "layout");
-  return { created: rows.length, skipped: template.length - rows.length };
+  return { id: created.id };
 }
 
 // Which trips "belong" to a traveler-type page isn't a separate relation — it's whichever

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { db } from "@/lib/db";
 import { isLocale, DEFAULT_LOCALE, type Locale } from "@/lib/i18n/locales";
 import { ExperiencesPageClient } from "./ExperiencesPageClient";
+import { pageMetadata } from "@/lib/seo";
 
 const META = {
   fr: { title: "Nos expériences de voyage", description: "Trouvez le voyage qui vous ressemble — par qui voyage, ce que vous voulez faire, ou comment vous voulez voyager." },
@@ -16,7 +17,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale: rawLocale } = await params;
   const locale = isLocale(rawLocale) ? rawLocale : DEFAULT_LOCALE;
-  return META[locale];
+  return pageMetadata({ locale, path: "/experience-types", ...META[locale] });
 }
 
 const TOUR_CARD_SELECT = {

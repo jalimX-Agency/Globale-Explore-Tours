@@ -31,7 +31,7 @@ const emptyValues: TourFormValues = {
   bestMonths: "",
   travelerTypes: "",
   maxGuests: 2,
-  departureFrom: "Agadir",
+  departureFrom: "",
   image: "",
   images: "",
   featured: false,

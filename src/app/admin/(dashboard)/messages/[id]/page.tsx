@@ -1,8 +1,7 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
 import { db } from "@/lib/db";
 import { Card } from "@/components/ui/card";
+import { AdminBreadcrumb } from "@/components/admin/breadcrumb";
 import { MessageReadToggle } from "../message-read-toggle";
 
 function Field({ label, value }: { label: string; value: React.ReactNode }) {
@@ -22,13 +21,13 @@ export default async function MessageDetailPage({ params }: { params: Promise<{ 
   return (
     <div className="space-y-6">
       <div className="space-y-3">
-        <Link
-          href="/admin/messages"
-          className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
-        >
-          <ArrowLeft className="size-3.5" />
-          Messages
-        </Link>
+        <AdminBreadcrumb
+          items={[
+            { label: "Tableau de bord", href: "/admin" },
+            { label: "Messages", href: "/admin/messages" },
+            { label: message.subject || "Message sans sujet" },
+          ]}
+        />
         <div className="flex flex-wrap items-center justify-between gap-4">
           <h1 className="text-2xl font-semibold tracking-tight text-foreground">
             {message.subject || "Message sans sujet"}

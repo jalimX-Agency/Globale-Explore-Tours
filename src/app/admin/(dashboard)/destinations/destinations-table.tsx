@@ -2,12 +2,14 @@
 
 import { Badge } from "@/components/ui/badge";
 import { DataTable } from "@/components/admin/data-table";
+import { RowThumbnail } from "@/components/admin/row-thumbnail";
 import { Star, Route } from "lucide-react";
 
 type Row = {
   id: string;
   name: string;
   region: string;
+  heroImage: string;
   order: number;
   featured: boolean;
   _count: { tours: number };
@@ -27,10 +29,13 @@ export function DestinationsTable({ data }: { data: Row[] }) {
         {
           header: "Nom",
           cell: (d) => (
-            <span className="flex items-center gap-2 font-medium text-foreground">
-              {d.name}
-              {d.featured && <Star className="size-3.5 fill-brand-accent text-brand-accent" />}
-            </span>
+            <div className="flex items-center gap-2.5">
+              <RowThumbnail src={d.heroImage} alt={d.name} />
+              <span className="flex items-center gap-2 font-medium text-foreground">
+                {d.name}
+                {d.featured && <Star className="size-3.5 fill-brand-accent text-brand-accent" />}
+              </span>
+            </div>
           ),
         },
         {

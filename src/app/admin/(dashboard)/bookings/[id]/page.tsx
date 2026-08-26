@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
 import { db } from "@/lib/db";
 import { Card } from "@/components/ui/card";
+import { AdminBreadcrumb } from "@/components/admin/breadcrumb";
 import { BookingStatusForm } from "../booking-status-form";
 
 function Field({ label, value }: { label: string; value: React.ReactNode }) {
@@ -25,13 +25,13 @@ export default async function BookingDetailPage({ params }: { params: Promise<{ 
   return (
     <div className="space-y-6">
       <div className="space-y-3">
-        <Link
-          href="/admin/bookings"
-          className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
-        >
-          <ArrowLeft className="size-3.5" />
-          Réservations
-        </Link>
+        <AdminBreadcrumb
+          items={[
+            { label: "Tableau de bord", href: "/admin" },
+            { label: "Réservations", href: "/admin/bookings" },
+            { label: `${booking.firstName} ${booking.lastName}` },
+          ]}
+        />
         <h1 className="text-2xl font-semibold tracking-tight text-foreground">
           {booking.firstName} {booking.lastName}
         </h1>

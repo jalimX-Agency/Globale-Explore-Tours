@@ -7,6 +7,7 @@ import { en } from "@/lib/i18n/translations/en";
 import { es } from "@/lib/i18n/translations/es";
 import { JourneyTripPageClient } from "./JourneyTripPageClient";
 import { StandardTripPageClient } from "@/components/get/StandardTripPageClient";
+import { pageMetadata, breadcrumbJsonLd, touristTripJsonLd, SITE_URL } from "@/lib/seo";
 
 const NAV_DESTINATIONS = { fr: fr.nav.destinations, en: en.nav.destinations, es: es.nav.destinations };
 
@@ -53,13 +54,20 @@ async function getTour(slug: string) {
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ locale: string; slug: string }>;
+  params: Promise<{ locale: string; region: string; country: string; slug: string }>;
 }): Promise<Metadata> {
-  const { locale: rawLocale, slug } = await params;
+  const { locale: rawLocale, region: regionSlug, country, slug } = await params;
   const locale = isLocale(rawLocale) ? rawLocale : DEFAULT_LOCALE;
   const tour = await getTour(slug);
   if (!tour) return { title: "Trip" };
-  return { title: pick(locale, tour.name, tour.nameEn, tour.nameEs) };
+  const description = pick(locale, tour.description, tour.descriptionEn, tour.descriptionEs) || pick(locale, tour.tagline, tour.taglineEn, tour.taglineEs);
+  return pageMetadata({
+    locale,
+    path: `/destinations/${regionSlug}/${country}/${slug}`,
+    title: pick(locale, tour.name, tour.nameEn, tour.nameEs),
+    description: description || undefined,
+    image: tour.image || undefined,
+  });
 }
 
 export default async function TripPage({
@@ -100,26 +108,52 @@ export default async function TripPage({
     { label: tripLabel },
   ];
 
+  const tripDescription =
+    pick(locale, tour.description, tour.descriptionEn, tour.descriptionEs) || pick(locale, tour.tagline, tour.taglineEn, tour.taglineEs);
+  const tripDuration = pick(locale, tour.duration, tour.durationEn, tour.durationEs);
+  const tripSchema = touristTripJsonLd({
+    name: tripLabel,
+    description: tripDescription || undefined,
+    image: tour.image || undefined,
+    url: `${SITE_URL}/${locale}/destinations/${regionSlug}/${country}/${slug}`,
+    price: tour.price || undefined,
+    currency: tour.currency,
+    duration: tripDuration || undefined,
+  });
+
+  const schemas = (
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: breadcrumbJsonLd(locale, breadcrumb) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: tripSchema }} />
+    </>
+  );
+
   if (tour.format === "journey") {
     return (
-      <JourneyTripPageClient
-        tour={tour}
-        countryLabel={countryLabel}
-        chapters={tour.chapters}
-        similarTours={similarToursWithHref}
-        breadcrumb={breadcrumb}
-      />
+      <>
+        {schemas}
+        <JourneyTripPageClient
+          tour={tour}
+          countryLabel={countryLabel}
+          chapters={tour.chapters}
+          similarTours={similarToursWithHref}
+          breadcrumb={breadcrumb}
+        />
+      </>
     );
   }
 
   return (
-    <StandardTripPageClient
-      tour={tour}
-      countryLabel={countryLabel}
-      sections={tour.sections}
-      hotels={tour.hotels}
-      similarTours={similarToursWithHref}
-      breadcrumb={breadcrumb}
-    />
+    <>
+      {schemas}
+      <StandardTripPageClient
+        tour={tour}
+        countryLabel={countryLabel}
+        sections={tour.sections}
+        hotels={tour.hotels}
+        similarTours={similarToursWithHref}
+        breadcrumb={breadcrumb}
+      />
+    </>
   );
 }

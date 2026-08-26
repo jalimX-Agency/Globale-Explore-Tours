@@ -120,7 +120,7 @@ export function Footer() {
 
         <div className="mt-10 flex flex-col gap-2 border-t border-white/10 pt-6 text-xs text-white/40 sm:flex-row sm:items-center sm:justify-between">
           <span>© {new Date().getFullYear()} Globale Explore Tours. {t("footer.copyright")}</span>
-          <span>4.9/5 · #1 des activités à Agadir sur TripAdvisor</span>
+          <span>4.9/5 sur TripAdvisor</span>
         </div>
       </div>
     </footer>

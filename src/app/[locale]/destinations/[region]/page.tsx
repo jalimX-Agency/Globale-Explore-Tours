@@ -6,6 +6,7 @@ import { fr } from "@/lib/i18n/translations/fr";
 import { en } from "@/lib/i18n/translations/en";
 import { es } from "@/lib/i18n/translations/es";
 import { RegionPageClient } from "./RegionPageClient";
+import { pageMetadata, breadcrumbJsonLd, faqJsonLd } from "@/lib/seo";
 
 const NAV_DESTINATIONS = { fr: fr.nav.destinations, en: en.nav.destinations, es: es.nav.destinations };
 
@@ -42,9 +43,19 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale: rawLocale, region: regionSlug } = await params;
   const locale = isLocale(rawLocale) ? rawLocale : DEFAULT_LOCALE;
-  const rep = await db.destination.findFirst({ where: { regionSlug }, select: { region: true, regionEn: true, regionEs: true } });
+  const [rep, region] = await Promise.all([
+    db.destination.findFirst({ where: { regionSlug }, select: { region: true, regionEn: true, regionEs: true } }),
+    db.region.findUnique({ where: { slug: regionSlug }, select: { intro: true, introEn: true, introEs: true, heroImage: true } }),
+  ]);
   const label = rep ? pick(locale, rep.region, rep.regionEn, rep.regionEs) : regionSlug;
-  return { title: label };
+  const description = region ? pick(locale, region.intro, region.introEn, region.introEs) : undefined;
+  return pageMetadata({
+    locale,
+    path: `/destinations/${regionSlug}`,
+    title: label,
+    description: description || undefined,
+    image: region?.heroImage || undefined,
+  });
 }
 
 export default async function RegionPage({
@@ -108,18 +119,30 @@ export default async function RegionPage({
 
   const regionLabel = pick(locale, destinations[0].region, destinations[0].regionEn, destinations[0].regionEs);
   const destinationsLabel = pick(locale, NAV_DESTINATIONS.fr, NAV_DESTINATIONS.en, NAV_DESTINATIONS.es);
+  const breadcrumb = [{ label: destinationsLabel }, { label: regionLabel }];
+
+  const faqSchema = faqJsonLd(
+    faqs.map((f) => ({
+      question: pick(locale, f.question, f.questionEn, f.questionEs),
+      answer: pick(locale, f.answer, f.answerEn, f.answerEs),
+    }))
+  );
 
   return (
-    <RegionPageClient
-      region={region}
-      regionLabel={regionLabel}
-      breadcrumb={[{ label: destinationsLabel }, { label: regionLabel }]}
-      destinations={destinations}
-      blocks={blocks}
-      faqs={faqs}
-      team={team}
-      tours={toursWithHref}
-      otherRegions={otherRegionItems}
-    />
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: breadcrumbJsonLd(locale, breadcrumb) }} />
+      {faqSchema && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: faqSchema }} />}
+      <RegionPageClient
+        region={region}
+        regionLabel={regionLabel}
+        breadcrumb={breadcrumb}
+        destinations={destinations}
+        blocks={blocks}
+        faqs={faqs}
+        team={team}
+        tours={toursWithHref}
+        otherRegions={otherRegionItems}
+      />
+    </>
   );
 }

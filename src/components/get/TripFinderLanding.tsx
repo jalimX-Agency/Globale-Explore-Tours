@@ -5,8 +5,8 @@ import { useRouter } from "next/navigation";
 import { useLanguage } from "@/lib/i18n/context";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-const R2 = "https://pub-6777907d6a4e4378b16e81847f00f2d2.r2.dev";
-const HERO_IMAGE = `${R2}/destinations/maroc.jpg`;
+const R2 = process.env.NEXT_PUBLIC_R2_URL!;
+const HERO_IMAGE = `${R2}/destinations/maroc-hero.jpg`;
 
 const FEELING_KEYS = ["revitalized", "freedom", "distraction", "challenged", "contentment"] as const;
 

@@ -8,6 +8,15 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "*.r2.dev",
+        pathname: "/**",
+      },
+      {
+        // R2's custom domain — every stored image URL now points here (see the migration
+        // that moved DB rows off pub-....r2.dev); the r2.dev pattern above stays as a
+        // fallback in case anything still references it.
+        protocol: "https",
+        hostname: "cdn.globaleexploretours.com",
+        pathname: "/**",
       },
     ],
   },
@@ -34,8 +43,8 @@ const nextConfig: NextConfig = {
       "default-src 'self'",
       `script-src ${scriptSrc}`,
       "style-src 'self' 'unsafe-inline'",
-      "img-src 'self' data: blob: https://*.r2.dev",
-      "media-src 'self' https://*.r2.dev",
+      "img-src 'self' data: blob: https://*.r2.dev https://cdn.globaleexploretours.com",
+      "media-src 'self' https://*.r2.dev https://cdn.globaleexploretours.com",
       "font-src 'self' data:",
       // *.r2.dev is the public CDN read path; *.r2.cloudflarestorage.com is the direct
       // upload endpoint the admin's video-upload PUT talks to (see src/lib/r2.ts) — a

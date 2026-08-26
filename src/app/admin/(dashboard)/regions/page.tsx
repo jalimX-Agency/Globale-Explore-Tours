@@ -1,5 +1,6 @@
 import { db } from "@/lib/db";
 import { PageHeader } from "@/components/admin/page-header";
+import { AdminBreadcrumb } from "@/components/admin/breadcrumb";
 import { RegionsTable } from "./regions-table";
 
 export default async function RegionsListPage() {
@@ -20,12 +21,14 @@ export default async function RegionsListPage() {
     slug: r.slug,
     displayName: nameByRegionSlug.get(r.slug) ?? r.slug,
     heading: r.heading,
+    heroImage: r.heroImage,
     order: r.order,
     destinationCount: countByRegionSlug.get(r.slug) ?? 0,
   }));
 
   return (
     <div className="space-y-6">
+      <AdminBreadcrumb items={[{ label: "Tableau de bord", href: "/admin" }, { label: "Régions" }]} />
       <PageHeader
         title="Régions"
         description={`${regions.length} régions — cliquez sur une région pour voir ses pays.`}

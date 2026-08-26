@@ -1,9 +1,10 @@
 "use client";
 
 import { DataTable } from "@/components/admin/data-table";
+import { RowThumbnail } from "@/components/admin/row-thumbnail";
 import { MapPin } from "lucide-react";
 
-type Row = { id: string; slug: string; displayName: string; heading: string; order: number; destinationCount: number };
+type Row = { id: string; slug: string; displayName: string; heading: string; heroImage: string; order: number; destinationCount: number };
 
 // Split from page.tsx for the same reason as destinations-table.tsx — see its comment.
 export function RegionsTable({ data }: { data: Row[] }) {
@@ -14,7 +15,15 @@ export function RegionsTable({ data }: { data: Row[] }) {
       getSearchText={(r) => `${r.displayName} ${r.slug}`}
       rowHref={(r) => `/admin/regions/${r.id}`}
       columns={[
-        { header: "Région", cell: (r) => <span className="font-medium text-foreground">{r.displayName}</span> },
+        {
+          header: "Région",
+          cell: (r) => (
+            <div className="flex items-center gap-2.5">
+              <RowThumbnail src={r.heroImage} alt={r.displayName} />
+              <span className="font-medium text-foreground">{r.displayName}</span>
+            </div>
+          ),
+        },
         {
           header: "Titre de page",
           cell: (r) => <span className="text-muted-foreground">{r.heading}</span>,

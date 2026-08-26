@@ -3,7 +3,7 @@
 import { useLanguage } from "@/lib/i18n/context";
 import { LocaleLink } from "@/components/get/LocaleLink";
 
-const HERO_VIDEO_URL = "https://pub-6777907d6a4e4378b16e81847f00f2d2.r2.dev/heroVid.mp4";
+const HERO_VIDEO_URL = `${process.env.NEXT_PUBLIC_R2_URL}/heroVid.mp4`;
 
 export function Hero() {
   const { t } = useLanguage();

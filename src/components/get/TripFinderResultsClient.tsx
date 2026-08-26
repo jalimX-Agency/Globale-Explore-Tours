@@ -12,8 +12,8 @@ import type { TripFinderSort } from "@/app/[locale]/trouver-mon-voyage/resultats
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 
-const R2 = "https://pub-6777907d6a4e4378b16e81847f00f2d2.r2.dev";
-const CUSTOM_TRIP_IMAGE = `${R2}/destinations/maldives.jpg`;
+const R2 = process.env.NEXT_PUBLIC_R2_URL!;
+const CUSTOM_TRIP_IMAGE = `${R2}/destinations/maldives-hero.jpg`;
 
 const FEELING_KEYS = ["revitalized", "freedom", "distraction", "challenged", "contentment"] as const;
 

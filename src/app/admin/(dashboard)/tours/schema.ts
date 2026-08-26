@@ -11,6 +11,28 @@ function trilingual<K extends string>(key: K) {
   } as Record<K, z.ZodString> & Record<`${K}En` | `${K}Es`, z.ZodString>;
 }
 
+// Shared between tour-form.tsx (create/edit selects) and tours-table.tsx (list filters) so
+// the two can never drift apart.
+export const THEMES = [
+  { value: "adventure", label: "Aventure" },
+  { value: "culture", label: "Culture" },
+  { value: "relax", label: "Détente" },
+  { value: "family", label: "Famille" },
+];
+
+export const TRAVELER_TYPES = [
+  { value: "family", label: "Famille" },
+  { value: "couples", label: "Couples" },
+  { value: "groups", label: "Groupes" },
+  { value: "honeymoon", label: "Lune de miel" },
+  { value: "solo", label: "Solo" },
+];
+
+export const FORMATS = [
+  { value: "standard", label: "Circuit standard" },
+  { value: "journey", label: "Voyage par étapes" },
+];
+
 export const itineraryDaySchema = z.object({
   dayNumber: z.number().int(),
   ...trilingual("location"),

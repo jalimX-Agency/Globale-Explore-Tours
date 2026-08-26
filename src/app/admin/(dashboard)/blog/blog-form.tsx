@@ -1,12 +1,11 @@
 "use client";
 
-import Link from "next/link";
 import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { ArrowLeft, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -28,6 +27,7 @@ import { TrilingualField } from "@/components/admin/trilingual-field";
 import { MediaUploadField } from "@/components/admin/media-upload-field";
 import { CollapsibleSection } from "@/components/admin/collapsible-section";
 import { LangProvider, LangSwitcher } from "@/components/admin/lang-context";
+import { AdminBreadcrumb } from "@/components/admin/breadcrumb";
 
 import { blogPostFormSchema, type BlogPostFormValues } from "./schema";
 import { createBlogPost, updateBlogPost, deleteBlogPost } from "./actions";
@@ -97,13 +97,13 @@ export function BlogForm({
       <LangProvider>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <div className="sticky top-0 z-10 -mx-8 space-y-3 bg-background/95 px-8 pt-1 pb-3 backdrop-blur">
-            <Link
-              href="/admin/blog"
-              className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
-            >
-              <ArrowLeft className="size-3.5" />
-              Blog
-            </Link>
+            <AdminBreadcrumb
+              items={[
+                { label: "Tableau de bord", href: "/admin" },
+                { label: "Blog", href: "/admin/blog" },
+                { label: postId ? values.title || "Modifier" : "Nouvel article" },
+              ]}
+            />
             <div className="flex flex-wrap items-center justify-between gap-4">
               <h1 className="text-2xl font-semibold tracking-tight text-foreground">
                 {postId ? values.title || "Modifier l'article" : "Nouvel article"}

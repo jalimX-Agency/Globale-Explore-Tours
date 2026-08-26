@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { ArrowLeft, Trash2 } from "lucide-react";
+import { Trash2, ExternalLink, ChevronRight } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -32,6 +32,8 @@ import { MediaUploadField } from "@/components/admin/media-upload-field";
 import { RepeatableList } from "@/components/admin/repeatable-list";
 import { LangProvider, LangSwitcher } from "@/components/admin/lang-context";
 import { CollapsibleSection } from "@/components/admin/collapsible-section";
+import { AdminBreadcrumb } from "@/components/admin/breadcrumb";
+import { RowThumbnail } from "@/components/admin/row-thumbnail";
 
 import {
   experienceTypeFormSchema,
@@ -40,8 +42,7 @@ import {
   MONTH_FILTER_KEYS,
   type ExperienceTypeFormValues,
 } from "./schema";
-import { createExperienceType, updateExperienceType, deleteExperienceType, createStandardSubPages } from "./actions";
-import { SUB_PAGE_TEMPLATE_KEYS, SUB_PAGE_TEMPLATE_LABELS } from "./subPageTemplates";
+import { createExperienceType, updateExperienceType, deleteExperienceType } from "./actions";
 import { ExperienceTripsPanel, type TripOption } from "./experience-trips-panel";
 
 const TRAVELER_TYPE_LABELS: Record<(typeof TRAVELER_TYPE_KEYS)[number], string> = {
@@ -76,8 +77,42 @@ const MONTH_FILTER_LABELS: Record<(typeof MONTH_FILTER_KEYS)[number], string> = 
 
 const KIND_LABELS = { who: "Qui voyage (Who)", what: "Que faire (What)", private: "Voyage privé (Private Travel)" };
 
+function typeBadgeLabel(values: ExperienceTypeFormValues): string {
+  if (values.kind === "who" && values.travelerTypeKey) {
+    return TRAVELER_TYPE_LABELS[values.travelerTypeKey as keyof typeof TRAVELER_TYPE_LABELS] ?? values.travelerTypeKey;
+  }
+  if (values.filterTheme) {
+    return THEME_FILTER_LABELS[values.filterTheme as keyof typeof THEME_FILTER_LABELS] ?? values.filterTheme;
+  }
+  return KIND_LABELS[values.kind];
+}
+
 type ParentOption = { id: string; slug: string; heroTitle: string; kind: string };
-type ChildOption = { id: string; slug: string; heroTitle: string };
+type ChildOption = {
+  id: string;
+  slug: string;
+  heroTitle: string;
+  cardImage: string;
+  filterTheme: string;
+  filterMonths: string;
+  order: number;
+};
+
+// Same "when / type / persona" bucketing already used to group sub-pages on the public page
+// (see buildSubPageGroups in src/app/[locale]/experience-types/[...slug]/page.tsx) — filtering
+// by the identical groups the admin already sees live keeps this one mental model, not a new
+// ad-hoc taxonomy just for this dropdown.
+type SubPageGroup = "when" | "type" | "persona";
+const SUB_PAGE_GROUP_LABELS: Record<SubPageGroup, string> = {
+  when: "Quand partir ?",
+  type: "Quel type de séjour ?",
+  persona: "Qui voyage ?",
+};
+function subPageGroup(child: ChildOption): SubPageGroup {
+  if (child.filterMonths) return "when";
+  if (child.filterTheme) return "type";
+  return "persona";
+}
 
 function computeIncomplete(values: ExperienceTypeFormValues) {
   const triples: { fr: string; en: string; es: string }[] = [
@@ -125,7 +160,8 @@ export function ExperienceTypeForm({
 }) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
-  const [subPageTemplate, setSubPageTemplate] = useState(SUB_PAGE_TEMPLATE_KEYS[0] ?? "");
+  const [subPageGroupFilter, setSubPageGroupFilter] = useState<"all" | SubPageGroup>("all");
+  const [subPageSort, setSubPageSort] = useState<"name" | "order">("order");
 
   const form = useForm<ExperienceTypeFormValues>({
     resolver: zodResolver(experienceTypeFormSchema),
@@ -140,21 +176,6 @@ export function ExperienceTypeForm({
   const [leafSlug, setLeafSlug] = useState(() =>
     parentSlug && defaultValues.slug.startsWith(`${parentSlug}/`) ? defaultValues.slug.slice(parentSlug.length + 1) : defaultValues.slug
   );
-
-  function generateSubPages() {
-    if (!experienceTypeId || !subPageTemplate) return;
-    startTransition(async () => {
-      try {
-        const { created, skipped } = await createStandardSubPages(experienceTypeId, subPageTemplate);
-        toast.success(
-          skipped > 0 ? `${created} sous-page(s) créée(s), ${skipped} déjà existante(s)` : `${created} sous-page(s) créée(s)`
-        );
-        router.refresh();
-      } catch (err) {
-        toast.error(err instanceof Error ? err.message : "Une erreur est survenue");
-      }
-    });
-  }
 
   function onSubmit(values: ExperienceTypeFormValues) {
     startTransition(async () => {
@@ -186,6 +207,11 @@ export function ExperienceTypeForm({
 
   const values = form.watch();
   const incomplete = computeIncomplete(values);
+  const currentParent = parentOptions.find((p) => p.id === values.parentId);
+
+  const filteredSubPages = childPages
+    .filter((c) => subPageGroupFilter === "all" || subPageGroup(c) === subPageGroupFilter)
+    .sort((a, b) => (subPageSort === "name" ? (a.heroTitle || "").localeCompare(b.heroTitle || "", "fr") : a.order - b.order));
 
   const destinationHrefOptions = destinations.map((d) => ({
     value: `/destinations/${d.regionSlug}/${d.slug}`,
@@ -197,20 +223,37 @@ export function ExperienceTypeForm({
       <LangProvider>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <div className="sticky top-0 z-10 -mx-8 space-y-3 bg-background/95 px-8 pt-1 pb-3 backdrop-blur">
-            <Link
-              href="/admin/experiences"
-              className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
-            >
-              <ArrowLeft className="size-3.5" />
-              Expériences
-            </Link>
+            <AdminBreadcrumb
+              items={[
+                { label: "Tableau de bord", href: "/admin" },
+                { label: "Expériences", href: "/admin/experiences" },
+                ...(currentParent
+                  ? [{ label: currentParent.heroTitle || currentParent.slug, href: `/admin/experiences/${currentParent.id}` }]
+                  : []),
+                { label: experienceTypeId ? values.heroTitle || "Modifier" : "Nouvelle page" },
+              ]}
+            />
 
             <div className="flex flex-wrap items-center justify-between gap-4">
-              <h1 className="text-2xl font-semibold tracking-tight text-foreground">
-                {experienceTypeId ? values.heroTitle || "Modifier la page" : "Nouvelle page"}
-              </h1>
+              <div className="space-y-1">
+                <h1 className="text-2xl font-semibold tracking-tight text-foreground">
+                  {experienceTypeId ? values.heroTitle || "Modifier la page" : "Nouvelle page"}
+                </h1>
+                {experienceTypeId && <Badge variant="outline">{typeBadgeLabel(values)}</Badge>}
+              </div>
               <div className="flex items-center gap-3">
                 <LangSwitcher incomplete={incomplete} />
+                {experienceTypeId && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    render={<a href={`/fr/experience-types/${values.slug}`} target="_blank" rel="noreferrer" />}
+                  >
+                    <ExternalLink className="size-3.5" />
+                    Voir la page
+                  </Button>
+                )}
                 {experienceTypeId && (
                   <AlertDialog>
                     <AlertDialogTrigger render={<Button type="button" variant="destructive" size="sm" />}>
@@ -740,52 +783,74 @@ export function ExperienceTypeForm({
 
             {experienceTypeId && (
               <TabsContent value="subpages" className="space-y-5 pt-5">
-                {SUB_PAGE_TEMPLATE_KEYS.length > 0 && (
-                  <div className="flex flex-wrap items-end gap-3 rounded-lg border border-border p-3">
-                    <div className="space-y-1.5">
-                      <span className="text-sm leading-none font-medium">Générer les sous-pages standard</span>
-                      <Select value={subPageTemplate} onValueChange={(v) => v && setSubPageTemplate(v)} items={SUB_PAGE_TEMPLATE_LABELS}>
-                        <SelectTrigger className="w-72">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {SUB_PAGE_TEMPLATE_KEYS.map((key) => (
-                            <SelectItem key={key} value={key}>
-                              {SUB_PAGE_TEMPLATE_LABELS[key]}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <Button type="button" variant="outline" onClick={generateSubPages} disabled={pending}>
-                      Générer
-                    </Button>
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <h2 className="text-sm font-semibold text-foreground">
+                    Sous-pages — {childPages.length} page{childPages.length > 1 ? "s" : ""}
+                  </h2>
+                  <Button render={<Link href={`/admin/experiences/new?parent=${experienceTypeId}`} />} nativeButton={false} variant="outline" size="sm">
+                    + Ajouter une sous-page
+                  </Button>
+                </div>
+
+                {childPages.length > 0 && (
+                  <div className="flex flex-wrap items-center gap-2">
+                    <Select
+                      value={subPageGroupFilter}
+                      onValueChange={(v) => v && setSubPageGroupFilter(v as "all" | SubPageGroup)}
+                      items={{ all: "Tous les groupes", ...SUB_PAGE_GROUP_LABELS }}
+                    >
+                      <SelectTrigger size="sm" className="w-52">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">Tous les groupes</SelectItem>
+                        {(Object.keys(SUB_PAGE_GROUP_LABELS) as SubPageGroup[]).map((key) => (
+                          <SelectItem key={key} value={key}>
+                            {SUB_PAGE_GROUP_LABELS[key]}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <Select value={subPageSort} onValueChange={(v) => v && setSubPageSort(v as "name" | "order")} items={{ order: "Trier par : Ordre", name: "Trier par : Nom" }}>
+                      <SelectTrigger size="sm" className="w-44">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="order">Trier par : Ordre</SelectItem>
+                        <SelectItem value="name">Trier par : Nom</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                 )}
 
                 {childPages.length === 0 ? (
-                  <p className="text-sm text-muted-foreground">Aucune sous-page pour l&apos;instant.</p>
+                  <p className="rounded-lg border border-dashed border-border py-8 text-center text-sm text-muted-foreground">
+                    Aucune sous-page pour l&apos;instant.
+                  </p>
+                ) : filteredSubPages.length === 0 ? (
+                  <p className="rounded-lg border border-dashed border-border py-8 text-center text-sm text-muted-foreground">
+                    Aucune sous-page dans ce groupe.
+                  </p>
                 ) : (
-                  <div className="divide-y divide-border rounded-lg border border-border">
-                    {childPages.map((child) => (
+                  <div className="divide-y divide-border overflow-hidden rounded-xl bg-card ring-1 ring-foreground/10">
+                    {filteredSubPages.map((child) => (
                       <Link
                         key={child.id}
                         href={`/admin/experiences/${child.id}`}
-                        className="flex items-center justify-between gap-3 px-4 py-2.5 transition-colors hover:bg-muted/50"
+                        className="group flex items-center justify-between gap-3 px-4 py-3 transition-colors hover:bg-muted/50"
                       >
-                        <div className="min-w-0">
-                          <p className="truncate text-sm font-medium text-foreground">{child.heroTitle || "(sans titre)"}</p>
-                          <p className="truncate text-xs text-muted-foreground">/{child.slug}</p>
+                        <div className="flex min-w-0 items-center gap-2.5">
+                          <RowThumbnail src={child.cardImage} alt={child.heroTitle} />
+                          <div className="min-w-0">
+                            <p className="truncate text-sm font-medium text-foreground">{child.heroTitle || "(sans titre)"}</p>
+                            <p className="truncate text-xs text-muted-foreground">/{child.slug}</p>
+                          </div>
                         </div>
-                        <Badge variant="outline">Modifier</Badge>
+                        <ChevronRight className="size-4 shrink-0 text-muted-foreground/50 transition-transform group-hover:translate-x-0.5 group-hover:text-muted-foreground" />
                       </Link>
                     ))}
                   </div>
                 )}
-
-                <Button render={<Link href={`/admin/experiences/new?parent=${experienceTypeId}`} />} nativeButton={false} variant="outline">
-                  + Ajouter une sous-page
-                </Button>
               </TabsContent>
             )}
           </Tabs>

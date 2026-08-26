@@ -8,7 +8,7 @@ import { TripsShowcase } from "@/components/get/TripsShowcase";
 import { ExperienceCardRow, type ExperienceCard } from "@/components/get/ExperienceCardRow";
 import { type TourCardData } from "@/components/get/TourCard";
 
-const R2 = "https://pub-6777907d6a4e4378b16e81847f00f2d2.r2.dev";
+const R2 = process.env.NEXT_PUBLIC_R2_URL!;
 
 export type ExperienceTypeLite = {
   slug: string;

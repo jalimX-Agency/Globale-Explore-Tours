@@ -22,7 +22,7 @@ export const fr = {
   trust: {
     title: "Pourquoi voyager avec nous",
     tab: "CE QUI NOUS DISTINGUE",
-    ratingLabel: "4.9/5 sur TripAdvisor · #1 des activités à Agadir",
+    ratingLabel: "4.9/5 sur TripAdvisor",
     ratingDesc: "Plus de cent avis vérifiés, pas une note achetée.",
     noHiddenFees: "Aucun frais caché",
     noHiddenFeesDesc: "Le prix annoncé est le prix payé, du premier devis à la facture finale.",
@@ -148,7 +148,7 @@ export const fr = {
     title: "Chaque voyage a besoin d'un guide, pas d'une brochure",
     body1: "Le Maroc est partout en ligne — mille circuits identiques, les mêmes photos de dunes, les mêmes avis copiés-collés. Plus il y a de choix, plus il est difficile de savoir à qui faire confiance.",
     body2: "Ce n'est pas nous. Globale Explore Tours conçoit des excursions et des voyages sur-mesure, pensés autour de vous — pas des tickets à cocher sur une liste. Que vous cherchiez l'aventure dans les dunes, la tranquillité d'un hammam ou une journée en famille, chaque sortie porte la marque d'un guide qui connaît vraiment le terrain.",
-    body3: "Nos guides — Momo, Hassane, Ahmed et le reste de l'équipe — sont aujourd'hui classés #1 des activités à Agadir sur TripAdvisor, avec plus de cent avis vérifiés. Ce n'est pas un slogan, ce sont nos voyageurs qui le disent.",
+    body3: "Nos guides — Momo, Hassane, Ahmed et le reste de l'équipe — sont notés 4.9/5 sur TripAdvisor, avec plus de cent avis vérifiés. Ce n'est pas un slogan, ce sont nos voyageurs qui le disent.",
     closing: "Alors commençons. Racontez-nous le voyage que vous imaginez.",
     cta: "Nous contacter",
   },
@@ -166,7 +166,7 @@ export const fr = {
     cta: "Faire une demande",
   },
   footer: {
-    description: "Globale Explore Tours conçoit des voyages et circuits sur-mesure dans le monde entier — des excursions à Agadir aux destinations les plus lointaines — avec des guides locaux reconnus.",
+    description: "Globale Explore Tours conçoit des voyages et circuits sur-mesure dans le monde entier, avec des guides locaux reconnus.",
     explore: "Explorer",
     company: "L'agence",
     contact: "Contact",

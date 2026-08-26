@@ -3,10 +3,11 @@
 import { useMemo, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from "@/components/ui/table";
 import { Search, ChevronRight, ChevronLeft, X, Inbox } from "lucide-react";
 
-const PAGE_SIZE = 10;
+const DEFAULT_PAGE_SIZE = 10;
 
 // The full (already-filtered-by-the-server) list is still fetched and searched client-side —
 // data scale here is small enough for that (~111 destinations, ~150 tours) — but only one
@@ -19,6 +20,8 @@ export function DataTable<T>({
   getSearchText,
   rowHref,
   onRowClick,
+  toolbarExtra,
+  pageSizeOptions,
 }: {
   data: T[];
   columns: { header: string; cell: (row: T) => React.ReactNode; className?: string }[];
@@ -28,10 +31,15 @@ export function DataTable<T>({
   rowHref?: (row: T) => string;
   /** Runs a callback instead of navigating (e.g. opening an edit dialog in place). */
   onRowClick?: (row: T) => void;
+  /** Extra controls (filter/sort selects) rendered next to the search box. */
+  toolbarExtra?: React.ReactNode;
+  /** Enables a "N / page" selector. Omit to keep the fixed 10-per-page default. */
+  pageSizeOptions?: number[];
 }) {
   const clickable = rowHref ?? onRowClick;
   const [query, setQuery] = useState("");
   const [rawPage, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(pageSizeOptions?.[0] ?? DEFAULT_PAGE_SIZE);
 
   const filtered = useMemo(() => {
     if (!query.trim()) return data;
@@ -39,15 +47,15 @@ export function DataTable<T>({
     return data.filter((row) => getSearchText(row).toLowerCase().includes(q));
   }, [data, query, getSearchText]);
 
-  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
   // Searching (or the underlying data shrinking) can leave stored `page` past the new last
   // page — clamp it here during render rather than syncing it back with an effect, so there's
   // never a frame with an out-of-range page and dead-looking pagination controls.
   const page = Math.min(rawPage, totalPages);
 
   const paged = useMemo(
-    () => filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE),
-    [filtered, page]
+    () => filtered.slice((page - 1) * pageSize, page * pageSize),
+    [filtered, page, pageSize]
   );
 
   return (
@@ -79,6 +87,7 @@ export function DataTable<T>({
             </button>
           )}
         </div>
+        {toolbarExtra}
         {query && (
           <span className="text-xs text-muted-foreground">
             {filtered.length} résultat{filtered.length > 1 ? "s" : ""}
@@ -136,9 +145,33 @@ export function DataTable<T>({
 
       {filtered.length > 0 && (
         <div className="flex items-center justify-between gap-3">
-          <p className="text-xs text-muted-foreground">
-            {(page - 1) * PAGE_SIZE + 1}–{Math.min(page * PAGE_SIZE, filtered.length)} sur {filtered.length}
-          </p>
+          <div className="flex items-center gap-3">
+            <p className="text-xs text-muted-foreground">
+              {(page - 1) * pageSize + 1}–{Math.min(page * pageSize, filtered.length)} sur {filtered.length}
+            </p>
+            {pageSizeOptions && pageSizeOptions.length > 1 && (
+              <Select
+                value={String(pageSize)}
+                onValueChange={(v) => {
+                  if (!v) return;
+                  setPageSize(Number(v));
+                  setPage(1);
+                }}
+                items={Object.fromEntries(pageSizeOptions.map((n) => [String(n), `${n} / page`]))}
+              >
+                <SelectTrigger className="h-7 w-auto gap-1 text-xs" size="sm">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {pageSizeOptions.map((n) => (
+                    <SelectItem key={n} value={String(n)}>
+                      {n} / page
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
+          </div>
           <div className="flex items-center gap-2">
             <Button
               type="button"

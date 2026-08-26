@@ -2,8 +2,9 @@
 
 import { Badge } from "@/components/ui/badge";
 import { DataTable } from "@/components/admin/data-table";
+import { RowThumbnail } from "@/components/admin/row-thumbnail";
 
-type Row = { id: string; title: string; category: string; author: string; order: number };
+type Row = { id: string; title: string; category: string; author: string; image: string; order: number };
 
 export function BlogTable({ data }: { data: Row[] }) {
   return (
@@ -13,7 +14,15 @@ export function BlogTable({ data }: { data: Row[] }) {
       getSearchText={(p) => `${p.title} ${p.category} ${p.author}`}
       rowHref={(p) => `/admin/blog/${p.id}`}
       columns={[
-        { header: "Titre", cell: (p) => <span className="font-medium text-foreground">{p.title}</span> },
+        {
+          header: "Titre",
+          cell: (p) => (
+            <div className="flex items-center gap-2.5">
+              <RowThumbnail src={p.image} alt={p.title} />
+              <span className="font-medium text-foreground">{p.title}</span>
+            </div>
+          ),
+        },
         {
           header: "Catégorie",
           cell: (p) =>

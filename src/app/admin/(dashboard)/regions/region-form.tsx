@@ -5,7 +5,7 @@ import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { ArrowLeft, ArrowUpRight, Route } from "lucide-react";
+import { ArrowUpRight, Route } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,6 +16,7 @@ import { Form, FormField, FormItem, FormLabel, FormControl } from "@/components/
 import { TrilingualField } from "@/components/admin/trilingual-field";
 import { MediaUploadField } from "@/components/admin/media-upload-field";
 import { LangProvider, LangSwitcher } from "@/components/admin/lang-context";
+import { AdminBreadcrumb } from "@/components/admin/breadcrumb";
 
 import { regionFormSchema, type RegionFormValues } from "./schema";
 import { updateRegion } from "./actions";
@@ -71,13 +72,13 @@ export function RegionForm({
       <LangProvider>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <div className="sticky top-0 z-10 -mx-8 space-y-3 bg-background/95 px-8 pt-1 pb-3 backdrop-blur">
-            <Link
-              href="/admin/regions"
-              className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
-            >
-              <ArrowLeft className="size-3.5" />
-              Régions
-            </Link>
+            <AdminBreadcrumb
+              items={[
+                { label: "Tableau de bord", href: "/admin" },
+                { label: "Régions", href: "/admin/regions" },
+                { label: displayName },
+              ]}
+            />
             <div className="flex items-center justify-between">
               <h1 className="text-2xl font-semibold tracking-tight text-foreground">{displayName}</h1>
               <div className="flex items-center gap-3">

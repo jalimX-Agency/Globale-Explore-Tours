@@ -3,10 +3,23 @@ import Image from "next/image";
 import { db } from "@/lib/db";
 import { isLocale, DEFAULT_LOCALE, type Locale } from "@/lib/i18n/locales";
 import { LocaleLink } from "@/components/get/LocaleLink";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Journal",
-};
+const META = {
+  fr: { title: "Journal", description: "Nos conseils et récits de voyage — destinations dans le monde entier, écrits par notre équipe de guides locaux." },
+  en: { title: "Travel Journal", description: "Our travel tips and stories — destinations worldwide, written by our team of local guides." },
+  es: { title: "Diario de viaje", description: "Nuestros consejos y relatos de viaje — destinos en todo el mundo, escritos por nuestro equipo de guías locales." },
+} as const satisfies Record<Locale, { title: string; description: string }>;
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale: rawLocale } = await params;
+  const locale = isLocale(rawLocale) ? rawLocale : DEFAULT_LOCALE;
+  return pageMetadata({ locale, path: "/blog", ...META[locale] });
+}
 
 function pick(locale: Locale, frText: string, enText: string, esText: string) {
   if (locale === "en") return enText || frText;

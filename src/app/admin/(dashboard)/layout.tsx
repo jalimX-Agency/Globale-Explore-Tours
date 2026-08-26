@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { AdminShell } from "@/components/admin/admin-shell";
@@ -12,10 +13,14 @@ import { Toaster } from "@/components/ui/sonner";
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const session = await getServerSession(authOptions);
   if (!session) redirect("/admin/login");
+  const cookieStore = await cookies();
+  const defaultCollapsed = cookieStore.get("admin-sidebar-collapsed")?.value === "1";
 
   return (
     <>
-      <AdminShell userEmail={session.user?.email ?? ""}>{children}</AdminShell>
+      <AdminShell userEmail={session.user?.email ?? ""} defaultCollapsed={defaultCollapsed}>
+        {children}
+      </AdminShell>
       <Toaster richColors position="top-center" />
     </>
   );

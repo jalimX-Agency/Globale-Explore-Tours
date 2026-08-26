@@ -1,12 +1,11 @@
 "use client";
 
-import Link from "next/link";
 import { useState, useTransition } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { ArrowLeft, ChevronDown, Trash2 } from "lucide-react";
+import { ChevronDown, Trash2 } from "lucide-react";
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "@/components/ui/collapsible";
 import { cn } from "@/lib/utils";
 
@@ -37,10 +36,11 @@ import { MediaUploadListField } from "@/components/admin/media-upload-list-field
 import { RepeatableList } from "@/components/admin/repeatable-list";
 import { CollapsibleSection } from "@/components/admin/collapsible-section";
 import { LangProvider, LangSwitcher } from "@/components/admin/lang-context";
+import { AdminBreadcrumb } from "@/components/admin/breadcrumb";
 
-import { tourFormSchema, type TourFormValues } from "./schema";
+import { tourFormSchema, THEMES, TRAVELER_TYPES, type TourFormValues } from "./schema";
 import { createTour, updateTour, deleteTour } from "./actions";
-import { formatWhenLabel } from "@/lib/tourFormatting";
+import { RouteMapEditor } from "./route-map-editor";
 
 type Destination = { id: string; name: string };
 
@@ -49,13 +49,6 @@ const CATEGORIES = [
   { value: "tour", label: "Circuit" },
   { value: "multi-day", label: "Séjour plusieurs jours" },
   { value: "transfer", label: "Transfert" },
-];
-
-const THEMES = [
-  { value: "adventure", label: "Aventure" },
-  { value: "culture", label: "Culture" },
-  { value: "relax", label: "Détente" },
-  { value: "family", label: "Famille" },
 ];
 
 // Same 5 keys as the public "Trip Finder" (t("feelings.*") in fr/en/es.ts) — this is the
@@ -87,14 +80,6 @@ const DURATION_UNITS = [
   { value: "days", label: "Jours" },
   { value: "nights", label: "Nuits" },
   { value: "hours", label: "Heures" },
-];
-
-const TRAVELER_TYPES = [
-  { value: "family", label: "Famille" },
-  { value: "couples", label: "Couples" },
-  { value: "groups", label: "Groupes" },
-  { value: "honeymoon", label: "Lune de miel" },
-  { value: "solo", label: "Solo" },
 ];
 
 const CURRENCIES = [
@@ -224,32 +209,10 @@ function ChapterInfoFields({
         label="Images de la galerie"
         folder="tours"
       />
-      <div className="grid grid-cols-2 gap-4">
-        <FormField
-          control={control}
-          name={`${baseName}.mapMarkerX`}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Position sur la carte — X (0-100)</FormLabel>
-              <FormControl>
-                <Input type="number" {...field} onChange={(e) => field.onChange(e.target.valueAsNumber || 0)} />
-              </FormControl>
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={control}
-          name={`${baseName}.mapMarkerY`}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Position sur la carte — Y (0-100)</FormLabel>
-              <FormControl>
-                <Input type="number" {...field} onChange={(e) => field.onChange(e.target.valueAsNumber || 0)} />
-              </FormControl>
-            </FormItem>
-          )}
-        />
-      </div>
+      <p className="text-xs text-muted-foreground">
+        La position de ce chapitre sur la carte se règle depuis l&apos;onglet « Voyage par
+        étapes » — sélectionnez-le dans la liste puis cliquez sur la carte.
+      </p>
     </div>
   );
 }
@@ -330,9 +293,13 @@ function ChapterDaysFields({
 // saves everything, chapters/days included.
 function ChaptersManager({
   control,
+  activeIndex,
+  onSelectActive,
 }: {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   control: any;
+  activeIndex: number;
+  onSelectActive: (index: number) => void;
 }) {
   const chapters = useWatch({ control, name: "chapters" }) as TourFormValues["chapters"];
   const [editingInfoIndex, setEditingInfoIndex] = useState<number | null>(null);
@@ -352,15 +319,28 @@ function ChaptersManager({
           const chapter = chapters[index];
           const title = chapter?.title?.trim() || `Chapitre ${index + 1}`;
           const dayCount = chapter?.days.length ?? 0;
+          const placed = !(chapter?.mapMarkerX === 50 && chapter?.mapMarkerY === 50);
+          const active = index === activeIndex;
           return (
-            <div className="flex flex-wrap items-center justify-between gap-3">
+            <div
+              role="button"
+              tabIndex={0}
+              onClick={() => onSelectActive(index)}
+              onKeyDown={(e) => e.key === "Enter" && onSelectActive(index)}
+              className={cn(
+                "-m-4 flex cursor-pointer flex-wrap items-center justify-between gap-3 rounded-lg p-4 transition-colors",
+                active && "bg-brand-accent/10"
+              )}
+            >
               <div className="min-w-0">
                 <p className="truncate text-sm font-medium text-foreground">{title}</p>
-                <p className="text-xs text-muted-foreground">
+                <p className="flex items-center gap-1 text-xs text-muted-foreground">
                   {dayCount} jour{dayCount > 1 ? "s" : ""}
+                  <span className="text-muted-foreground/40">·</span>
+                  {placed ? <span className="text-emerald-600">position définie</span> : <span>non placée</span>}
                 </p>
               </div>
-              <div className="flex shrink-0 gap-2">
+              <div className="flex shrink-0 gap-2" onClick={(e) => e.stopPropagation()}>
                 <Button type="button" variant="outline" size="sm" onClick={() => setEditingInfoIndex(index)}>
                   Modifier
                 </Button>
@@ -428,6 +408,9 @@ export function TourForm({
     resolver: zodResolver(tourFormSchema),
     defaultValues,
   });
+  // Shared between the chapters list and the map editor (siblings in the two-column "Voyage
+  // par étapes" layout) — whichever chapter is selected here is the one a map click positions.
+  const [activeChapterIndex, setActiveChapterIndex] = useState(0);
 
   function onSubmit(rawValues: TourFormValues) {
     // Day numbers are read-only in the UI (see ChapterFields/SubCollapsible) — computed here,
@@ -478,13 +461,14 @@ export function TourForm({
       <LangProvider>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <div className="sticky top-0 z-10 -mx-8 space-y-3 bg-background/95 px-8 pt-1 pb-3 backdrop-blur">
-            <Link
-              href={`/admin/destinations/${destination.id}`}
-              className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
-            >
-              <ArrowLeft className="size-3.5" />
-              {destination.name}
-            </Link>
+            <AdminBreadcrumb
+              items={[
+                { label: "Tableau de bord", href: "/admin" },
+                { label: "Destinations", href: "/admin/destinations" },
+                { label: destination.name, href: `/admin/destinations/${destination.id}` },
+                { label: tourId ? values.name || "Modifier" : "Nouveau voyage" },
+              ]}
+            />
 
             <div className="flex flex-wrap items-center justify-between gap-4">
               <h1 className="text-2xl font-semibold tracking-tight text-foreground">
@@ -541,7 +525,7 @@ export function TourForm({
                             Lien (slug) <span className="text-brand-accent">*</span>
                           </FormLabel>
                           <FormControl>
-                            <Input {...field} dir="ltr" placeholder="agadir-city-tour" />
+                            <Input {...field} dir="ltr" placeholder="marrakech-city-tour" />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -952,33 +936,46 @@ export function TourForm({
               </CollapsibleSection>
             </TabsContent>
 
-            <TabsContent value="journey" className="space-y-5 pt-5">
-              <CollapsibleSection title="Image de carte">
-                <MediaUploadField
-                  control={form.control}
-                  name="mapImage"
-                  label="Fond de carte illustré"
-                  folder="tours"
-                  size="lg"
-                />
-              </CollapsibleSection>
-
-              <CollapsibleSection title="Période">
-                <p className="text-sm text-muted-foreground">
-                  Générée automatiquement à partir de « Meilleure période » (onglet
-                  Informations) :{" "}
-                  <span className="font-medium text-foreground">
-                    {formatWhenLabel(values.bestMonths).fr || "—"}
-                  </span>
-                </p>
-              </CollapsibleSection>
-
+            <TabsContent value="journey" className="grid grid-cols-1 gap-5 pt-5 lg:grid-cols-2 lg:items-start">
               <CollapsibleSection
                 title="Chapitres"
                 badge={<Badge variant="outline">{values.chapters.length}</Badge>}
+                defaultOpen
               >
-                <ChaptersManager control={form.control} />
+                <ChaptersManager
+                  control={form.control}
+                  activeIndex={activeChapterIndex}
+                  onSelectActive={setActiveChapterIndex}
+                />
               </CollapsibleSection>
+
+              <div className="space-y-5">
+                <CollapsibleSection title="Image de carte" defaultOpen>
+                  <MediaUploadField
+                    control={form.control}
+                    name="mapImage"
+                    label="Fond de carte illustré"
+                    folder="tours"
+                    size="lg"
+                  />
+                </CollapsibleSection>
+
+                <CollapsibleSection title="Tracé de l'itinéraire" defaultOpen>
+                  <p className="mb-3 text-xs text-muted-foreground">
+                    Cliquez sur la carte pour placer le chapitre sélectionné, ou faites glisser
+                    un point existant pour l&apos;ajuster.
+                  </p>
+                  <RouteMapEditor
+                    mapImage={values.mapImage}
+                    chapters={values.chapters}
+                    activeIndex={Math.min(activeChapterIndex, Math.max(0, values.chapters.length - 1))}
+                    onPositionChange={(index, x, y) => {
+                      form.setValue(`chapters.${index}.mapMarkerX`, Math.round(x));
+                      form.setValue(`chapters.${index}.mapMarkerY`, Math.round(y));
+                    }}
+                  />
+                </CollapsibleSection>
+              </div>
             </TabsContent>
           </Tabs>
         </form>

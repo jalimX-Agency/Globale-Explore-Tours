@@ -6,6 +6,7 @@ import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { PageHeader } from "@/components/admin/page-header";
+import { AdminBreadcrumb } from "@/components/admin/breadcrumb";
 import { TestimonialsTable, type TestimonialRow } from "./testimonials-table";
 import { TestimonialForm } from "./testimonial-form";
 import type { TestimonialFormValues } from "./schema";
@@ -46,6 +47,7 @@ export function TestimonialsPageClient({ data }: { data: TestimonialRow[] }) {
 
   return (
     <div className="space-y-6">
+      <AdminBreadcrumb items={[{ label: "Tableau de bord", href: "/admin" }, { label: "Témoignages" }]} />
       <PageHeader
         title="Témoignages"
         description={`${data.length} témoignage${data.length > 1 ? "s" : ""}`}

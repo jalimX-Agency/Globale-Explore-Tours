@@ -22,7 +22,7 @@ export const es = {
   trust: {
     title: "Por qué viajar con nosotros",
     tab: "LO QUE NOS DISTINGUE",
-    ratingLabel: "4.9/5 en TripAdvisor · N.º 1 en actividades en Agadir",
+    ratingLabel: "4.9/5 en TripAdvisor",
     ratingDesc: "Más de cien reseñas verificadas, no una nota comprada.",
     noHiddenFees: "Sin cargos ocultos",
     noHiddenFeesDesc: "El precio indicado es el precio que se paga, desde el primer presupuesto hasta la factura final.",
@@ -148,7 +148,7 @@ export const es = {
     title: "Cada viaje necesita un guía, no un folleto",
     body1: "Marruecos está en todas partes en internet — mil circuitos idénticos, las mismas fotos de dunas, las mismas opiniones copiadas. Cuanta más opción hay, más difícil es saber en quién confiar.",
     body2: "Nosotros no. Globale Explore Tours diseña excursiones y viajes a medida, pensados en torno a usted — no casillas que marcar en una lista. Ya busque aventura en las dunas, la calma de un hammam o un día en familia, cada salida lleva el sello de un guía que realmente conoce el terreno.",
-    body3: "Nuestros guías — Momo, Hassane, Ahmed y el resto del equipo — están hoy clasificados como la actividad N.º 1 en Agadir en TripAdvisor, con más de cien opiniones verificadas. No es un eslogan — lo dicen nuestros viajeros.",
+    body3: "Nuestros guías — Momo, Hassane, Ahmed y el resto del equipo — tienen una valoración de 4.9/5 en TripAdvisor, con más de cien opiniones verificadas. No es un eslogan — lo dicen nuestros viajeros.",
     closing: "Así que empecemos. Cuéntenos el viaje que imagina.",
     cta: "Contáctenos",
   },
@@ -166,7 +166,7 @@ export const es = {
     cta: "Hacer una consulta",
   },
   footer: {
-    description: "Globale Explore Tours diseña viajes y circuitos a medida en todo el mundo — desde excursiones en Agadir hasta los destinos más lejanos — con guías locales de confianza.",
+    description: "Globale Explore Tours diseña viajes y circuitos a medida en todo el mundo, con guías locales de confianza.",
     explore: "Explorar",
     company: "La agencia",
     contact: "Contacto",

@@ -212,7 +212,7 @@ model Tour {
   destinationId     String
   destination       Destination      @relation(fields: [destinationId], references: [id])
   maxGuests         Int              @default(2)
-  departureFrom     String           @default("Agadir")
+  departureFrom     String           @default("")
   image             String           @default("")
   images            String           @default("") // comma-separated URLs — tour gallery
   featured          Boolean          @default(false)

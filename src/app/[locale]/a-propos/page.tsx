@@ -1,8 +1,18 @@
 import type { Metadata } from "next";
+import { isLocale, DEFAULT_LOCALE } from "@/lib/i18n/locales";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "À propos de Globale Explore Tours",
-};
+// Page is a content stub ("En construction") — noindex until real copy is written, so an
+// empty page doesn't get indexed as thin content under a business-relevant URL.
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale: rawLocale } = await params;
+  const locale = isLocale(rawLocale) ? rawLocale : DEFAULT_LOCALE;
+  return { ...pageMetadata({ locale, path: "/a-propos", title: "À propos de Globale Explore Tours" }), robots: { index: false, follow: true } };
+}
 
 export default function Page() {
   return (

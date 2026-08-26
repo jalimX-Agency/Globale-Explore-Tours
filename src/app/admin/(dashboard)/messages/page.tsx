@@ -1,5 +1,6 @@
 import { db } from "@/lib/db";
 import { PageHeader } from "@/components/admin/page-header";
+import { AdminBreadcrumb } from "@/components/admin/breadcrumb";
 import { MessagesTable } from "./messages-table";
 
 // Same reasoning as bookings/page.tsx: contact messages carry PII, are never pruned, and
@@ -24,6 +25,7 @@ export default async function MessagesListPage() {
 
   return (
     <div className="space-y-6">
+      <AdminBreadcrumb items={[{ label: "Tableau de bord", href: "/admin" }, { label: "Messages" }]} />
       <PageHeader
         title="Messages"
         description={

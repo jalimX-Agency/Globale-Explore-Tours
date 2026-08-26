@@ -8,6 +8,7 @@ import { es } from "@/lib/i18n/translations/es";
 import { getTravelerTypePage, type TravelerTypePage, type Localized, type LinkCardGroup } from "@/lib/experienceTypesData";
 import { TravelerTypePageClient } from "./TravelerTypePageClient";
 import { WhatTypePageClient, type WhatTypeContent } from "./WhatTypePageClient";
+import { pageMetadata, breadcrumbJsonLd, faqJsonLd } from "@/lib/seo";
 
 const NAV_EXPERIENCES = { fr: fr.nav.experiences, en: en.nav.experiences, es: es.nav.experiences };
 
@@ -186,10 +187,13 @@ export async function generateMetadata({
   const row = await getExperienceTypeRow(slug.join("/"));
   if (!row) return { title: "Experience" };
 
-  return {
+  return pageMetadata({
+    locale,
+    path: `/experience-types/${slug.join("/")}`,
     title: pick(locale, { fr: row.heroTitle, en: row.heroTitleEn, es: row.heroTitleEs }),
-    description: pick(locale, { fr: row.heroSubtitle || row.overviewBody, en: row.heroSubtitleEn || row.overviewBodyEn, es: row.heroSubtitleEs || row.overviewBodyEs }),
-  };
+    description: pick(locale, { fr: row.heroSubtitle || row.overviewBody, en: row.heroSubtitleEn || row.overviewBodyEn, es: row.heroSubtitleEs || row.overviewBodyEs }) || undefined,
+    image: row.heroImage || undefined,
+  });
 }
 
 export default async function ExperienceTypePage({
@@ -211,6 +215,13 @@ export default async function ExperienceTypePage({
       href: `/experience-types/${row.parent.slug}`,
     });
   }
+
+  const faqSchema = faqJsonLd(
+    row.faqs.map((f) => ({
+      question: pick(locale, { fr: f.question, en: f.questionEn, es: f.questionEs }),
+      answer: pick(locale, { fr: f.answer, en: f.answerEn, es: f.answerEs }),
+    }))
+  );
 
   if (row.kind === "who") {
     const travelerContent = await getTravelerTypeContent(row);
@@ -253,14 +264,19 @@ export default async function ExperienceTypePage({
     }
 
     const pageTitle = pick(locale, travelerContent.heroTitle);
+    const fullBreadcrumb = [...breadcrumb, { label: pageTitle }];
 
     return (
-      <TravelerTypePageClient
-        content={travelerContent}
-        tours={toursWithHref}
-        categoryTours={categoryTours}
-        breadcrumb={[...breadcrumb, { label: pageTitle }]}
-      />
+      <>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: breadcrumbJsonLd(locale, fullBreadcrumb) }} />
+        {faqSchema && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: faqSchema }} />}
+        <TravelerTypePageClient
+          content={travelerContent}
+          tours={toursWithHref}
+          categoryTours={categoryTours}
+          breadcrumb={fullBreadcrumb}
+        />
+      </>
     );
   }
 
@@ -311,13 +327,18 @@ export default async function ExperienceTypePage({
         });
 
   const pageTitle = pick(locale, content.heroTitle);
+  const fullBreadcrumb = [...breadcrumb, { label: pageTitle }];
 
   return (
-    <WhatTypePageClient
-      content={content}
-      tours={toursWithHref}
-      related={related}
-      breadcrumb={[...breadcrumb, { label: pageTitle }]}
-    />
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: breadcrumbJsonLd(locale, fullBreadcrumb) }} />
+      {faqSchema && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: faqSchema }} />}
+      <WhatTypePageClient
+        content={content}
+        tours={toursWithHref}
+        related={related}
+        breadcrumb={fullBreadcrumb}
+      />
+    </>
   );
 }

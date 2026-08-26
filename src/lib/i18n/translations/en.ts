@@ -22,7 +22,7 @@ export const en = {
   trust: {
     title: "Why travel with us",
     tab: "WHAT SETS US APART",
-    ratingLabel: "4.9/5 on TripAdvisor · #1 rated activity in Agadir",
+    ratingLabel: "4.9/5 on TripAdvisor",
     ratingDesc: "Over a hundred verified reviews, not a bought rating.",
     noHiddenFees: "No hidden fees",
     noHiddenFeesDesc: "The price you're quoted is the price you pay, from first quote to final bill.",
@@ -148,7 +148,7 @@ export const en = {
     title: "Every trip needs a guide, not a brochure",
     body1: "Morocco is everywhere online — a thousand identical itineraries, the same dune photos, the same copy-pasted reviews. The more choice there is, the harder it gets to know who to trust.",
     body2: "That's not us. Globale Explore Tours designs tailor-made excursions and trips, built around you — not boxes to tick on a list. Whether you're after dune adventure, the quiet of a hammam, or a family day out, every outing carries the mark of a guide who actually knows the ground.",
-    body3: "Our guides — Momo, Hassane, Ahmed and the rest of the team — are now rated the #1 activity in Agadir on TripAdvisor, with over a hundred verified reviews. That's not a tagline — it's our travellers saying it.",
+    body3: "Our guides — Momo, Hassane, Ahmed and the rest of the team — are rated 4.9/5 on TripAdvisor, with over a hundred verified reviews. That's not a tagline — it's our travellers saying it.",
     closing: "So let's begin. Tell us about the trip you're picturing.",
     cta: "Get In Touch",
   },
@@ -166,7 +166,7 @@ export const en = {
     cta: "Enquire now",
   },
   footer: {
-    description: "Globale Explore Tours designs tailor-made trips and tours worldwide — from excursions in Agadir to destinations further afield — led by trusted local guides.",
+    description: "Globale Explore Tours designs tailor-made trips and tours worldwide, led by trusted local guides.",
     explore: "Explore",
     company: "The agency",
     contact: "Contact",

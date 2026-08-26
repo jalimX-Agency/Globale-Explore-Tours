@@ -4,7 +4,9 @@ import { notFound } from "next/navigation";
 import { db } from "@/lib/db";
 import { isLocale, DEFAULT_LOCALE, type Locale } from "@/lib/i18n/locales";
 import { LocaleLink } from "@/components/get/LocaleLink";
+import { Breadcrumb } from "@/components/get/Breadcrumb";
 import { ArrowLeft } from "lucide-react";
+import { pageMetadata, breadcrumbJsonLd, articleJsonLd } from "@/lib/seo";
 
 function pick(locale: Locale, frText: string, enText: string, esText: string) {
   if (locale === "en") return enText || frText;
@@ -21,9 +23,16 @@ export async function generateMetadata({
   const locale = isLocale(rawLocale) ? rawLocale : DEFAULT_LOCALE;
   const post = await db.blogPost.findUnique({
     where: { slug },
-    select: { title: true, titleEn: true, titleEs: true },
+    select: { title: true, titleEn: true, titleEs: true, excerpt: true, excerptEn: true, excerptEs: true, image: true },
   });
-  return { title: post ? pick(locale, post.title, post.titleEn, post.titleEs) : "Article" };
+  if (!post) return { title: "Article" };
+  return pageMetadata({
+    locale,
+    path: `/blog/${slug}`,
+    title: pick(locale, post.title, post.titleEn, post.titleEs),
+    description: pick(locale, post.excerpt, post.excerptEn, post.excerptEs) || undefined,
+    image: post.image || undefined,
+  });
 }
 
 export default async function BlogPostPage({
@@ -39,15 +48,38 @@ export default async function BlogPostPage({
 
   const title = pick(locale, post.title, post.titleEn, post.titleEs);
   const content = pick(locale, post.content, post.contentEn, post.contentEs);
+  const excerpt = pick(locale, post.excerpt, post.excerptEn, post.excerptEs);
+  const journalLabel = locale === "en" ? "Travel Journal" : locale === "es" ? "Diario de viaje" : "Journal";
+  const breadcrumb = [{ label: journalLabel, href: "/blog" }, { label: title }];
 
   return (
     <main className="mx-auto max-w-3xl px-6 py-16 sm:py-24">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: breadcrumbJsonLd(locale, breadcrumb) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: articleJsonLd({
+            headline: title,
+            description: excerpt || undefined,
+            image: post.image || undefined,
+            url: `https://www.globaleexploretours.com/${locale}/blog/${slug}`,
+            datePublished: post.createdAt,
+            dateModified: post.updatedAt,
+            author: post.author || undefined,
+          }),
+        }}
+      />
+      <Breadcrumb items={breadcrumb} />
+
       <LocaleLink
         href="/blog"
-        className="inline-flex items-center gap-1.5 text-sm text-neutral-500 transition-colors hover:text-neutral-900"
+        className="mt-6 inline-flex items-center gap-1.5 text-sm text-neutral-500 transition-colors hover:text-neutral-900"
       >
         <ArrowLeft className="size-3.5" />
-        Journal
+        {journalLabel}
       </LocaleLink>
 
       <div className="mt-6 mb-8">

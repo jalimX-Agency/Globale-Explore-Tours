@@ -33,7 +33,7 @@ export default async function EditExperienceTypePage({ params }: { params: Promi
     db.experienceType.findMany({
       where: { parentId: id },
       orderBy: { order: "asc" },
-      select: { id: true, slug: true, heroTitle: true },
+      select: { id: true, slug: true, heroTitle: true, cardImage: true, filterTheme: true, filterMonths: true, order: true },
     }),
   ]);
 

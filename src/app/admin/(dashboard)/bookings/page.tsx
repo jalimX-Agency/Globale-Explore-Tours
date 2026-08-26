@@ -1,5 +1,6 @@
 import { db } from "@/lib/db";
 import { PageHeader } from "@/components/admin/page-header";
+import { AdminBreadcrumb } from "@/components/admin/breadcrumb";
 import { BookingsTable } from "./bookings-table";
 
 // Bookings carry customer PII (name/email/phone) and this table has no pruning — grows
@@ -30,6 +31,7 @@ export default async function BookingsListPage() {
 
   return (
     <div className="space-y-6">
+      <AdminBreadcrumb items={[{ label: "Tableau de bord", href: "/admin" }, { label: "Réservations" }]} />
       <PageHeader
         title="Réservations"
         description={

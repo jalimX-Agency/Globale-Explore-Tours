@@ -6,6 +6,7 @@ import { fr } from "@/lib/i18n/translations/fr";
 import { en } from "@/lib/i18n/translations/en";
 import { es } from "@/lib/i18n/translations/es";
 import { CountryPageClient } from "./CountryPageClient";
+import { pageMetadata, breadcrumbJsonLd, faqJsonLd } from "@/lib/seo";
 
 const NAV_DESTINATIONS = { fr: fr.nav.destinations, en: en.nav.destinations, es: es.nav.destinations };
 
@@ -39,11 +40,22 @@ export async function generateMetadata({
 }: {
   params: Promise<{ locale: string; region: string; country: string }>;
 }): Promise<Metadata> {
-  const { locale: rawLocale, country } = await params;
+  const { locale: rawLocale, region: regionSlug, country } = await params;
   const locale = isLocale(rawLocale) ? rawLocale : DEFAULT_LOCALE;
-  const destination = await db.destination.findUnique({ where: { slug: country }, select: { name: true, nameEn: true, nameEs: true } });
-  const label = destination ? pick(locale, destination.name, destination.nameEn, destination.nameEs) : country;
-  return { title: label };
+  const destination = await db.destination.findUnique({
+    where: { slug: country },
+    select: { name: true, nameEn: true, nameEs: true, description: true, descriptionEn: true, descriptionEs: true, heroImage: true },
+  });
+  if (!destination) return { title: country };
+  const label = pick(locale, destination.name, destination.nameEn, destination.nameEs);
+  const description = pick(locale, destination.description, destination.descriptionEn, destination.descriptionEs);
+  return pageMetadata({
+    locale,
+    path: `/destinations/${regionSlug}/${country}`,
+    title: label,
+    description: description || undefined,
+    image: destination.heroImage || undefined,
+  });
 }
 
 export default async function CountryPage({
@@ -93,20 +105,33 @@ export default async function CountryPage({
     image: d.heroImage,
   }));
 
+  const breadcrumb = [
+    { label: destinationsLabel },
+    { label: regionLabel, href: `/destinations/${regionSlug}` },
+    { label: countryLabel },
+  ];
+
+  const faqSchema = faqJsonLd(
+    faqs.map((f) => ({
+      question: pick(locale, f.question, f.questionEn, f.questionEs),
+      answer: pick(locale, f.answer, f.answerEn, f.answerEs),
+    }))
+  );
+
   return (
-    <CountryPageClient
-      destination={destination}
-      countryLabel={countryLabel}
-      breadcrumb={[
-        { label: destinationsLabel },
-        { label: regionLabel, href: `/destinations/${regionSlug}` },
-        { label: countryLabel },
-      ]}
-      blocks={blocks}
-      faqs={faqs}
-      team={team}
-      tours={toursWithHref}
-      otherDestinations={otherDestinations}
-    />
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: breadcrumbJsonLd(locale, breadcrumb) }} />
+      {faqSchema && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: faqSchema }} />}
+      <CountryPageClient
+        destination={destination}
+        countryLabel={countryLabel}
+        breadcrumb={breadcrumb}
+        blocks={blocks}
+        faqs={faqs}
+        team={team}
+        tours={toursWithHref}
+        otherDestinations={otherDestinations}
+      />
+    </>
   );
 }

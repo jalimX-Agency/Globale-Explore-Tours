@@ -6,7 +6,7 @@ import { useLanguage } from "@/lib/i18n/context";
 import { LocaleLink } from "@/components/get/LocaleLink";
 import { tourHref, type TourCardData } from "@/components/get/TourCard";
 
-const BG_IMAGE = "https://pub-6777907d6a4e4378b16e81847f00f2d2.r2.dev/backgrounds/bg-swirl-dark.jpg";
+const BG_IMAGE = `${process.env.NEXT_PUBLIC_R2_URL}/backgrounds/bg-swirl-dark.jpg`;
 
 function localized(language: string, fr: string, en: string, es: string) {
   if (language === "en") return en || fr;
