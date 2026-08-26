@@ -70,8 +70,19 @@ export function JourneyChapterSection({
     min === max ? `${t("tripDetailPage.day")} ${min}` : `${t("tripDetailPage.days")} ${min}-${max}`;
 
   return (
-    <section id={chapter.id} className="relative min-h-screen overflow-hidden bg-[var(--brand-sand)] py-16">
-      <div className="mx-auto max-w-7xl px-6 lg:px-10 lg:pr-[36rem]">
+    <section id={chapter.id} className="relative min-h-screen bg-[var(--brand-sand)] py-16">
+      {/* Full-section map background: the shared trip map fills this chapter's entire section
+          behind the day cards, camera-zoomed toward this chapter's own marker. Sticky so it
+          stays in view for the whole scroll through this section's days, then hands off to
+          the next section's own background. Hidden on mobile — the cards need the full width
+          there and a background map would just be noise behind text. */}
+      <div className="absolute inset-0 z-0 hidden lg:block" aria-hidden>
+        <div className="sticky top-0 h-screen">
+          <RouteMap mapImage={mapImage} markers={markers} activeIndex={index} />
+        </div>
+      </div>
+
+      <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-10 lg:pr-[30rem]">
         <h2 className="font-display text-3xl text-neutral-900 sm:text-4xl">{title}</h2>
         <p className="label-eyebrow mt-2 text-neutral-400">{dayRangeLabel}</p>
         <p className="font-body mt-4 max-w-2xl text-base leading-relaxed text-neutral-600">{intro}</p>
@@ -113,16 +124,15 @@ export function JourneyChapterSection({
         </div>
       </div>
 
-      {/* Full-bleed to the browser's right edge (not the max-w-7xl content column above),
-          full viewport height while sticky — matches the reference layout's proportions,
-          which extends past our old content-constrained, fixed-aspect panel. */}
-      <div className="absolute inset-y-0 right-0 hidden w-[34rem] lg:block">
-        <div className="sticky top-0 h-screen">
-          <RouteMap mapImage={mapImage} markers={markers} activeIndex={index} />
+      {/* relative z-10 lifts the full-width gallery above the trip-wide sticky map panel
+          (an absolutely-positioned z-0 sibling of the sections) — without it, the panel
+          paints over the carousel's right side since positioned elements stack above
+          non-positioned ones. */}
+      {gallery.length > 0 && (
+        <div className="relative z-10">
+          <GalleryCarousel images={gallery} />
         </div>
-      </div>
-
-      {gallery.length > 0 && <GalleryCarousel images={gallery} />}
+      )}
     </section>
   );
 }

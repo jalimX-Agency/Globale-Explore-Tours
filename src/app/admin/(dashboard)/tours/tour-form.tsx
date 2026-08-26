@@ -958,6 +958,28 @@ export function TourForm({
                     folder="tours"
                     size="lg"
                   />
+                  <div className="mt-3 rounded-lg border border-border bg-muted/40 p-3 text-xs text-muted-foreground">
+                    <p className="mb-1.5 font-medium text-foreground">Règles pour l&apos;image de carte</p>
+                    <ul className="list-disc space-y-1 pl-4">
+                      <li>
+                        <span className="font-medium">Format paysage</span> obligatoire (1920×1080 minimum) — l&apos;image
+                        sert de fond à toute la section, sur toute la largeur de l&apos;écran.
+                      </li>
+                      <li>
+                        Placer la forme du pays et les noms de lieux dans la <span className="font-medium">moitié droite</span>{" "}
+                        de l&apos;image — les cartes des jours recouvrent la partie gauche sur le site.
+                      </li>
+                      <li>
+                        Les noms des étapes doivent être <span className="font-medium">imprimés dans l&apos;illustration</span>{" "}
+                        (typographie majuscules espacées), avec un espace vide à côté de chaque nom pour le point.
+                      </li>
+                      <li>
+                        <span className="font-medium">Ne pas dessiner</span> de points, épingles ou lignes d&apos;itinéraire
+                        dans l&apos;image — ils sont ajoutés automatiquement d&apos;après le tracé ci-dessous.
+                      </li>
+                      <li>Fond uni clair (crème/sable), sans cadre, sans boussole, sans légende.</li>
+                    </ul>
+                  </div>
                 </CollapsibleSection>
 
                 <CollapsibleSection title="Tracé de l'itinéraire" defaultOpen>

@@ -1,27 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useActiveSection } from "@/lib/useActiveSection";
 
 export type SubNavTab = { id: string; label: string };
 
 export function DestinationSubNav({ tabs }: { tabs: SubNavTab[] }) {
-  const [active, setActive] = useState(tabs[0]?.id);
-
-  useEffect(() => {
-    const triggerLine = () => window.innerHeight * 0.35;
-    const handler = () => {
-      const line = triggerLine();
-      let current = tabs[0]?.id;
-      for (const tab of tabs) {
-        const el = document.getElementById(tab.id);
-        if (el && el.getBoundingClientRect().top <= line) current = tab.id;
-      }
-      setActive(current);
-    };
-    handler();
-    window.addEventListener("scroll", handler, { passive: true });
-    return () => window.removeEventListener("scroll", handler);
-  }, [tabs]);
+  const active = useActiveSection(tabs.map((t) => t.id));
 
   if (tabs.length === 0) return null;
 
