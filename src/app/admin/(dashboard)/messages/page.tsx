@@ -18,9 +18,12 @@ export default async function MessagesListPage() {
     id: m.id,
     name: m.name,
     email: m.email,
+    phone: m.phone,
     subject: m.subject,
+    message: m.message,
     read: m.read,
     createdAt: m.createdAt.toLocaleDateString("fr-FR"),
+    createdAtFull: m.createdAt.toLocaleString("fr-FR"),
   }));
 
   return (

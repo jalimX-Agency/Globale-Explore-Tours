@@ -103,3 +103,44 @@ export async function sendContactNotification(data: {
     html: `<p><strong>De:</strong> ${data.name} (${data.email})</p><p>${data.message}</p>`,
   });
 }
+
+const CONTACT_CONFIRMATION_COPY = {
+  fr: {
+    subject: "Votre message a bien été reçu — Globale Explore Tours",
+    title: "Message bien reçu",
+    hello: (name: string) => `Bonjour ${name},`,
+    body: "Nous avons bien reçu votre message et nous vous répondrons dans les meilleurs délais.",
+    signature: "L'équipe Globale Explore Tours",
+  },
+  en: {
+    subject: "We've received your message — Globale Explore Tours",
+    title: "Message received",
+    hello: (name: string) => `Hello ${name},`,
+    body: "We've received your message and will get back to you as soon as possible.",
+    signature: "The Globale Explore Tours team",
+  },
+  es: {
+    subject: "Hemos recibido su mensaje — Globale Explore Tours",
+    title: "Mensaje recibido",
+    hello: (name: string) => `Hola ${name},`,
+    body: "Hemos recibido su mensaje y le responderemos lo antes posible.",
+    signature: "El equipo de Globale Explore Tours",
+  },
+} as const;
+
+export async function sendContactConfirmation(data: { name: string; email: string; language?: "fr" | "en" | "es" }) {
+  const t = CONTACT_CONFIRMATION_COPY[data.language ?? "fr"];
+  await resend.emails.send({
+    from: FROM,
+    to: data.email,
+    subject: t.subject,
+    html: `
+      <div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; color: #1a1a1a;">
+        <h1 style="color: #b5502e;">${t.title}</h1>
+        <p>${t.hello(data.name)}</p>
+        <p>${t.body}</p>
+        <p style="color: #b5502e;">${t.signature}</p>
+      </div>
+    `,
+  });
+}

@@ -1,9 +1,23 @@
 import type { Metadata } from "next";
-import { isLocale, DEFAULT_LOCALE } from "@/lib/i18n/locales";
+import { isLocale, DEFAULT_LOCALE, type Locale } from "@/lib/i18n/locales";
 import { pageMetadata } from "@/lib/seo";
+import { AboutPageClient } from "./AboutPageClient";
 
-// Page is a content stub ("En construction") — noindex until real copy is written, so an
-// empty page doesn't get indexed as thin content under a business-relevant URL.
+const META = {
+  fr: {
+    title: "À propos",
+    description: "Globale Explore Tours conçoit des voyages et circuits sur-mesure dans le monde entier, depuis notre bureau de Valenciennes, en France. Guides locaux nommés, aucun frais caché.",
+  },
+  en: {
+    title: "About us",
+    description: "Globale Explore Tours designs tailor-made trips and tours worldwide, from our office in Valenciennes, France. Named local guides, no hidden fees.",
+  },
+  es: {
+    title: "Sobre nosotros",
+    description: "Globale Explore Tours diseña viajes y circuitos a medida en todo el mundo, desde nuestra oficina en Valenciennes, Francia. Guías locales con nombre propio, sin costes ocultos.",
+  },
+} as const satisfies Record<Locale, { title: string; description: string }>;
+
 export async function generateMetadata({
   params,
 }: {
@@ -11,16 +25,9 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale: rawLocale } = await params;
   const locale = isLocale(rawLocale) ? rawLocale : DEFAULT_LOCALE;
-  return { ...pageMetadata({ locale, path: "/a-propos", title: "À propos de Globale Explore Tours" }), robots: { index: false, follow: true } };
+  return pageMetadata({ locale, path: "/a-propos", ...META[locale] });
 }
 
 export default function Page() {
-  return (
-    <main className="min-h-screen flex items-center justify-center px-6">
-      <div className="text-center max-w-lg">
-        <p className="label-eyebrow text-neutral-400">En construction</p>
-        <h1 className="font-display text-3xl mt-2">À propos de Globale Explore Tours</h1>
-      </div>
-    </main>
-  );
+  return <AboutPageClient />;
 }

@@ -15,7 +15,7 @@ const labelClass = "label-eyebrow mb-1.5 block text-neutral-500";
 const errorClass = "mt-1 text-xs text-[var(--brand-accent)]";
 
 export function ContactForm() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [pending, startTransition] = useTransition();
   const [submitted, setSubmitted] = useState(false);
 
@@ -32,7 +32,7 @@ export function ContactForm() {
     startTransition(async () => {
       try {
         const { company, ...rest } = values;
-        const result = await submitContactMessage(rest, company);
+        const result = await submitContactMessage({ ...rest, language }, company);
         if (result.ok) setSubmitted(true);
       } catch {
         toast.error(t("contactPage.errorToast"));
@@ -81,6 +81,7 @@ export function ContactForm() {
           {t("contactPage.phoneLabel")}
         </label>
         <input id="phone" type="tel" className={fieldClass} {...register("phone")} />
+        {errors.phone && <p className={errorClass}>{t("bookingPage.requiredError")}</p>}
       </div>
 
       <div>

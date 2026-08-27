@@ -1,6 +1,7 @@
 "use client";
 
 import { useLanguage } from "@/lib/i18n/context";
+import { useSectionScrollProgress } from "@/lib/useSectionScrollProgress";
 import { RouteMap, type RouteMarker } from "@/components/get/RouteMap";
 import { DayCarousel } from "@/components/get/DayCarousel";
 import { GalleryCarousel } from "@/components/get/GalleryCarousel";
@@ -57,6 +58,10 @@ export function JourneyChapterSection({
   markers: RouteMarker[];
 }) {
   const { language, t } = useLanguage();
+  // Drives the "road" to the next chapter's marker drawing in live as this section scrolls by
+  // (see RouteMap's progress prop) — same trigger line as useActiveSection so the line finishes
+  // drawing right as the next section takes over as active.
+  const scrollProgress = useSectionScrollProgress(chapter.id);
   const title = localized(language, chapter.title, chapter.titleEn, chapter.titleEs);
   const intro = localized(language, chapter.intro, chapter.introEn, chapter.introEs);
   const gallery = chapter.galleryImages
@@ -78,7 +83,7 @@ export function JourneyChapterSection({
           there and a background map would just be noise behind text. */}
       <div className="absolute inset-0 z-0 hidden lg:block" aria-hidden>
         <div className="sticky top-0 h-screen">
-          <RouteMap mapImage={mapImage} markers={markers} activeIndex={index} />
+          <RouteMap mapImage={mapImage} markers={markers} activeIndex={index} progress={scrollProgress} />
         </div>
       </div>
 

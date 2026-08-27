@@ -270,7 +270,13 @@ function ChapterDaysFields({
                 label="Description"
                 multiline
               />
-              <MediaUploadField control={control} name={`${baseName}.days.${dayIndex}.image`} label="Image" folder="tours" />
+              <MediaUploadField
+                control={control}
+                name={`${baseName}.days.${dayIndex}.image`}
+                label="Média principal"
+                folder="tours"
+                allowVideo
+              />
               <MediaUploadListField
                 control={control}
                 name={`${baseName}.days.${dayIndex}.images`}
@@ -355,12 +361,16 @@ function ChaptersManager({
 
       <Dialog open={editingInfoIndex !== null} onOpenChange={(open) => !open && setEditingInfoIndex(null)}>
         <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-lg">
-          <DialogHeader>
+          {/* LangSwitcher lives here too, not just in the page header — that header sits behind
+              the dialog's overlay, so without a switcher inside, changing language meant closing
+              the dialog first. Same shared LangProvider context, so it stays in sync either way. */}
+          <DialogHeader className="flex-row items-center justify-between gap-3 pr-8">
             <DialogTitle>
               {editingInfoIndex !== null
                 ? chapters[editingInfoIndex]?.title?.trim() || `Chapitre ${editingInfoIndex + 1}`
                 : ""}
             </DialogTitle>
+            <LangSwitcher />
           </DialogHeader>
           {editingInfoIndex !== null && (
             <ChapterInfoFields control={control} baseName={`chapters.${editingInfoIndex}`} />
@@ -370,13 +380,14 @@ function ChaptersManager({
 
       <Dialog open={editingDaysIndex !== null} onOpenChange={(open) => !open && setEditingDaysIndex(null)}>
         <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-2xl">
-          <DialogHeader>
+          <DialogHeader className="flex-row items-center justify-between gap-3 pr-8">
             <DialogTitle>
               Jours —{" "}
               {editingDaysIndex !== null
                 ? chapters[editingDaysIndex]?.title?.trim() || `Chapitre ${editingDaysIndex + 1}`
                 : ""}
             </DialogTitle>
+            <LangSwitcher />
           </DialogHeader>
           {editingDaysIndex !== null && (
             <ChapterDaysFields

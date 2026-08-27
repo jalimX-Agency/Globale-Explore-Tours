@@ -34,16 +34,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ]);
 
   const now = new Date();
-  // "/a-propos", "/mentions-legales", "/politique-de-confidentialite" and
-  // "/conditions-de-reservation" are excluded — they're content stubs ("En construction") set
-  // to noindex until real copy is written, so they're left out of the sitemap to match.
   const staticRoutes = [
     { path: "", priority: 1.0 },
     { path: "/trouver-mon-voyage", priority: 0.9 },
     { path: "/experience-types", priority: 0.8 },
+    { path: "/a-propos", priority: 0.7 },
     { path: "/blog", priority: 0.7 },
     { path: "/contact", priority: 0.6 },
     { path: "/faire-une-demande", priority: 0.6 },
+    { path: "/politique-de-confidentialite", priority: 0.2 },
+    { path: "/conditions-de-reservation", priority: 0.2 },
+    { path: "/mentions-legales", priority: 0.2 },
   ].flatMap(({ path, priority }) => withLocales(path, now, "weekly", priority));
 
   const tourRoutes = tours.flatMap((t) =>

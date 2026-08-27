@@ -14,5 +14,10 @@ export async function setMessageRead(id: string, read: boolean) {
   await assertAdmin();
   await db.contactMessage.update({ where: { id }, data: { read } });
   revalidatePath("/admin/messages");
-  revalidatePath(`/admin/messages/${id}`);
+}
+
+export async function deleteMessage(id: string) {
+  await assertAdmin();
+  await db.contactMessage.delete({ where: { id } });
+  revalidatePath("/admin/messages");
 }

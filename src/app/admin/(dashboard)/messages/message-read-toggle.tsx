@@ -8,7 +8,17 @@ import { setMessageRead } from "./actions";
 
 // Opening a message's detail page marks it read automatically — the common inbox
 // convention — while the button lets staff flip it back to "unread" as a follow-up flag.
-export function MessageReadToggle({ messageId, initialRead }: { messageId: string; initialRead: boolean }) {
+export function MessageReadToggle({
+  messageId,
+  initialRead,
+  onChange,
+}: {
+  messageId: string;
+  initialRead: boolean;
+  /** Lets a parent list (e.g. the messages table, behind a dialog) keep its own copy of the
+   * read flag in sync without waiting for a full page revalidation. */
+  onChange?: (read: boolean) => void;
+}) {
   const [read, setRead] = useState(initialRead);
   const [pending, startTransition] = useTransition();
   const markedOnMount = useRef(false);
@@ -19,6 +29,7 @@ export function MessageReadToggle({ messageId, initialRead }: { messageId: strin
     startTransition(async () => {
       await setMessageRead(messageId, true);
       setRead(true);
+      onChange?.(true);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -29,6 +40,7 @@ export function MessageReadToggle({ messageId, initialRead }: { messageId: strin
       try {
         await setMessageRead(messageId, next);
         setRead(next);
+        onChange?.(next);
         toast.success(next ? "Marqué comme lu" : "Marqué comme non lu");
       } catch {
         toast.error("Une erreur est survenue");

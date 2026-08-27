@@ -4,10 +4,14 @@ export function RouteMap({
   mapImage,
   markers,
   activeIndex,
+  progress = 0,
 }: {
   mapImage: string;
   markers: RouteMarker[];
   activeIndex: number;
+  /** 0-1: how far scrolled through the active chapter's own section — draws the line to the
+   * *next* marker live as the user scrolls, instead of it just snapping to fully-reached. */
+  progress?: number;
 }) {
   if (!mapImage || markers.length === 0) return null;
 
@@ -35,19 +39,42 @@ export function RouteMap({
         <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute inset-0 h-full w-full overflow-visible">
           {markers.slice(0, -1).map((m, i) => {
             const next = markers[i + 1];
-            const filled = i < activeIndex;
+            const reached = i < activeIndex;
+            const isCurrent = i === activeIndex;
             return (
-              <line
-                key={i}
-                x1={m.x}
-                y1={m.y}
-                x2={next.x}
-                y2={next.y}
-                stroke={filled ? "var(--brand-accent)" : "var(--brand-clay)"}
-                strokeWidth={filled ? 0.35 : 0.22}
-                strokeDasharray={filled ? undefined : "1.5 1.5"}
-                opacity={filled ? 1 : 0.5}
-              />
+              <g key={i}>
+                {/* Faint static track for the road ahead — always present so the full route
+                    is legible at a glance, drawn under the live segment below. */}
+                {!reached && (
+                  <line
+                    x1={m.x}
+                    y1={m.y}
+                    x2={next.x}
+                    y2={next.y}
+                    stroke="var(--brand-clay)"
+                    strokeWidth={0.22}
+                    strokeDasharray="1.5 1.5"
+                    opacity={0.5}
+                  />
+                )}
+                {/* pathLength=1 normalizes the dash math to a 0-1 fraction regardless of this
+                    line's actual geometric length, so "reached" is just offset 0 (fully drawn)
+                    and the current segment's offset is driven live by scroll progress through
+                    this chapter's own section — the road visibly extends as you scroll. */}
+                {(reached || isCurrent) && (
+                  <line
+                    x1={m.x}
+                    y1={m.y}
+                    x2={next.x}
+                    y2={next.y}
+                    pathLength={1}
+                    strokeDasharray={1}
+                    strokeDashoffset={reached ? 0 : 1 - progress}
+                    stroke="var(--brand-accent)"
+                    strokeWidth={0.35}
+                  />
+                )}
+              </g>
             );
           })}
           {markers.map((m, i) => {
