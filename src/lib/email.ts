@@ -1,41 +1,62 @@
 import { Resend } from "resend";
+import { renderEmailShell, emailHeading, emailParagraph, emailEyebrow, emailButton, emailDetailRow, emailDetailTable } from "./email-templates";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
-const FROM = "noreply@globaleexploretours.com";
+const FROM = "Globale Explore Tours <noreply@globaleexploretours.com>";
 const ADMIN_EMAIL = "contact@globaleexploretours.com";
+const BASE_URL = "https://www.globaleexploretours.com";
 
-const COPY = {
+type Lang = "fr" | "en" | "es";
+
+const BOOKING_CONFIRMATION_COPY: Record<Lang, {
+  subject: string;
+  heading: string;
+  hello: (name: string) => string;
+  body: string;
+  tour: string;
+  date: string;
+  guests: string;
+  closing: string;
+  signature: string;
+  cta: string;
+}> = {
   fr: {
     subject: "Votre demande de réservation — Globale Explore Tours",
-    title: "Demande bien reçue",
-    hello: (name: string) => `Bonjour ${name},`,
+    heading: "Demande bien reçue",
+    hello: (name) => `Bonjour ${name},`,
     body: "Votre demande de réservation a bien été reçue. Notre équipe vous contactera sous 24h pour confirmer les détails et le tarif final.",
     tour: "Excursion",
     date: "Date souhaitée",
     guests: "Voyageurs",
+    closing: "À très vite,",
     signature: "L'équipe Globale Explore Tours",
+    cta: "Découvrir nos voyages",
   },
   en: {
     subject: "Your booking request — Globale Explore Tours",
-    title: "Request received",
-    hello: (name: string) => `Hello ${name},`,
+    heading: "Request received",
+    hello: (name) => `Hello ${name},`,
     body: "Your booking request has been received. Our team will contact you within 24h to confirm details and final pricing.",
     tour: "Tour",
     date: "Preferred date",
     guests: "Travellers",
+    closing: "Talk soon,",
     signature: "The Globale Explore Tours team",
+    cta: "Browse our trips",
   },
   es: {
     subject: "Su solicitud de reserva — Globale Explore Tours",
-    title: "Solicitud recibida",
-    hello: (name: string) => `Hola ${name},`,
+    heading: "Solicitud recibida",
+    hello: (name) => `Hola ${name},`,
     body: "Hemos recibido su solicitud de reserva. Nuestro equipo se pondrá en contacto en 24h para confirmar los detalles y el precio final.",
     tour: "Excursión",
     date: "Fecha preferida",
     guests: "Viajeros",
+    closing: "Hasta pronto,",
     signature: "El equipo de Globale Explore Tours",
+    cta: "Ver nuestros viajes",
   },
-} as const;
+};
 
 export async function sendBookingRequestConfirmation(data: {
   firstName: string;
@@ -43,26 +64,33 @@ export async function sendBookingRequestConfirmation(data: {
   tourName?: string;
   preferredDate?: string;
   guests: number;
-  language?: "fr" | "en" | "es";
+  language?: Lang;
 }) {
-  const t = COPY[data.language ?? "fr"];
+  const lang = data.language ?? "fr";
+  const t = BOOKING_CONFIRMATION_COPY[lang];
+
+  const rows = [
+    data.tourName && emailDetailRow(t.tour, data.tourName),
+    data.preferredDate && emailDetailRow(t.date, data.preferredDate),
+    emailDetailRow(t.guests, String(data.guests)),
+  ]
+    .filter(Boolean)
+    .join("");
+
+  const body = `
+    ${emailHeading(t.heading)}
+    ${emailParagraph(t.hello(data.firstName))}
+    ${emailParagraph(t.body)}
+    ${emailDetailTable(rows)}
+    ${emailParagraph(`${t.closing}<br />${t.signature}`)}
+    ${emailButton(t.cta, `${BASE_URL}/${lang}/trouver-mon-voyage`)}
+  `;
+
   await resend.emails.send({
     from: FROM,
     to: data.email,
     subject: t.subject,
-    html: `
-      <div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; color: #1a1a1a;">
-        <h1 style="color: #b5502e;">${t.title}</h1>
-        <p>${t.hello(data.firstName)}</p>
-        <p>${t.body}</p>
-        <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
-          ${data.tourName ? `<tr><td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>${t.tour}</strong></td><td>${data.tourName}</td></tr>` : ""}
-          ${data.preferredDate ? `<tr><td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>${t.date}</strong></td><td>${data.preferredDate}</td></tr>` : ""}
-          <tr><td style="padding: 8px;"><strong>${t.guests}</strong></td><td>${data.guests}</td></tr>
-        </table>
-        <p style="color: #b5502e;">${t.signature}</p>
-      </div>
-    `,
+    html: renderEmailShell({ previewText: t.body, bodyHtml: body, language: lang }),
   });
 }
 
@@ -76,17 +104,30 @@ export async function sendBookingNotificationToAdmin(data: {
   guests: number;
   message?: string;
 }) {
+  const rows = [
+    emailDetailRow("De", `${data.firstName} ${data.lastName}`),
+    emailDetailRow("E-mail", `<a href="mailto:${data.email}" style="color:#1a1a1a;">${data.email}</a>`),
+    data.phone && emailDetailRow("Téléphone", `<a href="tel:${data.phone}" style="color:#1a1a1a;">${data.phone}</a>`),
+    data.tourName && emailDetailRow("Excursion", data.tourName),
+    data.preferredDate && emailDetailRow("Date souhaitée", data.preferredDate),
+    emailDetailRow("Voyageurs", String(data.guests)),
+  ]
+    .filter(Boolean)
+    .join("");
+
+  const body = `
+    ${emailEyebrow("Nouvelle demande")}
+    ${emailHeading(`${data.firstName} ${data.lastName}`)}
+    ${emailDetailTable(rows)}
+    ${data.message ? emailParagraph(data.message.replace(/\n/g, "<br />")) : ""}
+    ${emailButton("Voir dans l'admin", `${BASE_URL}/admin/bookings`)}
+  `;
+
   await resend.emails.send({
     from: FROM,
     to: ADMIN_EMAIL,
     subject: `Nouvelle demande de réservation — ${data.firstName} ${data.lastName}`,
-    html: `
-      <p><strong>De:</strong> ${data.firstName} ${data.lastName} (${data.email}${data.phone ? `, ${data.phone}` : ""})</p>
-      ${data.tourName ? `<p><strong>Excursion:</strong> ${data.tourName}</p>` : ""}
-      ${data.preferredDate ? `<p><strong>Date souhaitée:</strong> ${data.preferredDate}</p>` : ""}
-      <p><strong>Voyageurs:</strong> ${data.guests}</p>
-      ${data.message ? `<p><strong>Message:</strong> ${data.message}</p>` : ""}
-    `,
+    html: renderEmailShell({ previewText: `Nouvelle demande de ${data.firstName} ${data.lastName}`, bodyHtml: body }),
   });
 }
 
@@ -96,51 +137,72 @@ export async function sendContactNotification(data: {
   subject: string;
   message: string;
 }) {
+  const rows = [
+    emailDetailRow("De", data.name),
+    emailDetailRow("E-mail", `<a href="mailto:${data.email}" style="color:#1a1a1a;">${data.email}</a>`),
+    data.subject && emailDetailRow("Sujet", data.subject),
+  ]
+    .filter(Boolean)
+    .join("");
+
+  const body = `
+    ${emailEyebrow("Nouveau message")}
+    ${emailHeading(data.subject || "Contact")}
+    ${emailDetailTable(rows)}
+    ${emailParagraph(data.message.replace(/\n/g, "<br />"))}
+    ${emailButton("Voir dans l'admin", `${BASE_URL}/admin/messages`)}
+  `;
+
   await resend.emails.send({
     from: FROM,
     to: ADMIN_EMAIL,
-    subject: `Nouveau message: ${data.subject || "Contact"}`,
-    html: `<p><strong>De:</strong> ${data.name} (${data.email})</p><p>${data.message}</p>`,
+    subject: `Nouveau message : ${data.subject || "Contact"}`,
+    html: renderEmailShell({ previewText: `Nouveau message de ${data.name}`, bodyHtml: body }),
   });
 }
 
-const CONTACT_CONFIRMATION_COPY = {
+const CONTACT_CONFIRMATION_COPY: Record<Lang, { subject: string; heading: string; hello: (name: string) => string; body: string; closing: string; signature: string }> = {
   fr: {
     subject: "Votre message a bien été reçu — Globale Explore Tours",
-    title: "Message bien reçu",
-    hello: (name: string) => `Bonjour ${name},`,
+    heading: "Message bien reçu",
+    hello: (name) => `Bonjour ${name},`,
     body: "Nous avons bien reçu votre message et nous vous répondrons dans les meilleurs délais.",
+    closing: "À très vite,",
     signature: "L'équipe Globale Explore Tours",
   },
   en: {
     subject: "We've received your message — Globale Explore Tours",
-    title: "Message received",
-    hello: (name: string) => `Hello ${name},`,
+    heading: "Message received",
+    hello: (name) => `Hello ${name},`,
     body: "We've received your message and will get back to you as soon as possible.",
+    closing: "Talk soon,",
     signature: "The Globale Explore Tours team",
   },
   es: {
     subject: "Hemos recibido su mensaje — Globale Explore Tours",
-    title: "Mensaje recibido",
-    hello: (name: string) => `Hola ${name},`,
+    heading: "Mensaje recibido",
+    hello: (name) => `Hola ${name},`,
     body: "Hemos recibido su mensaje y le responderemos lo antes posible.",
+    closing: "Hasta pronto,",
     signature: "El equipo de Globale Explore Tours",
   },
-} as const;
+};
 
-export async function sendContactConfirmation(data: { name: string; email: string; language?: "fr" | "en" | "es" }) {
-  const t = CONTACT_CONFIRMATION_COPY[data.language ?? "fr"];
+export async function sendContactConfirmation(data: { name: string; email: string; language?: Lang }) {
+  const lang = data.language ?? "fr";
+  const t = CONTACT_CONFIRMATION_COPY[lang];
+
+  const body = `
+    ${emailHeading(t.heading)}
+    ${emailParagraph(t.hello(data.name))}
+    ${emailParagraph(t.body)}
+    ${emailParagraph(`${t.closing}<br />${t.signature}`)}
+  `;
+
   await resend.emails.send({
     from: FROM,
     to: data.email,
     subject: t.subject,
-    html: `
-      <div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; color: #1a1a1a;">
-        <h1 style="color: #b5502e;">${t.title}</h1>
-        <p>${t.hello(data.name)}</p>
-        <p>${t.body}</p>
-        <p style="color: #b5502e;">${t.signature}</p>
-      </div>
-    `,
+    html: renderEmailShell({ previewText: t.body, bodyHtml: body, language: lang }),
   });
 }
