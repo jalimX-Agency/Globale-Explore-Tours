@@ -36,6 +36,8 @@ const TOUR_CARD_SELECT = {
   destination: { select: { slug: true, regionSlug: true } },
 } as const;
 
+export const revalidate = 3600;
+
 export async function generateMetadata({
   params,
 }: {

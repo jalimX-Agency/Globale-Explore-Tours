@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import { cache } from "react";
 import { notFound } from "next/navigation";
 import { db } from "@/lib/db";
 import { isLocale, DEFAULT_LOCALE, type Locale } from "@/lib/i18n/locales";
@@ -7,6 +8,11 @@ import { LocaleLink } from "@/components/get/LocaleLink";
 import { Breadcrumb } from "@/components/get/Breadcrumb";
 import { ArrowLeft } from "lucide-react";
 import { pageMetadata, breadcrumbJsonLd, articleJsonLd } from "@/lib/seo";
+
+// Cached per-request so generateMetadata and the page body share one query instead of two.
+const getPost = cache((slug: string) => db.blogPost.findUnique({ where: { slug } }));
+
+export const revalidate = 3600;
 
 function pick(locale: Locale, frText: string, enText: string, esText: string) {
   if (locale === "en") return enText || frText;
@@ -21,10 +27,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale: rawLocale, slug } = await params;
   const locale = isLocale(rawLocale) ? rawLocale : DEFAULT_LOCALE;
-  const post = await db.blogPost.findUnique({
-    where: { slug },
-    select: { title: true, titleEn: true, titleEs: true, excerpt: true, excerptEn: true, excerptEs: true, image: true },
-  });
+  const post = await getPost(slug);
   if (!post) return { title: "Article" };
   return pageMetadata({
     locale,
@@ -43,7 +46,7 @@ export default async function BlogPostPage({
   const { locale: rawLocale, slug } = await params;
   const locale = isLocale(rawLocale) ? rawLocale : DEFAULT_LOCALE;
 
-  const post = await db.blogPost.findUnique({ where: { slug } });
+  const post = await getPost(slug);
   if (!post) notFound();
 
   const title = pick(locale, post.title, post.titleEn, post.titleEs);

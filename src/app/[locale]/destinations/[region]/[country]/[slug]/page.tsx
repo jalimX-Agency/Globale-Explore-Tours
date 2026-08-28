@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { cache } from "react";
 import { notFound } from "next/navigation";
 import { db } from "@/lib/db";
 import { isLocale, DEFAULT_LOCALE, type Locale } from "@/lib/i18n/locales";
@@ -36,7 +37,10 @@ const TOUR_CARD_SELECT = {
   format: true,
 } as const;
 
-async function getTour(slug: string) {
+export const revalidate = 3600;
+
+// Cached per-request so generateMetadata and the page body share one query instead of two.
+const getTour = cache((slug: string) => {
   return db.tour.findUnique({
     where: { slug },
     include: {
@@ -49,7 +53,7 @@ async function getTour(slug: string) {
       hotels: { orderBy: { order: "asc" } },
     },
   });
-}
+});
 
 export async function generateMetadata({
   params,

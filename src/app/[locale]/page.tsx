@@ -8,6 +8,11 @@ import { OurApproach } from "@/components/get/OurApproach";
 import { TrustStrip } from "@/components/get/TrustStrip";
 import { ClosingCta } from "@/components/get/ClosingCta";
 
+// Content only changes when an admin publishes — see the revalidatePath("/[locale]", "layout")
+// calls in every admin action. Without this, Prisma calls below aren't cached at all (unlike
+// fetch(), Next.js doesn't cache raw DB queries), so every visit would hit Postgres directly.
+export const revalidate = 3600;
+
 export default async function Home() {
   const experienceTypes = await db.experienceType.findMany({
     where: { kind: "who", parentId: null },

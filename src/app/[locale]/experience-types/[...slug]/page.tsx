@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { cache } from "react";
 import { notFound } from "next/navigation";
 import { db } from "@/lib/db";
 import { isLocale, DEFAULT_LOCALE, type Locale } from "@/lib/i18n/locales";
@@ -126,7 +127,8 @@ function toWhatTypeContent(row: ExperienceTypeRow): WhatTypeContent {
   };
 }
 
-function getExperienceTypeRow(slug: string) {
+// Cached per-request so generateMetadata and the page body share one query instead of two.
+const getExperienceTypeRow = cache((slug: string) => {
   return db.experienceType.findUnique({
     where: { slug },
     include: {
@@ -148,7 +150,7 @@ function getExperienceTypeRow(slug: string) {
       children: { orderBy: { order: "asc" } },
     },
   });
-}
+});
 
 // A tour "belongs" to a page if it matches every filter field the page actually has set
 // (AND across dimensions) — a sub-page with none of its own set simply falls back to
@@ -170,6 +172,8 @@ function tourWhereForRow(row: ExperienceTypeRow) {
   }
   return where;
 }
+
+export const revalidate = 3600;
 
 export async function generateStaticParams() {
   const rows = await db.experienceType.findMany({ select: { slug: true } });

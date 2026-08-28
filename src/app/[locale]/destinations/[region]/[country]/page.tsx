@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { cache } from "react";
 import { notFound } from "next/navigation";
 import { db } from "@/lib/db";
 import { isLocale, DEFAULT_LOCALE, type Locale } from "@/lib/i18n/locales";
@@ -35,6 +36,11 @@ const TOUR_CARD_SELECT = {
   format: true,
 } as const;
 
+// Cached per-request so generateMetadata and the page body share one query instead of two.
+const getDestination = cache((slug: string) => db.destination.findUnique({ where: { slug } }));
+
+export const revalidate = 3600;
+
 export async function generateMetadata({
   params,
 }: {
@@ -42,10 +48,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale: rawLocale, region: regionSlug, country } = await params;
   const locale = isLocale(rawLocale) ? rawLocale : DEFAULT_LOCALE;
-  const destination = await db.destination.findUnique({
-    where: { slug: country },
-    select: { name: true, nameEn: true, nameEs: true, description: true, descriptionEn: true, descriptionEs: true, heroImage: true },
-  });
+  const destination = await getDestination(country);
   if (!destination) return { title: country };
   const label = pick(locale, destination.name, destination.nameEn, destination.nameEs);
   const description = pick(locale, destination.description, destination.descriptionEn, destination.descriptionEs);
@@ -66,7 +69,7 @@ export default async function CountryPage({
   const { locale: rawLocale, region: regionSlug, country } = await params;
   const locale = isLocale(rawLocale) ? rawLocale : DEFAULT_LOCALE;
 
-  const destination = await db.destination.findUnique({ where: { slug: country } });
+  const destination = await getDestination(country);
   if (!destination || destination.regionSlug !== regionSlug) notFound();
 
   const [blocks, faqs, team, tours, siblingDestinations] = await Promise.all([
