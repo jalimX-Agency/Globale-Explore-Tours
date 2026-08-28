@@ -146,9 +146,9 @@ export const es = {
   },
   mission: {
     title: "Cada viaje necesita un guía, no un folleto",
-    body1: "Marruecos está en todas partes en internet — mil circuitos idénticos, las mismas fotos de dunas, las mismas opiniones copiadas. Cuanta más opción hay, más difícil es saber en quién confiar.",
-    body2: "Nosotros no. Globale Explore Tours diseña excursiones y viajes a medida, pensados en torno a usted — no casillas que marcar en una lista. Ya busque aventura en las dunas, la calma de un hammam o un día en familia, cada salida lleva el sello de un guía que realmente conoce el terreno.",
-    body3: "Nuestros guías — Momo, Hassane, Ahmed y el resto del equipo — tienen una valoración de 4.9/5 en TripAdvisor, con más de cien opiniones verificadas. No es un eslogan — lo dicen nuestros viajeros.",
+    body1: "El viaje a medida está en todas partes en internet — mil circuitos idénticos, las mismas fotos de postal, las mismas opiniones copiadas. Cuanta más opción hay, más difícil es saber en quién confiar.",
+    body2: "Nosotros no. Globale Explore Tours diseña excursiones y viajes a medida, pensados en torno a usted — no casillas que marcar en una lista. Ya busque aventura en el desierto, la calma de un spa o un día en familia, cada salida lleva el sello de un guía que realmente conoce el terreno, dondequiera que viaje en el mundo.",
+    body3: "Nuestros guías locales — como Momo, Hassane y Ahmed en Marruecos, y sus homólogos en cada uno de nuestros destinos — tienen una valoración de 4.9/5 en TripAdvisor, con más de cien opiniones verificadas. No es un eslogan — lo dicen nuestros viajeros.",
     closing: "Así que empecemos. Cuéntenos el viaje que imagina.",
     cta: "Contáctenos",
   },

@@ -146,9 +146,9 @@ export const en = {
   },
   mission: {
     title: "Every trip needs a guide, not a brochure",
-    body1: "Morocco is everywhere online — a thousand identical itineraries, the same dune photos, the same copy-pasted reviews. The more choice there is, the harder it gets to know who to trust.",
-    body2: "That's not us. Globale Explore Tours designs tailor-made excursions and trips, built around you — not boxes to tick on a list. Whether you're after dune adventure, the quiet of a hammam, or a family day out, every outing carries the mark of a guide who actually knows the ground.",
-    body3: "Our guides — Momo, Hassane, Ahmed and the rest of the team — are rated 4.9/5 on TripAdvisor, with over a hundred verified reviews. That's not a tagline — it's our travellers saying it.",
+    body1: "Tailor-made travel is everywhere online — a thousand identical itineraries, the same postcard photos, the same copy-pasted reviews. The more choice there is, the harder it gets to know who to trust.",
+    body2: "That's not us. Globale Explore Tours designs tailor-made excursions and trips, built around you — not boxes to tick on a list. Whether you're after desert adventure, the quiet of a spa, or a family day out, every outing carries the mark of a guide who actually knows the ground, wherever in the world you're headed.",
+    body3: "Our local guides — like Momo, Hassane and Ahmed in Morocco, and their counterparts across every destination we cover — are rated 4.9/5 on TripAdvisor, with over a hundred verified reviews. That's not a tagline — it's our travellers saying it.",
     closing: "So let's begin. Tell us about the trip you're picturing.",
     cta: "Get In Touch",
   },

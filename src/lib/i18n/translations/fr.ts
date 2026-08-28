@@ -146,9 +146,9 @@ export const fr = {
   },
   mission: {
     title: "Chaque voyage a besoin d'un guide, pas d'une brochure",
-    body1: "Le Maroc est partout en ligne — mille circuits identiques, les mêmes photos de dunes, les mêmes avis copiés-collés. Plus il y a de choix, plus il est difficile de savoir à qui faire confiance.",
-    body2: "Ce n'est pas nous. Globale Explore Tours conçoit des excursions et des voyages sur-mesure, pensés autour de vous — pas des tickets à cocher sur une liste. Que vous cherchiez l'aventure dans les dunes, la tranquillité d'un hammam ou une journée en famille, chaque sortie porte la marque d'un guide qui connaît vraiment le terrain.",
-    body3: "Nos guides — Momo, Hassane, Ahmed et le reste de l'équipe — sont notés 4.9/5 sur TripAdvisor, avec plus de cent avis vérifiés. Ce n'est pas un slogan, ce sont nos voyageurs qui le disent.",
+    body1: "Le voyage sur-mesure est partout en ligne — mille circuits identiques, les mêmes photos de carte postale, les mêmes avis copiés-collés. Plus il y a de choix, plus il est difficile de savoir à qui faire confiance.",
+    body2: "Ce n'est pas nous. Globale Explore Tours conçoit des excursions et des voyages sur-mesure, pensés autour de vous — pas des tickets à cocher sur une liste. Que vous cherchiez l'aventure dans le désert, la tranquillité d'un spa ou une journée en famille, chaque sortie porte la marque d'un guide qui connaît vraiment le terrain, où que vous alliez dans le monde.",
+    body3: "Nos guides locaux — comme Momo, Hassane et Ahmed au Maroc, et leurs homologues dans chacune de nos destinations — sont notés 4.9/5 sur TripAdvisor, avec plus de cent avis vérifiés. Ce n'est pas un slogan, ce sont nos voyageurs qui le disent.",
     closing: "Alors commençons. Racontez-nous le voyage que vous imaginez.",
     cta: "Nous contacter",
   },
