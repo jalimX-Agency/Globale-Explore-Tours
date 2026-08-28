@@ -5,7 +5,7 @@ import { LanguageProvider } from "@/lib/i18n/context";
 import { SiteChrome } from "@/components/get/SiteChrome";
 import { NavigationServer } from "@/components/get/NavigationServer";
 import { SetHtmlLang } from "@/components/get/SetHtmlLang";
-import { DEFAULT_OG_IMAGE } from "@/lib/seo";
+import { DEFAULT_OG_IMAGE, safeJsonLd } from "@/lib/seo";
 
 export function generateStaticParams() {
   return LOCALES.map((locale) => ({ locale }));
@@ -80,7 +80,7 @@ export default async function LocaleLayout({
   if (!isLocale(rawLocale)) notFound();
   const locale = rawLocale;
 
-  const travelAgencySchema = JSON.stringify({
+  const travelAgencySchema = safeJsonLd({
     "@context": "https://schema.org",
     "@type": "TravelAgency",
     name: "Globale Explore Tours",

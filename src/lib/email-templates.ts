@@ -6,6 +6,18 @@
 
 const BASE_URL = "https://www.globaleexploretours.com";
 
+// Contact/booking form fields (name, message, phone...) reach these templates as raw visitor
+// input — escape before interpolating into any HTML string built here, or a submission can
+// inject markup/links into the notification email an admin opens in their inbox.
+export function escapeHtml(text: string): string {
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 const COLOR = {
   ink: "#1a1a1a",
   inkSoft: "#5c5c5c",

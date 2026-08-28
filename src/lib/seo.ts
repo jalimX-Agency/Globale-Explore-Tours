@@ -14,6 +14,14 @@ export const DEFAULT_OG_IMAGE = "https://cdn.globaleexploretours.com/destination
 
 const HOME_LABEL: Record<Locale, string> = { fr: fr.nav.home, en: en.nav.home, es: es.nav.home };
 
+// JSON.stringify doesn't escape "<", so a "</script>" inside any admin-authored field (a blog
+// title, FAQ answer, tour name...) landing in these strings would close the JSON-LD <script>
+// tag early and let whatever follows execute as HTML on a page every visitor loads. Escaping
+// "<" to its unicode form keeps the JSON valid while making that breakout impossible.
+export function safeJsonLd(data: unknown): string {
+  return JSON.stringify(data).replace(/</g, "\\u003c");
+}
+
 /**
  * Builds canonical + hreflang alternates + Open Graph + Twitter metadata for one page.
  * Every dynamic page (tour, country, region, blog post...) needs this — without it, Next.js
@@ -72,7 +80,7 @@ export function pageMetadata({
  */
 export function breadcrumbJsonLd(locale: Locale, items: { label: string; href?: string }[]) {
   const full = [{ label: HOME_LABEL[locale], href: "/" }, ...items];
-  return JSON.stringify({
+  return safeJsonLd({
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: full.map((item, i) => ({
@@ -88,7 +96,7 @@ export function breadcrumbJsonLd(locale: Locale, items: { label: string; href?: 
 // addition available on content pages that already carry FAQ copy.
 export function faqJsonLd(faqs: { question: string; answer: string }[]) {
   if (faqs.length === 0) return null;
-  return JSON.stringify({
+  return safeJsonLd({
     "@context": "https://schema.org",
     "@type": "FAQPage",
     mainEntity: faqs.map((f) => ({
@@ -116,7 +124,7 @@ export function touristTripJsonLd({
   currency?: string;
   duration?: string;
 }) {
-  return JSON.stringify({
+  return safeJsonLd({
     "@context": "https://schema.org",
     "@type": "TouristTrip",
     name,
@@ -156,7 +164,7 @@ export function articleJsonLd({
   dateModified: Date;
   author?: string;
 }) {
-  return JSON.stringify({
+  return safeJsonLd({
     "@context": "https://schema.org",
     "@type": "Article",
     headline,

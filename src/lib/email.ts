@@ -1,5 +1,5 @@
 import { Resend } from "resend";
-import { renderEmailShell, emailHeading, emailParagraph, emailEyebrow, emailButton, emailDetailRow, emailDetailTable } from "./email-templates";
+import { renderEmailShell, emailHeading, emailParagraph, emailEyebrow, emailButton, emailDetailRow, emailDetailTable, escapeHtml } from "./email-templates";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 const FROM = "Globale Explore Tours <noreply@globaleexploretours.com>";
@@ -70,8 +70,8 @@ export async function sendBookingRequestConfirmation(data: {
   const t = BOOKING_CONFIRMATION_COPY[lang];
 
   const rows = [
-    data.tourName && emailDetailRow(t.tour, data.tourName),
-    data.preferredDate && emailDetailRow(t.date, data.preferredDate),
+    data.tourName && emailDetailRow(t.tour, escapeHtml(data.tourName)),
+    data.preferredDate && emailDetailRow(t.date, escapeHtml(data.preferredDate)),
     emailDetailRow(t.guests, String(data.guests)),
   ]
     .filter(Boolean)
@@ -79,7 +79,7 @@ export async function sendBookingRequestConfirmation(data: {
 
   const body = `
     ${emailHeading(t.heading)}
-    ${emailParagraph(t.hello(data.firstName))}
+    ${emailParagraph(t.hello(escapeHtml(data.firstName)))}
     ${emailParagraph(t.body)}
     ${emailDetailTable(rows)}
     ${emailParagraph(`${t.closing}<br />${t.signature}`)}
@@ -104,12 +104,13 @@ export async function sendBookingNotificationToAdmin(data: {
   guests: number;
   message?: string;
 }) {
+  const name = `${escapeHtml(data.firstName)} ${escapeHtml(data.lastName)}`;
   const rows = [
-    emailDetailRow("De", `${data.firstName} ${data.lastName}`),
-    emailDetailRow("E-mail", `<a href="mailto:${data.email}" style="color:#1a1a1a;">${data.email}</a>`),
-    data.phone && emailDetailRow("Téléphone", `<a href="tel:${data.phone}" style="color:#1a1a1a;">${data.phone}</a>`),
-    data.tourName && emailDetailRow("Excursion", data.tourName),
-    data.preferredDate && emailDetailRow("Date souhaitée", data.preferredDate),
+    emailDetailRow("De", name),
+    emailDetailRow("E-mail", `<a href="mailto:${escapeHtml(data.email)}" style="color:#1a1a1a;">${escapeHtml(data.email)}</a>`),
+    data.phone && emailDetailRow("Téléphone", `<a href="tel:${escapeHtml(data.phone)}" style="color:#1a1a1a;">${escapeHtml(data.phone)}</a>`),
+    data.tourName && emailDetailRow("Excursion", escapeHtml(data.tourName)),
+    data.preferredDate && emailDetailRow("Date souhaitée", escapeHtml(data.preferredDate)),
     emailDetailRow("Voyageurs", String(data.guests)),
   ]
     .filter(Boolean)
@@ -117,9 +118,9 @@ export async function sendBookingNotificationToAdmin(data: {
 
   const body = `
     ${emailEyebrow("Nouvelle demande")}
-    ${emailHeading(`${data.firstName} ${data.lastName}`)}
+    ${emailHeading(name)}
     ${emailDetailTable(rows)}
-    ${data.message ? emailParagraph(data.message.replace(/\n/g, "<br />")) : ""}
+    ${data.message ? emailParagraph(escapeHtml(data.message).replace(/\n/g, "<br />")) : ""}
     ${emailButton("Voir dans l'admin", `${BASE_URL}/admin/bookings`)}
   `;
 
@@ -127,7 +128,7 @@ export async function sendBookingNotificationToAdmin(data: {
     from: FROM,
     to: ADMIN_EMAIL,
     subject: `Nouvelle demande de réservation — ${data.firstName} ${data.lastName}`,
-    html: renderEmailShell({ previewText: `Nouvelle demande de ${data.firstName} ${data.lastName}`, bodyHtml: body }),
+    html: renderEmailShell({ previewText: `Nouvelle demande de ${name}`, bodyHtml: body }),
   });
 }
 
@@ -138,18 +139,18 @@ export async function sendContactNotification(data: {
   message: string;
 }) {
   const rows = [
-    emailDetailRow("De", data.name),
-    emailDetailRow("E-mail", `<a href="mailto:${data.email}" style="color:#1a1a1a;">${data.email}</a>`),
-    data.subject && emailDetailRow("Sujet", data.subject),
+    emailDetailRow("De", escapeHtml(data.name)),
+    emailDetailRow("E-mail", `<a href="mailto:${escapeHtml(data.email)}" style="color:#1a1a1a;">${escapeHtml(data.email)}</a>`),
+    data.subject && emailDetailRow("Sujet", escapeHtml(data.subject)),
   ]
     .filter(Boolean)
     .join("");
 
   const body = `
     ${emailEyebrow("Nouveau message")}
-    ${emailHeading(data.subject || "Contact")}
+    ${emailHeading(escapeHtml(data.subject || "Contact"))}
     ${emailDetailTable(rows)}
-    ${emailParagraph(data.message.replace(/\n/g, "<br />"))}
+    ${emailParagraph(escapeHtml(data.message).replace(/\n/g, "<br />"))}
     ${emailButton("Voir dans l'admin", `${BASE_URL}/admin/messages`)}
   `;
 
@@ -157,7 +158,7 @@ export async function sendContactNotification(data: {
     from: FROM,
     to: ADMIN_EMAIL,
     subject: `Nouveau message : ${data.subject || "Contact"}`,
-    html: renderEmailShell({ previewText: `Nouveau message de ${data.name}`, bodyHtml: body }),
+    html: renderEmailShell({ previewText: `Nouveau message de ${escapeHtml(data.name)}`, bodyHtml: body }),
   });
 }
 
@@ -194,7 +195,7 @@ export async function sendContactConfirmation(data: { name: string; email: strin
 
   const body = `
     ${emailHeading(t.heading)}
-    ${emailParagraph(t.hello(data.name))}
+    ${emailParagraph(t.hello(escapeHtml(data.name)))}
     ${emailParagraph(t.body)}
     ${emailParagraph(`${t.closing}<br />${t.signature}`)}
   `;
