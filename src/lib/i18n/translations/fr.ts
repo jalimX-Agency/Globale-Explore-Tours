@@ -1,7 +1,7 @@
 export const fr = {
   nav: {
     home: "Accueil",
-    tours: "Trip Finder",
+    tours: "Trouveur de voyage",
     about: "À propos",
     blog: "Journal",
     contact: "Contact",
@@ -88,13 +88,13 @@ export const fr = {
     contentmentDesc: "Trouvez la paix dans des modes de vie locaux simples et calmes.",
   },
   tripFinder: {
-    heroTitle: "LE TRIP FINDER",
+    heroTitle: "LE TROUVEUR DE VOYAGE",
     heroSubtitle: "On dit que le monde a sept merveilles. On pense que ce n'est qu'un début.",
     feelingLabel: "Comment voulez-vous vous sentir ?",
     whenLabel: "Quand voulez-vous voyager ?",
     anyMonth: "Peu importe",
     cta: "Emmenez-moi",
-    resultsEyebrow: "LE TRIP FINDER",
+    resultsEyebrow: "LE TROUVEUR DE VOYAGE",
     resultsSearching: "Nous cherchons des expériences pour vous",
     resultsFound: "Nous avons trouvé {count} expériences pour vous",
     customTripsBadge: "Voyage sur-mesure",

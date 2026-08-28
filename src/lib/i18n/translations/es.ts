@@ -1,7 +1,7 @@
 export const es = {
   nav: {
     home: "Inicio",
-    tours: "Trip Finder",
+    tours: "Buscador de viajes",
     about: "Nosotros",
     blog: "Diario",
     contact: "Contacto",
@@ -88,13 +88,13 @@ export const es = {
     contentmentDesc: "Encuentre la paz en formas de vida locales simples y pausadas.",
   },
   tripFinder: {
-    heroTitle: "EL TRIP FINDER",
+    heroTitle: "EL BUSCADOR DE VIAJES",
     heroSubtitle: "Dicen que el mundo tiene siete maravillas. Nosotros creemos que eso es solo el comienzo.",
     feelingLabel: "¿Cómo quiere sentirse?",
     whenLabel: "¿Cuándo quiere viajar?",
     anyMonth: "Cualquier momento",
     cta: "Llévame allí",
-    resultsEyebrow: "EL TRIP FINDER",
+    resultsEyebrow: "EL BUSCADOR DE VIAJES",
     resultsSearching: "Buscando experiencias para usted",
     resultsFound: "Hemos encontrado {count} experiencias para usted",
     customTripsBadge: "Viajes a medida",
