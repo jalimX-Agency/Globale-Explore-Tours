@@ -94,7 +94,7 @@ export const es = {
     whenLabel: "¿Cuándo quiere viajar?",
     anyMonth: "Cualquier momento",
     cta: "Llévame allí",
-    resultsEyebrow: "TRIP FINDER",
+    resultsEyebrow: "EL TRIP FINDER",
     resultsSearching: "Buscando experiencias para usted",
     resultsFound: "Hemos encontrado {count} experiencias para usted",
     customTripsBadge: "Viajes a medida",

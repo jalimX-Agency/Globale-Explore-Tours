@@ -1,12 +1,26 @@
 import type { Metadata } from "next";
 import { db } from "@/lib/db";
 import { TripFinderResultsClient } from "@/components/get/TripFinderResultsClient";
+import { isLocale, DEFAULT_LOCALE, type Locale } from "@/lib/i18n/locales";
+import { pageMetadata } from "@/lib/seo";
 import { fetchTripFinderResults } from "./actions";
 import { tripFinderWhere, type TripFinderSort } from "./lib";
 
-export const metadata: Metadata = {
-  title: "Trip Finder — Résultats",
-};
+const META = {
+  fr: { title: "Résultats — Trouver mon voyage", description: "Découvrez les voyages sur-mesure qui correspondent à vos envies, filtrés selon vos préférences." },
+  en: { title: "Results — Find my trip", description: "Discover the tailor-made trips that match what you're looking for, filtered to your preferences." },
+  es: { title: "Resultados — Encontrar mi viaje", description: "Descubra los viajes a medida que coinciden con lo que busca, filtrados según sus preferencias." },
+} as const satisfies Record<Locale, { title: string; description: string }>;
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale: rawLocale } = await params;
+  const locale = isLocale(rawLocale) ? rawLocale : DEFAULT_LOCALE;
+  return pageMetadata({ locale, path: "/trouver-mon-voyage/resultats", ...META[locale] });
+}
 
 const VALID_SORTS: TripFinderSort[] = ["recommended", "price-asc", "price-desc"];
 
