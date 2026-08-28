@@ -1,6 +1,6 @@
 # Globale Explore Tours — Site web
 
-Site Next.js trilingue (FR / EN / ES) pour Globale Explore Tours, agence d'excursions basée à Agadir.
+Site Next.js trilingue (FR / EN / ES) pour Globale Explore Tours, agence d'excursions .
 Construit selon le playbook `luxury-hospitality-nextjs`.
 
 ## Stack
