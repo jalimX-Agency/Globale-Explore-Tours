@@ -26,7 +26,13 @@ export default async function TripFinderResultsPage({
   ]);
 
   return (
+    // Keyed by the filter/sort combo: without it, changing a filter or sort while already on
+    // this page just re-renders the same client component instance with new props — its
+    // `tours` state (seeded once from `initialTours` via useState) never re-syncs, so the
+    // grid silently keeps showing the previous filter's results. The key forces a remount,
+    // which re-seeds that state from the freshly-fetched `initialTours` for the new query.
     <TripFinderResultsClient
+      key={`${feeling ?? ""}|${when ?? ""}|${sort}`}
       initialTours={tours}
       totalCount={totalCount}
       feeling={feeling ?? ""}
