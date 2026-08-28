@@ -14,7 +14,17 @@ const STATUS_LABEL: Record<string, string> = {
   cancelled: "Annulé",
 };
 
-export function BookingStatusForm({ bookingId, initialStatus }: { bookingId: string; initialStatus: string }) {
+export function BookingStatusForm({
+  bookingId,
+  initialStatus,
+  onChange,
+}: {
+  bookingId: string;
+  initialStatus: string;
+  /** Lets a parent list (the demandes table, behind a dialog) keep its own copy of the
+   * status badge in sync without waiting for a full page revalidation. */
+  onChange?: (status: string) => void;
+}) {
   const [status, setStatus] = useState(initialStatus);
   const [pending, startTransition] = useTransition();
 
@@ -22,6 +32,7 @@ export function BookingStatusForm({ bookingId, initialStatus }: { bookingId: str
     startTransition(async () => {
       try {
         await updateBookingStatus(bookingId, { status: status as (typeof BOOKING_STATUSES)[number] });
+        onChange?.(status);
         toast.success("Statut mis à jour");
       } catch {
         toast.error("Impossible de mettre à jour le statut");

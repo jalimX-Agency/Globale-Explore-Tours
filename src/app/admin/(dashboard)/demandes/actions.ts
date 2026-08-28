@@ -15,6 +15,11 @@ export async function updateBookingStatus(id: string, raw: BookingStatusValues) 
   await assertAdmin();
   const { status } = bookingStatusSchema.parse(raw);
   await db.booking.update({ where: { id }, data: { status } });
-  revalidatePath("/admin/bookings");
-  revalidatePath(`/admin/bookings/${id}`);
+  revalidatePath("/admin/demandes");
+}
+
+export async function deleteBooking(id: string) {
+  await assertAdmin();
+  await db.booking.delete({ where: { id } });
+  revalidatePath("/admin/demandes");
 }
