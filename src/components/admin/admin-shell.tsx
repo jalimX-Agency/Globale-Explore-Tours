@@ -37,7 +37,7 @@ const CONTENT_NAV_ITEMS = [
 ];
 
 const ACTIVITY_NAV_ITEMS = [
-  { href: "/admin/bookings", label: "Réservations", icon: CalendarCheck, exact: false, iconBg: "bg-rose-100", iconColor: "text-rose-600" },
+  { href: "/admin/demandes", label: "Demandes", icon: CalendarCheck, exact: false, iconBg: "bg-rose-100", iconColor: "text-rose-600" },
   { href: "/admin/messages", label: "Messages", icon: Mail, exact: false, iconBg: "bg-cyan-100", iconColor: "text-cyan-600" },
 ];
 

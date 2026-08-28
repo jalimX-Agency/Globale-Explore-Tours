@@ -20,7 +20,7 @@ export default async function AdminDashboardPage() {
   ];
 
   const activityStats = [
-    { label: "Réservations en attente", value: pendingBookingCount, icon: CalendarCheck, href: "/admin/bookings", iconBg: "bg-rose-100", iconColor: "text-rose-600" },
+    { label: "Demandes en attente", value: pendingBookingCount, icon: CalendarCheck, href: "/admin/demandes", iconBg: "bg-rose-100", iconColor: "text-rose-600" },
     { label: "Messages non lus", value: unreadMessageCount, icon: Mail, href: "/admin/messages", iconBg: "bg-cyan-100", iconColor: "text-cyan-600" },
   ];
 

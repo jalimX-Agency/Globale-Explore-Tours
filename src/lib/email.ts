@@ -121,7 +121,7 @@ export async function sendBookingNotificationToAdmin(data: {
     ${emailHeading(name)}
     ${emailDetailTable(rows)}
     ${data.message ? emailParagraph(escapeHtml(data.message).replace(/\n/g, "<br />")) : ""}
-    ${emailButton("Voir dans l'admin", `${BASE_URL}/admin/bookings`)}
+    ${emailButton("Voir dans l'admin", `${BASE_URL}/admin/demandes`)}
   `;
 
   await resend.emails.send({
