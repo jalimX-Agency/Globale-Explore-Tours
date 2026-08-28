@@ -3,10 +3,10 @@
 import { useState } from "react";
 import Link from "next/link";
 import { toast } from "sonner";
-import { Trash2 } from "lucide-react";
+import { Trash2, Mail, Phone, Route, MessageSquare, Info } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogFooter, DialogTitle } from "@/components/ui/dialog";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -65,6 +65,30 @@ function Field({ label, value }: { label: string; value: React.ReactNode }) {
       <div className="mt-0.5 text-sm text-foreground">{value}</div>
     </div>
   );
+}
+
+function Section({
+  icon: Icon,
+  title,
+  children,
+}: {
+  icon: typeof Route;
+  title: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="space-y-3">
+      <div className="flex items-center gap-1.5 text-xs font-semibold tracking-wide text-muted-foreground uppercase">
+        <Icon className="size-3.5" />
+        {title}
+      </div>
+      {children}
+    </div>
+  );
+}
+
+function initials(firstName: string, lastName: string) {
+  return `${firstName[0] ?? ""}${lastName[0] ?? ""}`.toUpperCase();
 }
 
 export function DemandesTable({ data }: { data: Row[] }) {
@@ -127,50 +151,87 @@ export function DemandesTable({ data }: { data: Row[] }) {
         <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-2xl">
           {selected && (
             <>
-              <DialogHeader>
-                <DialogTitle>
-                  {selected.firstName} {selected.lastName}
-                </DialogTitle>
+              <DialogHeader className="gap-3 border-b border-border pr-8 pb-4">
+                <div className="flex items-start gap-3">
+                  <div
+                    className="flex size-10 shrink-0 items-center justify-center rounded-full bg-brand-accent/10 text-sm font-semibold text-brand-accent"
+                    aria-hidden="true"
+                  >
+                    {initials(selected.firstName, selected.lastName)}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <DialogTitle>
+                        {selected.firstName} {selected.lastName}
+                      </DialogTitle>
+                      <Badge variant="outline" className={STATUS_COLOR[selected.status] ?? ""}>
+                        {STATUS_LABEL[selected.status] ?? selected.status}
+                      </Badge>
+                    </div>
+                    <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1">
+                      <a
+                        href={`mailto:${selected.email}`}
+                        className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-brand-accent hover:underline"
+                      >
+                        <Mail className="size-3.5" />
+                        {selected.email}
+                      </a>
+                      {selected.phone && (
+                        <a
+                          href={`tel:${selected.phone}`}
+                          className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-brand-accent hover:underline"
+                        >
+                          <Phone className="size-3.5" />
+                          {selected.phone}
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                </div>
               </DialogHeader>
 
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <Field label="Email" value={selected.email} />
-                <Field label="Téléphone" value={selected.phone || "—"} />
-                <Field
-                  label="Voyage"
-                  value={
-                    selected.tourId ? (
-                      <Link href={`/admin/tours/${selected.tourId}`} className="text-brand-accent hover:underline">
-                        {selected.tourName}
-                      </Link>
-                    ) : (
-                      "—"
-                    )
-                  }
-                />
-                <Field label="Date souhaitée" value={selected.preferredDate ?? "—"} />
-                <Field
-                  label="Voyageurs"
-                  value={`${selected.guests} adulte${selected.guests > 1 ? "s" : ""}${selected.children > 0 ? `, ${selected.children} enfant${selected.children > 1 ? "s" : ""}` : ""}`}
-                />
-                <Field label="Durée souhaitée" value={selected.duration || "—"} />
-                <Field label="Budget par personne" value={selected.budget || "—"} />
-                <Field label="Destinations d'intérêt" value={selected.destinationsInterest || "—"} />
-                <Field label="Connu via" value={selected.hearAboutUs || "—"} />
-                <Field label="Langue" value={selected.language.toUpperCase()} />
+              <div className="space-y-5">
+                <Section icon={Route} title="Voyage souhaité">
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <Field
+                      label="Voyage"
+                      value={
+                        selected.tourId ? (
+                          <Link href={`/admin/tours/${selected.tourId}`} className="text-brand-accent hover:underline">
+                            {selected.tourName}
+                          </Link>
+                        ) : (
+                          "—"
+                        )
+                      }
+                    />
+                    <Field label="Date souhaitée" value={selected.preferredDate ?? "—"} />
+                    <Field
+                      label="Voyageurs"
+                      value={`${selected.guests} adulte${selected.guests > 1 ? "s" : ""}${selected.children > 0 ? `, ${selected.children} enfant${selected.children > 1 ? "s" : ""}` : ""}`}
+                    />
+                    <Field label="Durée souhaitée" value={selected.duration || "—"} />
+                    <Field label="Budget par personne" value={selected.budget || "—"} />
+                    <Field label="Destinations d'intérêt" value={selected.destinationsInterest || "—"} />
+                  </div>
+                </Section>
+
+                {selected.message && (
+                  <Section icon={MessageSquare} title="Message">
+                    <p className="text-sm whitespace-pre-wrap text-foreground">{selected.message}</p>
+                  </Section>
+                )}
+
+                <Section icon={Info} title="Autres informations">
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                    <Field label="Connu via" value={selected.hearAboutUs || "—"} />
+                    <Field label="Langue" value={selected.language.toUpperCase()} />
+                    <Field label="Reçu le" value={selected.createdAtFull} />
+                  </div>
+                </Section>
               </div>
 
-              {selected.message && (
-                <div className="border-t border-border pt-4">
-                  <Field label="Message" value={<p className="whitespace-pre-wrap">{selected.message}</p>} />
-                </div>
-              )}
-
-              <div className="border-t border-border pt-4">
-                <Field label="Reçu le" value={selected.createdAtFull} />
-              </div>
-
-              <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4">
+              <DialogFooter className="flex-col items-stretch justify-between gap-3 sm:flex-row sm:items-center">
                 <BookingStatusForm
                   key={selected.id}
                   bookingId={selected.id}
@@ -200,7 +261,7 @@ export function DemandesTable({ data }: { data: Row[] }) {
                     </AlertDialogFooter>
                   </AlertDialogContent>
                 </AlertDialog>
-              </div>
+              </DialogFooter>
             </>
           )}
         </DialogContent>
