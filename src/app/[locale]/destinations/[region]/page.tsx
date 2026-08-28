@@ -132,7 +132,10 @@ export default async function RegionPage({
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: breadcrumbJsonLd(locale, breadcrumb) }} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: breadcrumbJsonLd(locale, breadcrumb, `/destinations/${regionSlug}`) }}
+      />
       {faqSchema && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: faqSchema }} />}
       <RegionPageClient
         region={region}

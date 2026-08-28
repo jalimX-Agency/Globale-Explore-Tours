@@ -127,7 +127,10 @@ export default async function TripPage({
 
   const schemas = (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: breadcrumbJsonLd(locale, breadcrumb) }} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: breadcrumbJsonLd(locale, breadcrumb, `/destinations/${regionSlug}/${country}/${slug}`) }}
+      />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: tripSchema }} />
     </>
   );

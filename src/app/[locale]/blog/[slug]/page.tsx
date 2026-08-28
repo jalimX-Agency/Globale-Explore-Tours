@@ -59,7 +59,7 @@ export default async function BlogPostPage({
     <main className="mx-auto max-w-3xl px-6 py-16 sm:py-24">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: breadcrumbJsonLd(locale, breadcrumb) }}
+        dangerouslySetInnerHTML={{ __html: breadcrumbJsonLd(locale, breadcrumb, `/blog/${slug}`) }}
       />
       <script
         type="application/ld+json"

@@ -88,11 +88,20 @@ export function pageMetadata({
 
 /**
  * BreadcrumbList JSON-LD matching what <Breadcrumb> renders visually (which always prepends
- * "Home" itself) — items without an href (the current page) simply omit "item", which is
- * valid per Google's structured-data guidelines.
+ * "Home" itself). Google's Rich Results validator requires every ListItem to carry an "item"
+ * URL, including the current/last page — but `items`' last entry deliberately omits `href` so
+ * <Breadcrumb> renders it as plain (non-clickable) text, matching the usual "you are here"
+ * convention. `currentPath` fills that gap for the schema only, without touching the array
+ * used for the visual breadcrumb, so the current page doesn't turn into a link to itself.
+ * Any other href-less entry (an unlinkable label like "Destinations", which has no hub page
+ * of its own) is dropped from the schema entirely rather than emitted without "item", and
+ * positions are renumbered contiguously afterwards so there's no gap.
  */
-export function breadcrumbJsonLd(locale: Locale, items: { label: string; href?: string }[]) {
-  const full = [{ label: HOME_LABEL[locale], href: "/" }, ...items];
+export function breadcrumbJsonLd(locale: Locale, items: { label: string; href?: string }[], currentPath: string) {
+  const withCurrent = items.map((item, i) =>
+    i === items.length - 1 && !item.href ? { ...item, href: currentPath } : item
+  );
+  const full = [{ label: HOME_LABEL[locale], href: "/" }, ...withCurrent].filter((item) => item.href);
   return safeJsonLd({
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -100,7 +109,7 @@ export function breadcrumbJsonLd(locale: Locale, items: { label: string; href?: 
       "@type": "ListItem",
       position: i + 1,
       name: item.label,
-      ...(item.href ? { item: `${SITE_URL}/${locale}${item.href === "/" ? "" : item.href}` } : {}),
+      item: `${SITE_URL}/${locale}${item.href === "/" ? "" : item.href}`,
     })),
   });
 }

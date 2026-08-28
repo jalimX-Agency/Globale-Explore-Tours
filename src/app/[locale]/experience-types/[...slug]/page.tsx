@@ -272,7 +272,10 @@ export default async function ExperienceTypePage({
 
     return (
       <>
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: breadcrumbJsonLd(locale, fullBreadcrumb) }} />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: breadcrumbJsonLd(locale, fullBreadcrumb, `/experience-types/${slug.join("/")}`) }}
+        />
         {faqSchema && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: faqSchema }} />}
         <TravelerTypePageClient
           content={travelerContent}
@@ -335,7 +338,10 @@ export default async function ExperienceTypePage({
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: breadcrumbJsonLd(locale, fullBreadcrumb) }} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: breadcrumbJsonLd(locale, fullBreadcrumb, `/experience-types/${slug.join("/")}`) }}
+      />
       {faqSchema && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: faqSchema }} />}
       <WhatTypePageClient
         content={content}
