@@ -30,6 +30,18 @@ export function safeJsonLd(data: unknown): string {
  * homepage." `path` is locale-free and starts with "/" (e.g. "/destinations/afrique/maroc"),
  * or "" for the homepage itself.
  */
+// Google truncates SERP snippets past ~155-160 chars — cut on a word boundary so an
+// over-long admin-authored description (blog excerpt, experience-type overview...) never
+// gets clipped mid-word in search results.
+const MAX_DESCRIPTION_LENGTH = 155;
+
+function truncateDescription(description: string): string {
+  if (description.length <= MAX_DESCRIPTION_LENGTH) return description;
+  const cut = description.slice(0, MAX_DESCRIPTION_LENGTH);
+  const lastSpace = cut.lastIndexOf(" ");
+  return `${cut.slice(0, lastSpace > 0 ? lastSpace : MAX_DESCRIPTION_LENGTH)}…`;
+}
+
 export function pageMetadata({
   locale,
   path,
@@ -44,12 +56,13 @@ export function pageMetadata({
   image?: string;
 }): Metadata {
   const displayTitle = `${title} | ${SITE_NAME}`;
+  const trimmedDescription = description ? truncateDescription(description) : undefined;
   const ogImage = image || DEFAULT_OG_IMAGE;
   const languages = Object.fromEntries(LOCALES.map((l) => [l, `/${l}${path}`]));
 
   return {
     title,
-    description,
+    description: trimmedDescription,
     alternates: {
       canonical: `/${locale}${path}`,
       languages: { ...languages, "x-default": `/fr${path}` },
@@ -61,13 +74,13 @@ export function pageMetadata({
       url: `${SITE_URL}/${locale}${path}`,
       siteName: SITE_NAME,
       title: displayTitle,
-      description,
+      description: trimmedDescription,
       images: [{ url: ogImage, width: 1200, height: 630 }],
     },
     twitter: {
       card: "summary_large_image",
       title: displayTitle,
-      description,
+      description: trimmedDescription,
       images: [ogImage],
     },
   };

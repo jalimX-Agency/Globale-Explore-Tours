@@ -23,7 +23,7 @@ function closestDomIndex(track: HTMLDivElement) {
   return closest;
 }
 
-export function TripGalleryCarousel({ images, caption }: { images: string[]; caption?: string }) {
+export function TripGalleryCarousel({ images, caption, title }: { images: string[]; caption?: string; title: string }) {
   const trackRef = useRef<HTMLDivElement>(null);
   const [index, setIndex] = useState(0);
 
@@ -96,7 +96,7 @@ export function TripGalleryCarousel({ images, caption }: { images: string[]; cap
             {isVideoUrl(src) ? (
               <video src={src} className="absolute inset-0 h-full w-full object-cover" autoPlay muted loop playsInline />
             ) : (
-              <Image src={src} alt="" fill priority={i === 1} className="object-cover" sizes="100vw" />
+              <Image src={src} alt={`${title} — photo ${i + 1}`} fill priority={i === 1} className="object-cover" sizes="100vw" />
             )}
           </div>
         ))}

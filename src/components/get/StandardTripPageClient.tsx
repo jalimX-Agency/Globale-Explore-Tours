@@ -119,7 +119,7 @@ export function StandardTripPageClient({
         />
 
         <div className="mt-12">
-          <TripGalleryCarousel images={galleryImages} />
+          <TripGalleryCarousel images={galleryImages} title={title} />
         </div>
 
         <div className="mx-auto mt-14 max-w-3xl space-y-8">

@@ -5,7 +5,7 @@ import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { isVideoUrl } from "@/lib/media";
 
-export function GalleryCarousel({ images }: { images: string[] }) {
+export function GalleryCarousel({ images, title }: { images: string[]; title: string }) {
   const trackRef = useRef<HTMLDivElement>(null);
   const [index, setIndex] = useState(0);
 
@@ -31,7 +31,7 @@ export function GalleryCarousel({ images }: { images: string[] }) {
             {isVideoUrl(src) ? (
               <video src={src} className="absolute inset-0 h-full w-full object-cover" autoPlay muted loop playsInline />
             ) : (
-              <Image src={src} alt="" fill className="object-cover" sizes="(min-width: 1024px) 38vw, (min-width: 640px) 45vw, 50vw" />
+              <Image src={src} alt={`${title} — photo ${i + 1}`} fill className="object-cover" sizes="(min-width: 1024px) 38vw, (min-width: 640px) 45vw, 50vw" />
             )}
           </div>
         ))}

@@ -51,11 +51,15 @@ export async function generateMetadata({
   const destination = await getDestination(country);
   if (!destination) return { title: country };
   const label = pick(locale, destination.name, destination.nameEn, destination.nameEs);
+  const regionLabel = pick(locale, destination.region, destination.regionEn, destination.regionEs);
   const description = pick(locale, destination.description, destination.descriptionEn, destination.descriptionEs);
   return pageMetadata({
     locale,
     path: `/destinations/${regionSlug}/${country}`,
-    title: label,
+    // Country names alone collide across locales when a name is spelled the same way in two
+    // languages (Kenya, Cuba, Laos...) — the region differs by locale (Africa/Afrique/África),
+    // which keeps <title> unique per language even when the country name doesn't.
+    title: `${label}, ${regionLabel}`,
     description: description || undefined,
     image: destination.heroImage || undefined,
   });

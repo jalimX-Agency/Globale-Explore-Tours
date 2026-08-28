@@ -135,7 +135,7 @@ export function JourneyChapterSection({
           non-positioned ones. */}
       {gallery.length > 0 && (
         <div className="relative z-10">
-          <GalleryCarousel images={gallery} />
+          <GalleryCarousel images={gallery} title={title} />
         </div>
       )}
     </section>
