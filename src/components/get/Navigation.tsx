@@ -9,6 +9,7 @@ import { useLanguage } from "@/lib/i18n/context";
 import { LOCALES } from "@/lib/i18n/locales";
 import { usePathWithoutLocale } from "@/lib/i18n/useLocalizedPath";
 import { LocaleLink } from "@/components/get/LocaleLink";
+import { isVideoUrl } from "@/lib/media";
 
 // Everything that isn't Excursions / Expériences / About lives behind the hamburger — mirrors
 // Black Tomato's own header, which only ever surfaces 3 top-level links.
@@ -512,9 +513,19 @@ export function Navigation({
                 <div className="relative h-full min-h-[380px] w-full">
                   {(() => {
                     const photo = activeGroup.items.find((d) => d.featured)?.heroImage ?? activeGroup.items[0]?.heroImage;
-                    return photo ? (
+                    if (!photo) return null;
+                    return isVideoUrl(photo) ? (
+                      <video
+                        src={photo}
+                        autoPlay
+                        muted
+                        loop
+                        playsInline
+                        className="absolute inset-0 h-full w-full object-cover"
+                      />
+                    ) : (
                       <Image src={photo} alt={activeGroup.label} fill className="object-cover" />
-                    ) : null;
+                    );
                   })()}
                 </div>
               </div>

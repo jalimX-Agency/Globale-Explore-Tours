@@ -4,6 +4,7 @@ import { useRef } from "react";
 import Image from "next/image";
 import { LocaleLink } from "@/components/get/LocaleLink";
 import { useLanguage } from "@/lib/i18n/context";
+import { isVideoUrl } from "@/lib/media";
 
 export type OtherDestinationItem = {
   key: string;
@@ -92,14 +93,25 @@ export function OtherDestinationsCarousel({ title, items }: { title: string; ite
               >
                 <div className="relative aspect-[3/4] w-full overflow-hidden rounded-sm">
                   {item.image ? (
-                    <Image
-                      src={item.image}
-                      alt={label}
-                      fill
-                      draggable={false}
-                      className="pointer-events-none object-cover transition-transform duration-700 group-hover:scale-105"
-                      sizes="(min-width: 1024px) 18vw, (min-width: 640px) 30vw, 45vw"
-                    />
+                    isVideoUrl(item.image) ? (
+                      <video
+                        src={item.image}
+                        autoPlay
+                        muted
+                        loop
+                        playsInline
+                        className="pointer-events-none absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                      />
+                    ) : (
+                      <Image
+                        src={item.image}
+                        alt={label}
+                        fill
+                        draggable={false}
+                        className="pointer-events-none object-cover transition-transform duration-700 group-hover:scale-105"
+                        sizes="(min-width: 1024px) 18vw, (min-width: 640px) 30vw, 45vw"
+                      />
+                    )
                   ) : (
                     <div className="h-full w-full bg-neutral-200" />
                   )}

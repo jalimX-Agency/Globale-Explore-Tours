@@ -15,6 +15,7 @@ import { TripsShowcase } from "@/components/get/TripsShowcase";
 import { FaqAccordion } from "@/components/get/FaqAccordion";
 import { OtherDestinationsCarousel, type OtherDestinationItem } from "@/components/get/OtherDestinationsCarousel";
 import type { TourCardData } from "@/components/get/TourCard";
+import { isVideoUrl } from "@/lib/media";
 
 type Region = {
   id: string;
@@ -150,13 +151,24 @@ export function RegionPageClient({
                 <LocaleLink key={d.slug} href={`/destinations/${region.slug}/${d.slug}`} className="group">
                   <div className="relative aspect-[4/3] overflow-hidden rounded-sm">
                     {d.heroImage ? (
-                      <Image
-                        src={d.heroImage}
-                        alt={name}
-                        fill
-                        className="object-cover transition-transform duration-700 group-hover:scale-105"
-                        sizes="(min-width: 640px) 33vw, 50vw"
-                      />
+                      isVideoUrl(d.heroImage) ? (
+                        <video
+                          src={d.heroImage}
+                          autoPlay
+                          muted
+                          loop
+                          playsInline
+                          className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                        />
+                      ) : (
+                        <Image
+                          src={d.heroImage}
+                          alt={name}
+                          fill
+                          className="object-cover transition-transform duration-700 group-hover:scale-105"
+                          sizes="(min-width: 640px) 33vw, 50vw"
+                        />
+                      )
                     ) : (
                       <div className="h-full w-full bg-neutral-200" />
                     )}
