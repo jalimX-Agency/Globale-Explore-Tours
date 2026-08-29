@@ -1,6 +1,10 @@
 import { existsSync, readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { dirname } from "node:path";
+import { execFile } from "node:child_process";
+import { promisify } from "node:util";
 import { uploadToR2 } from "../../src/lib/r2";
+
+const execFileAsync = promisify(execFile);
 
 // The entry-point script that imports this file is responsible for calling
 // process.loadEnvFile(".env") and using a dynamic import() *before* importing this module —
@@ -22,25 +26,36 @@ function saveManifest(manifestPath: string, manifest: Manifest) {
   writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
 }
 
-// No timeout on the fetch here would let one bad connection hang the whole sequential batch
-// indefinitely under flaky network conditions — happened in practice (a run sat stuck on one
-// URL for minutes with no further output). A bounded timeout plus a few retries turns a dead
-// connection into "eventually fails or succeeds" instead of "silently wedges the script".
-async function downloadBuffer(url: string, attempts = 4): Promise<{ buffer: Buffer; contentType: string }> {
+// Node's own fetch (undici) was empirically unreliable for this: run back-to-back against the
+// exact same URL in this environment, a *fresh* `curl` process succeeded consistently while
+// Node's fetch failed the large majority of the time inside this script's long-running
+// process (60+ sequential requests) — pointing at undici's connection-pool/keep-alive state
+// degrading over the life of the process, not the network path itself, which curl proved was
+// fine call after call. Shelling out to curl (one fresh process per request) sidesteps
+// whatever that degradation is. -sS: silent but still show errors; -L: follow redirects;
+// --max-time: hard per-attempt cap; --fail: non-2xx exits non-zero instead of writing the
+// error body as if it were the image.
+async function downloadBuffer(url: string, attempts = 6): Promise<{ buffer: Buffer; contentType: string }> {
   let lastErr: unknown;
   for (let i = 0; i < attempts; i++) {
     try {
-      const res = await fetch(url, {
-        headers: { "User-Agent": "curl/8.0" },
-        signal: AbortSignal.timeout(40_000),
-      });
-      if (!res.ok) throw new Error(`download failed ${res.status} for ${url}`);
-      const buffer = Buffer.from(await res.arrayBuffer());
-      const contentType = res.headers.get("content-type") || "image/jpeg";
-      return { buffer, contentType };
+      const { stdout } = await execFileAsync(
+        "curl",
+        ["-sS", "-L", "--fail", "--max-time", "20", "-A", "curl/8.0", url],
+        { encoding: "buffer", maxBuffer: 50 * 1024 * 1024 }
+      );
+      const contentType = url.endsWith(".svg")
+        ? "image/svg+xml"
+        : url.match(/\.png($|\?)/i)
+          ? "image/png"
+          : "image/jpeg";
+      return { buffer: stdout, contentType };
     } catch (err) {
       lastErr = err;
-      if (i < attempts - 1) await new Promise((r) => setTimeout(r, 500 * (i + 1)));
+      // Observed failures are bursty/correlated (a stretch of bad connections), not
+      // independent per-request — exponential backoff up to ~16s gives a burst time to pass
+      // instead of just re-hitting it a fraction of a second later.
+      if (i < attempts - 1) await new Promise((r) => setTimeout(r, Math.min(1000 * 2 ** i, 16_000)));
     }
   }
   throw lastErr;
