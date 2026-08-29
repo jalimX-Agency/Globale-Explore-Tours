@@ -60,6 +60,10 @@ export async function uploadToR2(
       Authorization: authorization,
     },
     body: new Uint8Array(body),
+    // Without a bound, a stalled connection here hangs forever instead of failing — seen in
+    // practice during a bulk seeding script, but it's just as real a risk for the live admin
+    // upload route this function also backs.
+    signal: AbortSignal.timeout(20_000),
   });
   if (!res.ok) throw new Error(`R2 upload failed ${res.status}`);
 }
@@ -82,6 +86,7 @@ export async function deleteFromR2(key: string): Promise<void> {
   await fetch(url, {
     method: "DELETE",
     headers: { "x-amz-content-sha256": payloadHash, "x-amz-date": amzDate, Authorization: authorization },
+    signal: AbortSignal.timeout(20_000),
   });
 }
 

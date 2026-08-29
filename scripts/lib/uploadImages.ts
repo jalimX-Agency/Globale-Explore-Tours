@@ -22,12 +22,28 @@ function saveManifest(manifestPath: string, manifest: Manifest) {
   writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
 }
 
-async function downloadBuffer(url: string): Promise<{ buffer: Buffer; contentType: string }> {
-  const res = await fetch(url, { headers: { "User-Agent": "curl/8.0" } });
-  if (!res.ok) throw new Error(`download failed ${res.status} for ${url}`);
-  const buffer = Buffer.from(await res.arrayBuffer());
-  const contentType = res.headers.get("content-type") || "image/jpeg";
-  return { buffer, contentType };
+// No timeout on the fetch here would let one bad connection hang the whole sequential batch
+// indefinitely under flaky network conditions — happened in practice (a run sat stuck on one
+// URL for minutes with no further output). A bounded timeout plus a few retries turns a dead
+// connection into "eventually fails or succeeds" instead of "silently wedges the script".
+async function downloadBuffer(url: string, attempts = 4): Promise<{ buffer: Buffer; contentType: string }> {
+  let lastErr: unknown;
+  for (let i = 0; i < attempts; i++) {
+    try {
+      const res = await fetch(url, {
+        headers: { "User-Agent": "curl/8.0" },
+        signal: AbortSignal.timeout(40_000),
+      });
+      if (!res.ok) throw new Error(`download failed ${res.status} for ${url}`);
+      const buffer = Buffer.from(await res.arrayBuffer());
+      const contentType = res.headers.get("content-type") || "image/jpeg";
+      return { buffer, contentType };
+    } catch (err) {
+      lastErr = err;
+      if (i < attempts - 1) await new Promise((r) => setTimeout(r, 500 * (i + 1)));
+    }
+  }
+  throw lastErr;
 }
 
 // Downloads each {url} and uploads it to R2 at {key}, skipping keys the manifest already
