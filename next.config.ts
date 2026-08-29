@@ -4,6 +4,15 @@ const nextConfig: NextConfig = {
   // No `output: "standalone"` — that's for Docker/self-hosted builds and breaks Vercel's
   // own build trace step (ENOENT on next-server.js.nft.json). Vercel needs its default output.
   images: {
+    // Vercel's Image Optimization (resize + WebP/AVIF conversion on request) is metered per
+    // unique source image and hit its plan quota at ~118 tours' worth of images — new images
+    // started 402ing while old (already-cached) ones kept working. Cloudflare R2 already
+    // serves every image from a fast global CDN, just without on-the-fly resizing, so
+    // disabling Vercel's layer trades "auto-shrunk per device" for "no quota, ever" rather
+    // than trading away CDN speed. remotePatterns below is inert while unoptimized is true,
+    // but left in place in case optimization is ever re-enabled (e.g. via Cloudflare's own
+    // image resizing as a loader instead).
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: "https",

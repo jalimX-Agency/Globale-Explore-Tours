@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# resumable upload manifests for scripts/upload-images-*.ts — local bookkeeping, not content
+scripts/.manifests/
