@@ -30,26 +30,35 @@ const nextConfig: NextConfig = {
       { source: "/:locale/reserver/:path*", destination: "/:locale/faire-une-demande/:path*", permanent: true },
     ];
   },
-  // Baseline security headers — the only external origin the app ever loads from is the R2
-  // image bucket (see images.remotePatterns above); there's no analytics/maps script wired
-  // up despite the NEXT_PUBLIC_GA_ID / NEXT_PUBLIC_GOOGLE_MAPS_EMBED_URL env vars existing
-  // (grepped: unused), so this CSP doesn't need to allowlist them yet — add hosts here if
-  // those ever get wired up. `unsafe-eval` is dev-only (Turbopack's Fast Refresh needs it);
-  // production never sends it.
+  // Baseline security headers. External origins allowlisted below: the R2 image bucket (see
+  // images.remotePatterns above), Google Analytics (GoogleAnalytics.tsx, inert until
+  // NEXT_PUBLIC_GA_ID is set), Google Tag Manager (GoogleTagManager.tsx — note GTM can load
+  // arbitrary third-party tags configured in its own dashboard; a new tag added there may need
+  // its own host added here too, unlike a typical unrestricted-CSP GTM setup), and the free
+  // Google Maps embed on the Contact page. `unsafe-eval` is dev-only (Turbopack's Fast Refresh
+  // needs it); production never sends it.
   async headers() {
     const isProd = process.env.NODE_ENV === "production";
     const scriptSrc = isProd ? "'self' 'unsafe-inline'" : "'self' 'unsafe-inline' 'unsafe-eval'";
     const csp = [
       "default-src 'self'",
-      `script-src ${scriptSrc}`,
+      // connect.facebook.net is pre-allowlisted for the Facebook Pixel tag — not wired up yet,
+      // but added now so adding it as a GTM tag later doesn't need another CSP edit.
+      `script-src ${scriptSrc} https://www.googletagmanager.com https://connect.facebook.net`,
       "style-src 'self' 'unsafe-inline'",
-      "img-src 'self' data: blob: https://*.r2.dev https://cdn.globaleexploretours.com",
+      "img-src 'self' data: blob: https://*.r2.dev https://cdn.globaleexploretours.com https://www.googletagmanager.com https://www.google-analytics.com https://www.facebook.com",
       "media-src 'self' https://*.r2.dev https://cdn.globaleexploretours.com",
       "font-src 'self' data:",
       // *.r2.dev is the public CDN read path; *.r2.cloudflarestorage.com is the direct
       // upload endpoint the admin's video-upload PUT talks to (see src/lib/r2.ts) — a
-      // different origin from the public bucket domain, both needed here.
-      "connect-src 'self' https://*.r2.dev https://*.r2.cloudflarestorage.com" + (isProd ? "" : " ws:"),
+      // different origin from the public bucket domain, both needed here. GTM/GA4 report to
+      // googletagmanager.com and google-analytics.com respectively; Facebook Pixel's beacon
+      // (once wired up) reports to facebook.com/connect.facebook.net.
+      "connect-src 'self' https://*.r2.dev https://*.r2.cloudflarestorage.com https://www.googletagmanager.com https://www.google-analytics.com https://www.facebook.com https://connect.facebook.net" +
+        (isProd ? "" : " ws:"),
+      // The Contact page's location map is Google's free no-API-key embed iframe; GTM's
+      // <noscript> fallback is a hidden iframe too.
+      "frame-src https://www.google.com https://www.googletagmanager.com",
       "frame-ancestors 'self'",
       "base-uri 'self'",
       "form-action 'self'",

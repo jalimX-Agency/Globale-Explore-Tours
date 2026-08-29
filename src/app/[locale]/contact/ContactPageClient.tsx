@@ -46,6 +46,19 @@ export function ContactPageClient() {
           <div>
             <p className="label-eyebrow text-neutral-400">Adresse</p>
             <p className="mt-3 text-sm text-neutral-600">5 Avenue du Sénateur Girard, 59300 Valenciennes, France</p>
+            {/* Google's free "share > embed a map" iframe — no API key or billing required,
+                unlike the Maps Embed API / Locator Plus widget. */}
+            <div className="mt-4 aspect-[4/3] w-full overflow-hidden rounded-sm border border-neutral-200">
+              <iframe
+                src="https://www.google.com/maps?q=place_id:ChIJQT2_2XHtwkcRRZmeuiJ4uBY&output=embed"
+                title="Globale Explore Tours — Valenciennes, France"
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            </div>
           </div>
         </div>
 

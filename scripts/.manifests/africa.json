@@ -1,0 +1,87 @@
+{
+  "journeys/kenya-nord-hero.jpg": {
+    "key": "journeys/kenya-nord-hero.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/journeys/kenya-nord-hero.jpg",
+    "status": "uploaded"
+  },
+  "journeys/kenya-nord-lewa-gallery1.jpg": {
+    "key": "journeys/kenya-nord-lewa-gallery1.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/journeys/kenya-nord-lewa-gallery1.jpg",
+    "status": "uploaded"
+  },
+  "journeys/kenya-nord-lewa-gallery2.jpg": {
+    "key": "journeys/kenya-nord-lewa-gallery2.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/journeys/kenya-nord-lewa-gallery2.jpg",
+    "status": "uploaded"
+  },
+  "journeys/kenya-nord-lewa-gallery3.jpg": {
+    "key": "journeys/kenya-nord-lewa-gallery3.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/journeys/kenya-nord-lewa-gallery3.jpg",
+    "status": "uploaded"
+  },
+  "journeys/kenya-nord-samburu-gallery1.jpg": {
+    "key": "journeys/kenya-nord-samburu-gallery1.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/journeys/kenya-nord-samburu-gallery1.jpg",
+    "status": "uploaded"
+  },
+  "journeys/kenya-nord-samburu-gallery2.jpg": {
+    "key": "journeys/kenya-nord-samburu-gallery2.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/journeys/kenya-nord-samburu-gallery2.jpg",
+    "status": "uploaded"
+  },
+  "journeys/kenya-nord-samburu-gallery3.jpg": {
+    "key": "journeys/kenya-nord-samburu-gallery3.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/journeys/kenya-nord-samburu-gallery3.jpg",
+    "status": "uploaded"
+  },
+  "journeys/kenya-nord-samburu-gallery4.jpg": {
+    "key": "journeys/kenya-nord-samburu-gallery4.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/journeys/kenya-nord-samburu-gallery4.jpg",
+    "status": "uploaded"
+  },
+  "tours/kenya-cote-diani-lamu.jpg": {
+    "key": "tours/kenya-cote-diani-lamu.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/tours/kenya-cote-diani-lamu.jpg",
+    "status": "uploaded"
+  },
+  "trips/kenya-cote-gallery-1.jpg": {
+    "key": "trips/kenya-cote-gallery-1.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/trips/kenya-cote-gallery-1.jpg",
+    "status": "uploaded"
+  },
+  "trips/kenya-cote-gallery-2.jpg": {
+    "key": "trips/kenya-cote-gallery-2.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/trips/kenya-cote-gallery-2.jpg",
+    "status": "uploaded"
+  },
+  "trips/kenya-cote-gallery-3.jpg": {
+    "key": "trips/kenya-cote-gallery-3.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/trips/kenya-cote-gallery-3.jpg",
+    "status": "uploaded"
+  },
+  "trips/kenya-cote-gallery-4.jpg": {
+    "key": "trips/kenya-cote-gallery-4.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/trips/kenya-cote-gallery-4.jpg",
+    "status": "uploaded"
+  },
+  "trips/kenya-cote-gallery-6.jpg": {
+    "key": "trips/kenya-cote-gallery-6.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/trips/kenya-cote-gallery-6.jpg",
+    "status": "uploaded"
+  },
+  "trips/kenya-cote-hotel-diani.jpg": {
+    "key": "trips/kenya-cote-hotel-diani.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/trips/kenya-cote-hotel-diani.jpg",
+    "status": "uploaded"
+  },
+  "trips/kenya-cote-gallery-5.jpg": {
+    "key": "trips/kenya-cote-gallery-5.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/trips/kenya-cote-gallery-5.jpg",
+    "status": "uploaded"
+  },
+  "trips/kenya-cote-hotel-lamu.jpg": {
+    "key": "trips/kenya-cote-hotel-lamu.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/trips/kenya-cote-hotel-lamu.jpg",
+    "status": "uploaded"
+  }
+}

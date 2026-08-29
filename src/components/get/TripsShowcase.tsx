@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import Image from "next/image";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useLanguage } from "@/lib/i18n/context";
 import { LocaleLink } from "@/components/get/LocaleLink";
 import { tourHref, type TourCardData } from "@/components/get/TourCard";
@@ -134,6 +135,14 @@ export function TripsShowcase({
     }
   };
 
+  const scrollByStep = (direction: 1 | -1) => {
+    const track = trackRef.current;
+    if (!track) return;
+    stopMomentum();
+    // One card-ish width per click, matching the visible card size at each breakpoint.
+    track.scrollBy({ left: direction * track.clientWidth * 0.8, behavior: "smooth" });
+  };
+
   return (
     <div className="relative left-1/2 right-1/2 -mx-[50vw] w-screen overflow-hidden bg-neutral-900 py-20">
       <Image src={BG_IMAGE} alt="" fill priority={false} className="object-cover" sizes="100vw" />
@@ -211,6 +220,23 @@ export function TripsShowcase({
 
           {/* Right-edge fade — hints there's more to scroll to, matching the reference. */}
           <div className="pointer-events-none absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-neutral-900 to-transparent sm:w-24" />
+
+          <button
+            type="button"
+            onClick={() => scrollByStep(-1)}
+            aria-label={t("pagination.previous")}
+            className="absolute left-2 top-1/2 z-10 hidden -translate-y-1/2 items-center justify-center rounded-full bg-black/50 p-2 text-white backdrop-blur-sm transition-colors hover:bg-black/75 sm:flex"
+          >
+            <ChevronLeft className="h-5 w-5" />
+          </button>
+          <button
+            type="button"
+            onClick={() => scrollByStep(1)}
+            aria-label={t("pagination.next")}
+            className="absolute right-2 top-1/2 z-10 hidden -translate-y-1/2 items-center justify-center rounded-full bg-black/50 p-2 text-white backdrop-blur-sm transition-colors hover:bg-black/75 sm:flex"
+          >
+            <ChevronRight className="h-5 w-5" />
+          </button>
         </div>
       </div>
     </div>
