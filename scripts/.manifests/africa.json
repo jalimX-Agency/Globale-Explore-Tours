@@ -83,5 +83,325 @@
     "key": "trips/kenya-cote-hotel-lamu.jpg",
     "publicUrl": "https://cdn.globaleexploretours.com/trips/kenya-cote-hotel-lamu.jpg",
     "status": "uploaded"
+  },
+  "journeys/kenya-nord-lewa-day1.jpg": {
+    "key": "journeys/kenya-nord-lewa-day1.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/journeys/kenya-nord-lewa-day1.jpg",
+    "status": "uploaded"
+  },
+  "journeys/kenya-nord-lewa-day2.jpg": {
+    "key": "journeys/kenya-nord-lewa-day2.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/journeys/kenya-nord-lewa-day2.jpg",
+    "status": "uploaded"
+  },
+  "journeys/kenya-nord-samburu-day1.jpg": {
+    "key": "journeys/kenya-nord-samburu-day1.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/journeys/kenya-nord-samburu-day1.jpg",
+    "status": "uploaded"
+  },
+  "journeys/kenya-nord-samburu-day2.jpg": {
+    "key": "journeys/kenya-nord-samburu-day2.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/journeys/kenya-nord-samburu-day2.jpg",
+    "status": "uploaded"
+  },
+  "tours/afrique-du-sud-garden-route.jpg": {
+    "key": "tours/afrique-du-sud-garden-route.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/tours/afrique-du-sud-garden-route.jpg",
+    "status": "uploaded"
+  },
+  "trips/afrique-du-sud-garden-route-gallery-1.jpg": {
+    "key": "trips/afrique-du-sud-garden-route-gallery-1.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/trips/afrique-du-sud-garden-route-gallery-1.jpg",
+    "status": "uploaded"
+  },
+  "trips/afrique-du-sud-garden-route-gallery-2.jpg": {
+    "key": "trips/afrique-du-sud-garden-route-gallery-2.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/trips/afrique-du-sud-garden-route-gallery-2.jpg",
+    "status": "uploaded"
+  },
+  "trips/afrique-du-sud-garden-route-gallery-3.jpg": {
+    "key": "trips/afrique-du-sud-garden-route-gallery-3.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/trips/afrique-du-sud-garden-route-gallery-3.jpg",
+    "status": "uploaded"
+  },
+  "trips/afrique-du-sud-garden-route-gallery-4.jpg": {
+    "key": "trips/afrique-du-sud-garden-route-gallery-4.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/trips/afrique-du-sud-garden-route-gallery-4.jpg",
+    "status": "uploaded"
+  },
+  "trips/afrique-du-sud-garden-route-gallery-5.jpg": {
+    "key": "trips/afrique-du-sud-garden-route-gallery-5.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/trips/afrique-du-sud-garden-route-gallery-5.jpg",
+    "status": "uploaded"
+  },
+  "trips/afrique-du-sud-garden-route-gallery-6.jpg": {
+    "key": "trips/afrique-du-sud-garden-route-gallery-6.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/trips/afrique-du-sud-garden-route-gallery-6.jpg",
+    "status": "uploaded"
+  },
+  "trips/afrique-du-sud-garden-route-hotel-tsitsikamma.jpg": {
+    "key": "trips/afrique-du-sud-garden-route-hotel-tsitsikamma.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/trips/afrique-du-sud-garden-route-hotel-tsitsikamma.jpg",
+    "status": "uploaded"
+  },
+  "trips/afrique-du-sud-garden-route-hotel-hermanus.jpg": {
+    "key": "trips/afrique-du-sud-garden-route-hotel-hermanus.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/trips/afrique-du-sud-garden-route-hotel-hermanus.jpg",
+    "status": "uploaded"
+  },
+  "journeys/afrique-du-sud-kzn-hero.jpg": {
+    "key": "journeys/afrique-du-sud-kzn-hero.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/journeys/afrique-du-sud-kzn-hero.jpg",
+    "status": "uploaded"
+  },
+  "journeys/afrique-du-sud-kzn-drakensberg-gallery1.jpg": {
+    "key": "journeys/afrique-du-sud-kzn-drakensberg-gallery1.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/journeys/afrique-du-sud-kzn-drakensberg-gallery1.jpg",
+    "status": "uploaded"
+  },
+  "journeys/afrique-du-sud-kzn-drakensberg-gallery2.jpg": {
+    "key": "journeys/afrique-du-sud-kzn-drakensberg-gallery2.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/journeys/afrique-du-sud-kzn-drakensberg-gallery2.jpg",
+    "status": "uploaded"
+  },
+  "journeys/afrique-du-sud-kzn-drakensberg-gallery3.jpg": {
+    "key": "journeys/afrique-du-sud-kzn-drakensberg-gallery3.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/journeys/afrique-du-sud-kzn-drakensberg-gallery3.jpg",
+    "status": "uploaded"
+  },
+  "journeys/afrique-du-sud-kzn-drakensberg-day1.jpg": {
+    "key": "journeys/afrique-du-sud-kzn-drakensberg-day1.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/journeys/afrique-du-sud-kzn-drakensberg-day1.jpg",
+    "status": "uploaded"
+  },
+  "journeys/afrique-du-sud-kzn-drakensberg-day2.jpg": {
+    "key": "journeys/afrique-du-sud-kzn-drakensberg-day2.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/journeys/afrique-du-sud-kzn-drakensberg-day2.jpg",
+    "status": "uploaded"
+  },
+  "journeys/afrique-du-sud-kzn-isimangaliso-gallery1.jpg": {
+    "key": "journeys/afrique-du-sud-kzn-isimangaliso-gallery1.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/journeys/afrique-du-sud-kzn-isimangaliso-gallery1.jpg",
+    "status": "uploaded"
+  },
+  "journeys/afrique-du-sud-kzn-isimangaliso-gallery2.jpg": {
+    "key": "journeys/afrique-du-sud-kzn-isimangaliso-gallery2.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/journeys/afrique-du-sud-kzn-isimangaliso-gallery2.jpg",
+    "status": "uploaded"
+  },
+  "journeys/afrique-du-sud-kzn-isimangaliso-gallery3.jpg": {
+    "key": "journeys/afrique-du-sud-kzn-isimangaliso-gallery3.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/journeys/afrique-du-sud-kzn-isimangaliso-gallery3.jpg",
+    "status": "uploaded"
+  },
+  "journeys/afrique-du-sud-kzn-isimangaliso-day1.jpg": {
+    "key": "journeys/afrique-du-sud-kzn-isimangaliso-day1.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/journeys/afrique-du-sud-kzn-isimangaliso-day1.jpg",
+    "status": "uploaded"
+  },
+  "journeys/afrique-du-sud-kzn-isimangaliso-day2.jpg": {
+    "key": "journeys/afrique-du-sud-kzn-isimangaliso-day2.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/journeys/afrique-du-sud-kzn-isimangaliso-day2.jpg",
+    "status": "uploaded"
+  },
+  "tours/botswana-kalahari-makgadikgadi.jpg": {
+    "key": "tours/botswana-kalahari-makgadikgadi.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/tours/botswana-kalahari-makgadikgadi.jpg",
+    "status": "uploaded"
+  },
+  "trips/botswana-kalahari-gallery-1.jpg": {
+    "key": "trips/botswana-kalahari-gallery-1.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/trips/botswana-kalahari-gallery-1.jpg",
+    "status": "uploaded"
+  },
+  "trips/botswana-kalahari-gallery-2.jpg": {
+    "key": "trips/botswana-kalahari-gallery-2.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/trips/botswana-kalahari-gallery-2.jpg",
+    "status": "uploaded"
+  },
+  "trips/botswana-kalahari-gallery-3.jpg": {
+    "key": "trips/botswana-kalahari-gallery-3.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/trips/botswana-kalahari-gallery-3.jpg",
+    "status": "uploaded"
+  },
+  "trips/botswana-kalahari-gallery-4.jpg": {
+    "key": "trips/botswana-kalahari-gallery-4.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/trips/botswana-kalahari-gallery-4.jpg",
+    "status": "uploaded"
+  },
+  "trips/botswana-kalahari-gallery-5.jpg": {
+    "key": "trips/botswana-kalahari-gallery-5.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/trips/botswana-kalahari-gallery-5.jpg",
+    "status": "uploaded"
+  },
+  "trips/botswana-kalahari-gallery-6.jpg": {
+    "key": "trips/botswana-kalahari-gallery-6.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/trips/botswana-kalahari-gallery-6.jpg",
+    "status": "uploaded"
+  },
+  "trips/botswana-kalahari-hotel-kalahari.jpg": {
+    "key": "trips/botswana-kalahari-hotel-kalahari.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/trips/botswana-kalahari-hotel-kalahari.jpg",
+    "status": "uploaded"
+  },
+  "trips/botswana-kalahari-hotel-makgadikgadi.jpg": {
+    "key": "trips/botswana-kalahari-hotel-makgadikgadi.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/trips/botswana-kalahari-hotel-makgadikgadi.jpg",
+    "status": "uploaded"
+  },
+  "journeys/botswana-chobe-hero.jpg": {
+    "key": "journeys/botswana-chobe-hero.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/journeys/botswana-chobe-hero.jpg",
+    "status": "uploaded"
+  },
+  "journeys/botswana-chobe-gallery1.jpg": {
+    "key": "journeys/botswana-chobe-gallery1.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/journeys/botswana-chobe-gallery1.jpg",
+    "status": "uploaded"
+  },
+  "journeys/botswana-chobe-gallery2.jpg": {
+    "key": "journeys/botswana-chobe-gallery2.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/journeys/botswana-chobe-gallery2.jpg",
+    "status": "uploaded"
+  },
+  "journeys/botswana-chobe-gallery3.jpg": {
+    "key": "journeys/botswana-chobe-gallery3.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/journeys/botswana-chobe-gallery3.jpg",
+    "status": "uploaded"
+  },
+  "journeys/botswana-chobe-day1.jpg": {
+    "key": "journeys/botswana-chobe-day1.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/journeys/botswana-chobe-day1.jpg",
+    "status": "uploaded"
+  },
+  "journeys/botswana-chobe-day2.jpg": {
+    "key": "journeys/botswana-chobe-day2.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/journeys/botswana-chobe-day2.jpg",
+    "status": "uploaded"
+  },
+  "journeys/botswana-linyanti-gallery1.jpg": {
+    "key": "journeys/botswana-linyanti-gallery1.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/journeys/botswana-linyanti-gallery1.jpg",
+    "status": "uploaded"
+  },
+  "journeys/botswana-linyanti-gallery2.jpg": {
+    "key": "journeys/botswana-linyanti-gallery2.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/journeys/botswana-linyanti-gallery2.jpg",
+    "status": "uploaded"
+  },
+  "journeys/botswana-linyanti-gallery3.jpg": {
+    "key": "journeys/botswana-linyanti-gallery3.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/journeys/botswana-linyanti-gallery3.jpg",
+    "status": "uploaded"
+  },
+  "journeys/botswana-linyanti-day1.jpg": {
+    "key": "journeys/botswana-linyanti-day1.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/journeys/botswana-linyanti-day1.jpg",
+    "status": "uploaded"
+  },
+  "journeys/botswana-linyanti-day2.jpg": {
+    "key": "journeys/botswana-linyanti-day2.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/journeys/botswana-linyanti-day2.jpg",
+    "status": "uploaded"
+  },
+  "tours/egypte-mer-rouge-hurghada.jpg": {
+    "key": "tours/egypte-mer-rouge-hurghada.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/tours/egypte-mer-rouge-hurghada.jpg",
+    "status": "uploaded"
+  },
+  "trips/egypte-mer-rouge-gallery-1.jpg": {
+    "key": "trips/egypte-mer-rouge-gallery-1.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/trips/egypte-mer-rouge-gallery-1.jpg",
+    "status": "uploaded"
+  },
+  "trips/egypte-mer-rouge-gallery-2.jpg": {
+    "key": "trips/egypte-mer-rouge-gallery-2.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/trips/egypte-mer-rouge-gallery-2.jpg",
+    "status": "uploaded"
+  },
+  "trips/egypte-mer-rouge-gallery-3.jpg": {
+    "key": "trips/egypte-mer-rouge-gallery-3.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/trips/egypte-mer-rouge-gallery-3.jpg",
+    "status": "uploaded"
+  },
+  "trips/egypte-mer-rouge-gallery-4.jpg": {
+    "key": "trips/egypte-mer-rouge-gallery-4.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/trips/egypte-mer-rouge-gallery-4.jpg",
+    "status": "uploaded"
+  },
+  "trips/egypte-mer-rouge-gallery-5.jpg": {
+    "key": "trips/egypte-mer-rouge-gallery-5.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/trips/egypte-mer-rouge-gallery-5.jpg",
+    "status": "uploaded"
+  },
+  "trips/egypte-mer-rouge-gallery-6.jpg": {
+    "key": "trips/egypte-mer-rouge-gallery-6.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/trips/egypte-mer-rouge-gallery-6.jpg",
+    "status": "uploaded"
+  },
+  "trips/egypte-mer-rouge-hotel-hurghada.jpg": {
+    "key": "trips/egypte-mer-rouge-hotel-hurghada.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/trips/egypte-mer-rouge-hotel-hurghada.jpg",
+    "status": "uploaded"
+  },
+  "trips/egypte-mer-rouge-hotel-elgouna.jpg": {
+    "key": "trips/egypte-mer-rouge-hotel-elgouna.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/trips/egypte-mer-rouge-hotel-elgouna.jpg",
+    "status": "uploaded"
+  },
+  "journeys/egypte-sinai-hero.jpg": {
+    "key": "journeys/egypte-sinai-hero.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/journeys/egypte-sinai-hero.jpg",
+    "status": "uploaded"
+  },
+  "journeys/egypte-sinai-gallery1.jpg": {
+    "key": "journeys/egypte-sinai-gallery1.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/journeys/egypte-sinai-gallery1.jpg",
+    "status": "uploaded"
+  },
+  "journeys/egypte-sinai-gallery2.jpg": {
+    "key": "journeys/egypte-sinai-gallery2.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/journeys/egypte-sinai-gallery2.jpg",
+    "status": "uploaded"
+  },
+  "journeys/egypte-sinai-gallery3.jpg": {
+    "key": "journeys/egypte-sinai-gallery3.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/journeys/egypte-sinai-gallery3.jpg",
+    "status": "uploaded"
+  },
+  "journeys/egypte-sinai-day1.jpg": {
+    "key": "journeys/egypte-sinai-day1.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/journeys/egypte-sinai-day1.jpg",
+    "status": "uploaded"
+  },
+  "journeys/egypte-sinai-day2.jpg": {
+    "key": "journeys/egypte-sinai-day2.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/journeys/egypte-sinai-day2.jpg",
+    "status": "uploaded"
+  },
+  "journeys/egypte-desert-blanc-gallery1.jpg": {
+    "key": "journeys/egypte-desert-blanc-gallery1.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/journeys/egypte-desert-blanc-gallery1.jpg",
+    "status": "uploaded"
+  },
+  "journeys/egypte-desert-blanc-gallery2.jpg": {
+    "key": "journeys/egypte-desert-blanc-gallery2.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/journeys/egypte-desert-blanc-gallery2.jpg",
+    "status": "uploaded"
+  },
+  "journeys/egypte-desert-blanc-gallery3.jpg": {
+    "key": "journeys/egypte-desert-blanc-gallery3.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/journeys/egypte-desert-blanc-gallery3.jpg",
+    "status": "uploaded"
+  },
+  "journeys/egypte-desert-blanc-day1.jpg": {
+    "key": "journeys/egypte-desert-blanc-day1.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/journeys/egypte-desert-blanc-day1.jpg",
+    "status": "uploaded"
+  },
+  "journeys/egypte-desert-blanc-day2.jpg": {
+    "key": "journeys/egypte-desert-blanc-day2.jpg",
+    "publicUrl": "https://cdn.globaleexploretours.com/journeys/egypte-desert-blanc-day2.jpg",
+    "status": "uploaded"
   }
 }

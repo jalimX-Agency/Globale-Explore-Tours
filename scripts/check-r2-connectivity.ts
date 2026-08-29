@@ -1,3 +1,8 @@
+// `export {}` forces TS to treat this file as a module (its own scope) rather than a global
+// script — without it, `main` below would be a *global* declaration, colliding with any other
+// script in this folder that also has no top-level static import and its own `main`.
+export {};
+
 // ESM hoists static `import` statements above any other top-level code in this file — so a
 // static import of a module that reads `process.env.*` at its own top level (like
 // src/lib/r2.ts) would evaluate BEFORE loadEnvFile() below ever runs, no matter where the

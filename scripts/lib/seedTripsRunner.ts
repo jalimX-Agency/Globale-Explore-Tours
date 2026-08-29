@@ -29,13 +29,21 @@ export type NewJourneyTrip = {
   }>;
 };
 
-async function headOk(url: string): Promise<boolean> {
-  try {
-    const res = await fetch(url, { method: "HEAD" });
-    return res.ok;
-  } catch {
-    return false;
+// A single HEAD attempt, alongside ~80+ others fired concurrently for a full batch, is prone
+// to spurious DNS/connection blips having nothing to do with whether the image is actually
+// live — a bare fetch failure here isn't trustworthy on the first try. Retries a few times
+// with a short backoff before really giving up on a URL.
+async function headOk(url: string, attempts = 3): Promise<boolean> {
+  for (let i = 0; i < attempts; i++) {
+    try {
+      const res = await fetch(url, { method: "HEAD", signal: AbortSignal.timeout(10_000) });
+      if (res.ok) return true;
+    } catch {
+      // fall through to retry
+    }
+    if (i < attempts - 1) await new Promise((r) => setTimeout(r, 500 * (i + 1)));
   }
+  return false;
 }
 
 async function assertImagesLive(records: unknown[]): Promise<void> {
