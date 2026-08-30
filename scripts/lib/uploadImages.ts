@@ -41,7 +41,7 @@ async function downloadBuffer(url: string, attempts = 6): Promise<{ buffer: Buff
     try {
       const { stdout } = await execFileAsync(
         "curl",
-        ["-sS", "-L", "--fail", "--max-time", "20", "-A", "curl/8.0", url],
+        ["-sS", "-L", "--fail", "--max-time", "90", "-A", "curl/8.0", url],
         { encoding: "buffer", maxBuffer: 50 * 1024 * 1024 }
       );
       const contentType = url.endsWith(".svg")
