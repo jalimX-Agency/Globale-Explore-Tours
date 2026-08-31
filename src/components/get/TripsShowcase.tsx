@@ -8,6 +8,7 @@ import { LocaleLink } from "@/components/get/LocaleLink";
 import { tourHref, type TourCardData } from "@/components/get/TourCard";
 
 const BG_IMAGE = `${process.env.NEXT_PUBLIC_R2_URL}/backgrounds/bg-swirl-dark.jpg`;
+const CREATE_ITINERARY_IMAGE = `${process.env.NEXT_PUBLIC_R2_URL}/backgrounds/create-itinerary-hiker.jpg`;
 
 function localized(language: string, fr: string, en: string, es: string) {
   if (language === "en") return en || fr;
@@ -222,13 +223,22 @@ export function TripsShowcase({
           <LocaleLink
             href="/faire-une-demande"
             draggable={false}
-            className="group relative w-[70%] flex-shrink-0 overflow-hidden rounded-sm border border-white/20 bg-white/5 transition-colors duration-300 hover:bg-white/10 sm:w-[42%] lg:w-[26%]"
+            className="group relative w-[70%] flex-shrink-0 overflow-hidden rounded-sm border border-white/20 sm:w-[42%] lg:w-[26%]"
           >
             <div className="relative aspect-[1/2] w-full">
+              <Image
+                src={CREATE_ITINERARY_IMAGE}
+                alt=""
+                fill
+                draggable={false}
+                className="pointer-events-none object-cover transition-transform duration-700 group-hover:scale-105"
+                sizes="(min-width: 1024px) 26vw, (min-width: 640px) 42vw, 70vw"
+              />
+              <div className="absolute inset-0 bg-black/55" />
               <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
-                <Compass className="size-8 text-white/70" />
+                <Compass className="size-8 text-white/80" />
                 <p className="font-display mt-4 text-lg text-white">{t("destinationsPage.createOwnItinerary")}</p>
-                <p className="font-body mt-3 text-xs text-white/70">{t("destinationsPage.createOwnItineraryBlurb")}</p>
+                <p className="font-body mt-3 text-xs text-white/80">{t("destinationsPage.createOwnItineraryBlurb")}</p>
                 <span className="btn-outline mt-5 inline-flex text-white text-[0.65rem] px-4 py-2">
                   {t("destinationsPage.createTrip")}
                 </span>
