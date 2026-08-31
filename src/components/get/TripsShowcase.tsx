@@ -238,8 +238,11 @@ export function TripsShowcase({
 
               <span className="label-eyebrow absolute right-3 top-3 text-white/85">{t("destinationsPage.customTrips")}</span>
 
+              <p className="font-display absolute inset-x-0 top-1/2 -translate-y-1/2 px-4 text-center text-2xl text-white">
+                {t("destinationsPage.createOwnItinerary")}
+              </p>
+
               <div className="absolute inset-x-0 bottom-0 p-4">
-                <p className="font-display text-lg text-white">{t("destinationsPage.createOwnItinerary")}</p>
                 <div className="grid grid-rows-[0fr] transition-all duration-300 group-hover:grid-rows-[1fr]">
                   <div className="overflow-hidden">
                     <p className="font-body mt-2 text-xs text-white/80">{t("destinationsPage.createOwnItineraryBlurb")}</p>
