@@ -143,6 +143,9 @@ export const en = {
     faq: "Frequently asked questions",
     otherRegions: "Other destinations",
     otherCountries: "Other destinations in the region",
+    createOwnItinerary: "Create your own itinerary",
+    createOwnItineraryBlurb: "Our Travel Experts will help you create a completely bespoke itinerary. Just tell us what you want. We'll make it happen.",
+    createTrip: "Create trip",
   },
   mission: {
     title: "Every trip needs a guide, not a brochure",

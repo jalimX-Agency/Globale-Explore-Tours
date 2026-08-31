@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import Image from "next/image";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Compass } from "lucide-react";
 import { useLanguage } from "@/lib/i18n/context";
 import { LocaleLink } from "@/components/get/LocaleLink";
 import { tourHref, type TourCardData } from "@/components/get/TourCard";
@@ -216,6 +216,25 @@ export function TripsShowcase({
               </LocaleLink>
             );
           })}
+
+          {/* Always-last card — an escape hatch for browsers who don't see their trip in the
+              carousel, straight into the enquiry flow rather than a dead end. */}
+          <LocaleLink
+            href="/faire-une-demande"
+            draggable={false}
+            className="group relative w-[70%] flex-shrink-0 overflow-hidden rounded-sm border border-white/20 bg-white/5 transition-colors duration-300 hover:bg-white/10 sm:w-[42%] lg:w-[26%]"
+          >
+            <div className="relative aspect-[1/2] w-full">
+              <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
+                <Compass className="size-8 text-white/70" />
+                <p className="font-display mt-4 text-lg text-white">{t("destinationsPage.createOwnItinerary")}</p>
+                <p className="font-body mt-3 text-xs text-white/70">{t("destinationsPage.createOwnItineraryBlurb")}</p>
+                <span className="btn-outline mt-5 inline-flex text-white text-[0.65rem] px-4 py-2">
+                  {t("destinationsPage.createTrip")}
+                </span>
+              </div>
+            </div>
+          </LocaleLink>
           </div>
 
           {/* Right-edge fade — hints there's more to scroll to, matching the reference. */}
