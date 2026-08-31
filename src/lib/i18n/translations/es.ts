@@ -143,6 +143,7 @@ export const es = {
     faq: "Preguntas frecuentes",
     otherRegions: "Otros destinos",
     otherCountries: "Otros destinos en la región",
+    customTrips: "Viajes a medida",
     createOwnItinerary: "Crea tu propio itinerario",
     createOwnItineraryBlurb: "Nuestros expertos en viajes te ayudan a crear un itinerario totalmente a medida. Solo dinos lo que quieres. Nosotros nos encargamos del resto.",
     createTrip: "Crear mi viaje",
