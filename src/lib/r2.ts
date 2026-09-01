@@ -26,16 +26,16 @@ function amzDateNow() {
   return { amzDate, dateStamp: amzDate.slice(0, 8) };
 }
 
-export async function uploadToR2(
+// Computes the SigV4-signed URL + headers for a PUT, without performing the request itself —
+// factored out of uploadToR2 so bulk scripts that need a non-fetch transport (curl has proven
+// far more reliable than Node's fetch/undici for long-running, many-request batches — see
+// scripts/lib/uploadImages.ts) can issue the exact same signed request another way.
+export function getSignedR2PutRequest(
   key: string,
   body: Buffer,
   contentType: string,
-  // Safe as "immutable" for the admin upload route, which always writes unique,
-  // content-hashed filenames — a real overwrite of an existing key (as with a manually
-  // replaced fixed-name asset like the hero video) should bump the filename instead,
-  // or this header will keep serving the old cached bytes for up to a year.
-  cacheControl: string = "public, max-age=31536000, immutable"
-): Promise<void> {
+  cacheControl: string
+): { url: string; headers: Record<string, string> } {
   const { amzDate, dateStamp } = amzDateNow();
   const region = "auto";
   const service = "s3";
@@ -50,8 +50,8 @@ export async function uploadToR2(
   const signature = hmacSha256(signingKey, stringToSign).toString("hex");
   const authorization = `AWS4-HMAC-SHA256 Credential=${ACCESS_KEY}/${credentialScope}, SignedHeaders=${signedHeaders}, Signature=${signature}`;
 
-  const res = await fetch(`${ENDPOINT}/${BUCKET}/${key}`, {
-    method: "PUT",
+  return {
+    url: `${ENDPOINT}/${BUCKET}/${key}`,
     headers: {
       "Content-Type": contentType,
       "Cache-Control": cacheControl,
@@ -59,6 +59,23 @@ export async function uploadToR2(
       "x-amz-date": amzDate,
       Authorization: authorization,
     },
+  };
+}
+
+export async function uploadToR2(
+  key: string,
+  body: Buffer,
+  contentType: string,
+  // Safe as "immutable" for the admin upload route, which always writes unique,
+  // content-hashed filenames — a real overwrite of an existing key (as with a manually
+  // replaced fixed-name asset like the hero video) should bump the filename instead,
+  // or this header will keep serving the old cached bytes for up to a year.
+  cacheControl: string = "public, max-age=31536000, immutable"
+): Promise<void> {
+  const { url, headers } = getSignedR2PutRequest(key, body, contentType, cacheControl);
+  const res = await fetch(url, {
+    method: "PUT",
+    headers,
     body: new Uint8Array(body),
     // Without a bound, a stalled connection here hangs forever instead of failing — seen in
     // practice during a bulk seeding script, but it's just as real a risk for the live admin
