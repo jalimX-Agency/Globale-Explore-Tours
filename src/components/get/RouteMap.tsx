@@ -35,7 +35,7 @@ export function RouteMap({
         }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={mapImage} alt="" className="absolute inset-0 h-full w-full object-cover" />
+        <img src={mapImage} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
         <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute inset-0 h-full w-full overflow-visible">
           {markers.slice(0, -1).map((m, i) => {
             const next = markers[i + 1];

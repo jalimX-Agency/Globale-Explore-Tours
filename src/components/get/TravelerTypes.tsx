@@ -48,6 +48,7 @@ export function TravelerTypes({ types }: { types: TravelerTypeCard[] }) {
                 <img
                   src={type.image}
                   alt=""
+                  loading="lazy"
                   className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
                 <span className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-black/0 transition-opacity group-hover:from-black/70" />

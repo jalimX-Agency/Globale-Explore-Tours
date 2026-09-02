@@ -59,7 +59,12 @@ export function TourCard({ tour, index = 0 }: { tour: TourCardData; index?: numb
         <div className={`relative aspect-[4/3] overflow-hidden rounded-sm bg-gradient-to-br ${PLACEHOLDER_GRADIENT}`}>
           {tour.image ? (
             // eslint-disable-next-line @next/next/no-img-element -- placeholder path until real photos are supplied
-            <img src={tour.image} alt={name} className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
+            <img
+              src={tour.image}
+              alt={name}
+              loading="lazy"
+              className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+            />
           ) : (
             <div className="flex h-full items-center justify-center">
               <span className="label-eyebrow text-white/50">{t("featured.photoPending")}</span>
