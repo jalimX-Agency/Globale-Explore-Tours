@@ -1,9 +1,11 @@
 export {};
 
-// Phase 2 of the image-size fix: downloads every image over SIZE_THRESHOLD_MB from R2,
-// compresses/resizes it with sharp, and re-uploads it to the exact same key (overwriting the
-// original in place — no DB changes needed, since every Tour/TourSection/TourHotel/
-// JourneyChapter/ItineraryDay record already points at these same URLs).
+// Phase 2 of the image-size fix: downloads every image over SIZE_THRESHOLD_BYTES from R2,
+// compresses/resizes it (see lib/compressImage.ts), and re-uploads it to the exact same key
+// (overwriting the original in place — no DB changes needed, since every
+// Tour/TourSection/TourHotel/JourneyChapter/ItineraryDay record already points at these same
+// URLs). Resumable via a manifest keyed by R2 key, so lowering SIZE_THRESHOLD_BYTES and
+// re-running only processes the newly-included images — already-compressed ones are skipped.
 //
 // Source of truth for "which images are oversized": an ahrefs image-file-size export
 // (docs/globaleexploretours_01-sep-2026_image-file-si_2026-09-01_18-12-25.csv), UTF-16
@@ -32,7 +34,7 @@ const unlink = promisify(unlinkCb);
 
 const CSV_PATH =
   "C:\\Users\\pc\\Documents\\JalimX\\clients\\Globale explore tours\\docs\\globaleexploretours_01-sep-2026_image-file-si_2026-09-01_18-12-25.csv";
-const SIZE_THRESHOLD_BYTES = 3 * 1024 * 1024; // Phase 2, pass 1: the 1179 images > 3MB (6GB of the 10GB total).
+const SIZE_THRESHOLD_BYTES = 1 * 1024 * 1024; // Phase 2, pass 2: widen to > 1MB (adds the 2076 images between 1-3MB, ~4GB). The already-compressed >3MB images are skipped automatically via the manifest.
 const MANIFEST_PATH = "scripts/.manifests/fix-oversized-images.json";
 
 type CsvRow = { url: string; sizeBytes: number };
