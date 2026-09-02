@@ -3,6 +3,7 @@ import { dirname } from "node:path";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { uploadToR2 } from "../../src/lib/r2";
+import { compressImage, pickCompressOptions } from "./compressImage";
 
 const execFileAsync = promisify(execFile);
 
@@ -79,10 +80,35 @@ export async function uploadImageBatch(images: ImageSpec[], manifestPath: string
     }
     try {
       const { buffer, contentType } = await downloadBuffer(img.url);
-      await uploadToR2(img.key, buffer, contentType);
+      // Sourced images (Pexels' direct pexels-photo-{id}.jpeg URLs, in particular) come at
+      // full original resolution — sometimes 100+ megapixels, tens of MB — with no resizing
+      // done by the source. This is what caused the site-wide oversized-image problem fixed in
+      // scripts/fix-oversized-images.ts; compressing every raster image here before it ever
+      // reaches R2 is what stops that from recurring. SVGs are vector and pass through as-is.
+      let finalBuffer = buffer;
+      let finalContentType = contentType;
+      if (contentType !== "image/svg+xml") {
+        try {
+          const compressed = await compressImage(buffer, pickCompressOptions(img.key));
+          // Guard against the rare case where compression doesn't help (already tiny/simple
+          // image) — never ship a file bigger than what was downloaded.
+          if (compressed.length < buffer.length) {
+            finalBuffer = compressed;
+            finalContentType = "image/jpeg";
+          }
+        } catch (compressErr) {
+          // A small fraction of real-world JPEGs trip up jimp's decoder (confirmed rare:
+          // ~1 in 3255 during the site-wide cleanup this replaced) — fall back to uploading
+          // the original uncompressed rather than losing the image entirely.
+          console.warn(`WARN ${img.key}: compression failed, uploading uncompressed —`, compressErr);
+        }
+      }
+      await uploadToR2(img.key, finalBuffer, finalContentType);
       const publicUrl = `${process.env.NEXT_PUBLIC_R2_URL}/${img.key}`;
       manifest[img.key] = { key: img.key, publicUrl, status: "uploaded" };
-      console.log(`OK   ${img.key} -> ${publicUrl}`);
+      console.log(
+        `OK   ${img.key} -> ${publicUrl}  (${(buffer.length / 1024).toFixed(0)}KB -> ${(finalBuffer.length / 1024).toFixed(0)}KB)`
+      );
       done++;
     } catch (err) {
       manifest[img.key] = { key: img.key, publicUrl: "", status: "failed", error: String(err) };
