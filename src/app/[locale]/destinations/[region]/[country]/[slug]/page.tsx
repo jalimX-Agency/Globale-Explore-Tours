@@ -39,6 +39,17 @@ const TOUR_CARD_SELECT = {
 
 export const revalidate = 3600;
 
+// Pre-renders every trip at build time (337 today) instead of relying on on-demand ISR — same
+// rationale as the region/country pages above. Generates the full {region, country, slug}
+// triple itself (the "bottom-up" pattern) rather than composing with the parent's
+// generateStaticParams — composition silently produced zero paths for this route in testing.
+export async function generateStaticParams() {
+  const tours = await db.tour.findMany({
+    select: { slug: true, destination: { select: { slug: true, regionSlug: true } } },
+  });
+  return tours.map((t) => ({ region: t.destination.regionSlug, country: t.destination.slug, slug: t.slug }));
+}
+
 // Cached per-request so generateMetadata and the page body share one query instead of two.
 const getTour = cache((slug: string) => {
   return db.tour.findUnique({

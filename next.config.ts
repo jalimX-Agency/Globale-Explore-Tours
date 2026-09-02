@@ -3,6 +3,19 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   // No `output: "standalone"` — that's for Docker/self-hosted builds and breaks Vercel's
   // own build trace step (ENOENT on next-server.js.nft.json). Vercel needs its default output.
+  experimental: {
+    // Adding generateStaticParams to the destinations routes (~1570 pages: 111 destinations ×
+    // 337 tours across 3 locales) made the build spin up 11 parallel worker processes, each
+    // opening its own Prisma connection pool against Neon's pooled endpoint at the same
+    // time — reliably exceeded Neon's concurrent-connection limit and failed the build with
+    // "Can't reach database server" during page-data collection. A single build worker
+    // processing a handful of pages at a time keeps concurrent DB connections low enough to
+    // never hit that ceiling; it costs build-time wall-clock minutes, not correctness.
+    cpus: 1,
+    staticGenerationMaxConcurrency: 4,
+    staticGenerationMinPagesPerWorker: 50,
+    staticGenerationRetryCount: 2,
+  },
   images: {
     // Vercel's Image Optimization (resize + WebP/AVIF conversion on request) is metered per
     // unique source image and hit its plan quota at ~118 tours' worth of images — new images

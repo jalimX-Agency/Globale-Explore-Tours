@@ -38,6 +38,19 @@ const TOUR_CARD_SELECT = {
 
 export const revalidate = 3600;
 
+// Pre-renders every region at build time (11 today) instead of relying on on-demand ISR —
+// ahrefs found every /destinations/* page returning Vercel `x-vercel-cache: MISS` and 1-4s
+// TTFB even on repeated requests seconds apart, which generateStaticParams's build-time
+// prerender sidesteps entirely. Composes with `[locale]/layout.tsx`'s own
+// generateStaticParams: this runs once per locale, so the actual output is regions × locales.
+export async function generateStaticParams() {
+  const regions = await db.destination.findMany({
+    select: { regionSlug: true },
+    distinct: ["regionSlug"],
+  });
+  return regions.map((r) => ({ region: r.regionSlug }));
+}
+
 export async function generateMetadata({
   params,
 }: {

@@ -41,6 +41,17 @@ const getDestination = cache((slug: string) => db.destination.findUnique({ where
 
 export const revalidate = 3600;
 
+// Pre-renders every country at build time (111 today) instead of relying on on-demand ISR —
+// same rationale as the region page above. Generates the full {region, country} pair itself
+// (the "bottom-up" pattern) rather than composing with the parent's generateStaticParams —
+// composition silently produced zero paths for this route in testing.
+export async function generateStaticParams() {
+  const destinations = await db.destination.findMany({
+    select: { slug: true, regionSlug: true },
+  });
+  return destinations.map((d) => ({ region: d.regionSlug, country: d.slug }));
+}
+
 export async function generateMetadata({
   params,
 }: {
