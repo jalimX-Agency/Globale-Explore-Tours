@@ -10,7 +10,9 @@ export const SITE_NAME = "Globale Explore Tours";
 // Real, currently-live photo used as the sitewide OG/Twitter fallback — the previous
 // "/og-image.jpg" reference pointed at a file that was never added to public/, so every
 // share preview site-wide (and every page below that doesn't have its own photo) 404'd.
-export const DEFAULT_OG_IMAGE = "https://cdn.globaleexploretours.com/destinations/maroc-hero.jpg";
+// Swapped from the flat oasis shot (maroc-hero.jpg) to a stronger sunset-dune photo — the
+// old one looked washed-out and unpolished in link previews and Google search results.
+export const DEFAULT_OG_IMAGE = "https://cdn.globaleexploretours.com/tours/grand-desert-dunes-crepuscule.jpg";
 
 const HOME_LABEL: Record<Locale, string> = { fr: fr.nav.home, en: en.nav.home, es: es.nav.home };
 
