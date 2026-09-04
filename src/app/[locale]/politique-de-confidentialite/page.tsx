@@ -24,7 +24,7 @@ const CONTENT: Record<Locale, string> = {
 
 <h2>1. Responsable du traitement</h2>
 <p>Le responsable du traitement des données collectées sur ce site est :<br />
-<strong>Globale Explore Tours</strong>, SASU au capital de 2 500 €, immatriculée au RCS de Valenciennes sous le numéro 998 961 999, dont le siège social est situé 5 avenue du Sénateur Girard, 59300 Valenciennes, France.<br />
+<strong>Globale Explore Tours</strong>, société par actions simplifiée à associé unique au capital de 14 000 €, immatriculée au RCS de Valenciennes sous le numéro 998 961 999, dont le siège social est situé 5 avenue du Sénateur Girard, 59300 Valenciennes, France.<br />
 Contact : contact@globaleexploretours.com</p>
 
 <h2>2. Données que nous collectons</h2>
@@ -66,7 +66,7 @@ Contact : contact@globaleexploretours.com</p>
 
 <h2>1. Data controller</h2>
 <p>The controller responsible for data collected on this site is:<br />
-<strong>Globale Explore Tours</strong>, a French SASU with capital of €2,500, registered with the Valenciennes Trade and Companies Register under number 998 961 999, with its registered office at 5 avenue du Sénateur Girard, 59300 Valenciennes, France.<br />
+<strong>Globale Explore Tours</strong>, a French simplified joint-stock company with a sole shareholder, share capital of €14,000, registered with the Valenciennes Trade and Companies Register under number 998 961 999, with its registered office at 5 avenue du Sénateur Girard, 59300 Valenciennes, France.<br />
 Contact: contact@globaleexploretours.com</p>
 
 <h2>2. Data we collect</h2>
@@ -108,7 +108,7 @@ Contact: contact@globaleexploretours.com</p>
 
 <h2>1. Responsable del tratamiento</h2>
 <p>El responsable del tratamiento de los datos recogidos en este sitio es:<br />
-<strong>Globale Explore Tours</strong>, SASU con un capital de 2.500 €, inscrita en el Registro Mercantil de Valenciennes con el número 998 961 999, con domicilio social en 5 avenue du Sénateur Girard, 59300 Valenciennes, Francia.<br />
+<strong>Globale Explore Tours</strong>, sociedad por acciones simplificada con socio único con un capital de 14.000 €, inscrita en el Registro Mercantil de Valenciennes con el número 998 961 999, con domicilio social en 5 avenue du Sénateur Girard, 59300 Valenciennes, Francia.<br />
 Contacto: contact@globaleexploretours.com</p>
 
 <h2>2. Datos que recopilamos</h2>
