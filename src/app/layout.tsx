@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { oswald, inter } from "@/lib/fonts";
 import { GoogleAnalytics } from "@/components/GoogleAnalytics";
 import { GoogleTagManagerScript, GoogleTagManagerNoscript } from "@/components/GoogleTagManager";
+import { TrustpilotWidgetScript } from "@/components/TrustpilotWidget";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -15,6 +16,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="fr" className={`${oswald.variable} ${inter.variable} h-full antialiased`}>
       <head>
         <GoogleTagManagerScript />
+        <TrustpilotWidgetScript />
       </head>
       <body className="min-h-full flex flex-col font-sans">
         <GoogleTagManagerNoscript />

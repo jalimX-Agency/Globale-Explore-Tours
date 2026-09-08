@@ -66,7 +66,8 @@ const nextConfig: NextConfig = {
       "default-src 'self'",
       // connect.facebook.net is pre-allowlisted for the Facebook Pixel tag — not wired up yet,
       // but added now so adding it as a GTM tag later doesn't need another CSP edit.
-      `script-src ${scriptSrc} https://www.googletagmanager.com https://connect.facebook.net`,
+      // invitejs.trustpilot.com serves the Trustpilot review-invitation widget (TrustpilotWidget.tsx).
+      `script-src ${scriptSrc} https://www.googletagmanager.com https://connect.facebook.net https://invitejs.trustpilot.com`,
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' data: blob: https://*.r2.dev https://cdn.globaleexploretours.com https://www.googletagmanager.com https://www.google-analytics.com https://www.facebook.com",
       "media-src 'self' https://*.r2.dev https://cdn.globaleexploretours.com",
@@ -75,8 +76,9 @@ const nextConfig: NextConfig = {
       // upload endpoint the admin's video-upload PUT talks to (see src/lib/r2.ts) — a
       // different origin from the public bucket domain, both needed here. GTM/GA4 report to
       // googletagmanager.com and google-analytics.com respectively; Facebook Pixel's beacon
-      // (once wired up) reports to facebook.com/connect.facebook.net.
-      "connect-src 'self' https://*.r2.dev https://*.r2.cloudflarestorage.com https://www.googletagmanager.com https://www.google-analytics.com https://www.facebook.com https://connect.facebook.net" +
+      // (once wired up) reports to facebook.com/connect.facebook.net; the Trustpilot widget
+      // registers invitations back to invitejs.trustpilot.com.
+      "connect-src 'self' https://*.r2.dev https://*.r2.cloudflarestorage.com https://www.googletagmanager.com https://www.google-analytics.com https://www.facebook.com https://connect.facebook.net https://invitejs.trustpilot.com" +
         (isProd ? "" : " ws:"),
       // The Contact page's location map is Google's free no-API-key embed iframe; GTM's
       // <noscript> fallback is a hidden iframe too.
