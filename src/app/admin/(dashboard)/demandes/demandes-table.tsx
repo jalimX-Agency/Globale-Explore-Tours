@@ -19,6 +19,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { DataTable } from "@/components/admin/data-table";
+import { TrustpilotInviteButton } from "@/components/admin/trustpilot-invite-button";
 import { BookingStatusForm } from "./booking-status-form";
 import { deleteBooking } from "./actions";
 
@@ -232,14 +233,23 @@ export function DemandesTable({ data }: { data: Row[] }) {
               </div>
 
               <DialogFooter className="flex-col items-stretch justify-between gap-3 sm:flex-row sm:items-center">
-                <BookingStatusForm
-                  key={selected.id}
-                  bookingId={selected.id}
-                  initialStatus={selected.status}
-                  onChange={(status) =>
-                    setRows((prev) => prev.map((r) => (r.id === selected.id ? { ...r, status } : r)))
-                  }
-                />
+                <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center">
+                  <BookingStatusForm
+                    key={selected.id}
+                    bookingId={selected.id}
+                    initialStatus={selected.status}
+                    onChange={(status) =>
+                      setRows((prev) => prev.map((r) => (r.id === selected.id ? { ...r, status } : r)))
+                    }
+                  />
+                  {selected.status === "confirmed" && (
+                    <TrustpilotInviteButton
+                      email={selected.email}
+                      name={`${selected.firstName} ${selected.lastName}`}
+                      referenceId={selected.id}
+                    />
+                  )}
+                </div>
                 <AlertDialog>
                   <AlertDialogTrigger render={<Button type="button" variant="destructive" size="sm" />}>
                     <Trash2 className="size-3.5" />
