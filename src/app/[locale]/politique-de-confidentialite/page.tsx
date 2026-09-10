@@ -4,8 +4,8 @@ import { pageMetadata } from "@/lib/seo";
 
 const META = {
   fr: { title: "Politique de confidentialité", description: "Comment Globale Explore Tours collecte, utilise et protège vos données personnelles, conformément au RGPD." },
-  en: { title: "Privacy Policy", description: "How Globale Explore Tours collects, uses and protects your personal data, in line with the GDPR." },
-  es: { title: "Política de privacidad", description: "Cómo Globale Explore Tours recopila, utiliza y protege sus datos personales, conforme al RGPD." },
+  en: { title: "Privacy Policy", description: "How Globale Explore Tours collects, uses, stores and protects your personal data when you browse or book a trip, in line with the GDPR." },
+  es: { title: "Política de privacidad", description: "Cómo Globale Explore Tours recopila, utiliza, conserva y protege sus datos personales al navegar o reservar un viaje, conforme al RGPD." },
 } as const satisfies Record<Locale, { title: string; description: string }>;
 
 export async function generateMetadata({

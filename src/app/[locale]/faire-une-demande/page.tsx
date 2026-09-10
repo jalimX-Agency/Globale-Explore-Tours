@@ -7,7 +7,7 @@ import { pageMetadata } from "@/lib/seo";
 const META = {
   fr: { title: "Faire une demande", description: "Décrivez le voyage que vous imaginez et recevez une proposition sur-mesure de notre équipe, sous 24h." },
   en: { title: "Make a request", description: "Tell us about the trip you're imagining and receive a tailor-made proposal from our team within 24h." },
-  es: { title: "Hacer una solicitud", description: "Cuéntenos el viaje que imagina y reciba una propuesta a medida de nuestro equipo en 24h." },
+  es: { title: "Hacer una solicitud", description: "Cuéntenos el viaje que imagina y reciba una propuesta a medida de nuestro equipo de expertos locales en 24h." },
 } as const satisfies Record<Locale, { title: string; description: string }>;
 
 export async function generateMetadata({

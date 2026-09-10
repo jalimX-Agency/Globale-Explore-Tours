@@ -35,7 +35,12 @@ const TOUR_CARD_SELECT = {
   theme: true,
   image: true,
   format: true,
+  destination: { select: { slug: true, regionSlug: true } },
 } as const;
+
+// Below this, a trip page backfills its "similar trips" list from the wider region — see the
+// call site for why.
+const MIN_SIMILAR_TOURS = 3;
 
 export const revalidate = 3600;
 
@@ -98,22 +103,40 @@ export default async function TripPage({
     notFound();
   }
 
-  const similarTours = await db.tour.findMany({
+  const sameDestinationTours = await db.tour.findMany({
     where: { destinationId: tour.destinationId, id: { not: tour.id } },
     orderBy: [{ featured: "desc" }, { order: "asc" }],
     take: 6,
     select: TOUR_CARD_SELECT,
   });
 
+  // Most destinations carry only 1 trip today, which left this section — and every internal
+  // link it provides — empty: a site crawl audit (2026-09-08) flagged dozens of those trip
+  // pages as reachable from exactly one internal link (their destination hub) as a result.
+  // Backfilling from the wider region gives every trip page real "similar trips" links again
+  // without waiting on new trip content.
+  const similarTours =
+    sameDestinationTours.length >= MIN_SIMILAR_TOURS
+      ? sameDestinationTours
+      : [
+          ...sameDestinationTours,
+          ...(await db.tour.findMany({
+            where: { destination: { regionSlug: tour.destination.regionSlug }, destinationId: { not: tour.destinationId } },
+            orderBy: [{ featured: "desc" }, { order: "asc" }],
+            take: 6 - sameDestinationTours.length,
+            select: TOUR_CARD_SELECT,
+          })),
+        ];
+
   const regionLabel = pick(locale, tour.destination.region, tour.destination.regionEn, tour.destination.regionEs);
   const countryLabel = pick(locale, tour.destination.name, tour.destination.nameEn, tour.destination.nameEs);
   const tripLabel = pick(locale, tour.name, tour.nameEn, tour.nameEs);
   const destinationsLabel = pick(locale, NAV_DESTINATIONS.fr, NAV_DESTINATIONS.en, NAV_DESTINATIONS.es);
 
-  const similarToursWithHref = similarTours.map((t) => ({
+  const similarToursWithHref = similarTours.map(({ destination, ...t }) => ({
     ...t,
-    destinationSlug: tour.destination.slug,
-    regionSlug: tour.destination.regionSlug,
+    destinationSlug: destination.slug,
+    regionSlug: destination.regionSlug,
   }));
 
   const breadcrumb = [

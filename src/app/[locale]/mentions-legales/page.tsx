@@ -3,9 +3,9 @@ import { isLocale, DEFAULT_LOCALE, type Locale } from "@/lib/i18n/locales";
 import { pageMetadata } from "@/lib/seo";
 
 const META = {
-  fr: { title: "Mentions légales", description: "Informations légales sur Globale Explore Tours, SASU, et sur l'édition de ce site." },
-  en: { title: "Legal notice", description: "Legal information about Globale Explore Tours, SASU, and about this site's publisher." },
-  es: { title: "Aviso legal", description: "Información legal sobre Globale Explore Tours, SASU, y sobre la editora de este sitio." },
+  fr: { title: "Mentions légales", description: "Informations légales sur Globale Explore Tours : forme juridique, immatriculation, siège social et éditeur de ce site." },
+  en: { title: "Legal notice", description: "Legal information about Globale Explore Tours: company structure, registration number, registered office and site publisher." },
+  es: { title: "Aviso legal", description: "Información legal sobre Globale Explore Tours: forma jurídica, número de registro, domicilio social y editora de este sitio." },
 } as const satisfies Record<Locale, { title: string; description: string }>;
 
 export async function generateMetadata({

@@ -4,8 +4,8 @@ import { pageMetadata } from "@/lib/seo";
 
 const META = {
   fr: { title: "Conditions de réservation", description: "Conditions générales de vente de Globale Explore Tours : réservation, paiement, modification et annulation." },
-  en: { title: "Booking terms", description: "Globale Explore Tours' terms of sale: booking, payment, changes and cancellation." },
-  es: { title: "Condiciones de reserva", description: "Condiciones generales de venta de Globale Explore Tours: reserva, pago, modificación y cancelación." },
+  en: { title: "Booking terms", description: "Globale Explore Tours' general terms of sale: booking process, payment schedule, itinerary changes and cancellation policy." },
+  es: { title: "Condiciones de reserva", description: "Condiciones generales de venta de Globale Explore Tours: proceso de reserva, pago, modificaciones del itinerario y cancelación." },
 } as const satisfies Record<Locale, { title: string; description: string }>;
 
 export async function generateMetadata({

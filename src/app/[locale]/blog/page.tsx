@@ -7,7 +7,7 @@ import { pageMetadata } from "@/lib/seo";
 
 const META = {
   fr: { title: "Journal", description: "Nos conseils et récits de voyage — destinations dans le monde entier, écrits par notre équipe de guides locaux." },
-  en: { title: "Travel Journal", description: "Our travel tips and stories — destinations worldwide, written by our team of local guides." },
+  en: { title: "Travel Journal", description: "Our travel tips and stories — destinations worldwide, written by our team of trusted local guides and destination experts." },
   es: { title: "Diario de viaje", description: "Nuestros consejos y relatos de viaje — destinos en todo el mundo, escritos por nuestro equipo de guías locales." },
 } as const satisfies Record<Locale, { title: string; description: string }>;
 

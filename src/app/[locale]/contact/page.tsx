@@ -5,7 +5,7 @@ import { pageMetadata } from "@/lib/seo";
 
 const META = {
   fr: { title: "Contact", description: "Contactez Globale Explore Tours — par téléphone, WhatsApp ou email — pour organiser votre voyage sur-mesure." },
-  en: { title: "Contact", description: "Contact Globale Explore Tours — by phone, WhatsApp or email — to plan your tailor-made trip." },
+  en: { title: "Contact", description: "Contact Globale Explore Tours — by phone, WhatsApp or email — to start planning your tailor-made trip with a local expert." },
   es: { title: "Contacto", description: "Contacte con Globale Explore Tours — por teléfono, WhatsApp o email — para organizar su viaje a medida." },
 } as const satisfies Record<Locale, { title: string; description: string }>;
 

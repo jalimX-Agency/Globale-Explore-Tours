@@ -21,7 +21,7 @@ const META_BY_LOCALE: Record<Locale, { title: string; description: string }> = {
   en: {
     title: "Globale Explore Tours | Tailor-made Trips & Tours Worldwide",
     description:
-      "Tailor-made trips and tours worldwide, with trusted local guides. Rated 4.9/5 on TripAdvisor.",
+      "Tailor-made trips and tours worldwide, designed around you and led by trusted local guides. Rated 4.9/5 on TripAdvisor.",
   },
   es: {
     title: "Globale Explore Tours | Viajes y circuitos a medida en todo el mundo",

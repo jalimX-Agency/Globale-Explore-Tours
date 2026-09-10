@@ -44,6 +44,20 @@ function truncateDescription(description: string): string {
   return `${cut.slice(0, lastSpace > 0 ? lastSpace : MAX_DESCRIPTION_LENGTH)}…`;
 }
 
+// Google's <title> display cutoff (a site crawl audit on 2026-09-08 flagged every trip-detail
+// page — all 249 of them — past this length; the shortest flagged title was exactly 71 chars,
+// confirming 70 as the tool's own threshold). Tour/experience names are full descriptive
+// phrases (e.g. "Maroc en profondeur : villes impériales & Sahara"), long enough on their own
+// that appending " | Globale Explore Tours" (24 chars) regularly pushed them over.
+const MAX_TITLE_LENGTH = 70;
+
+function truncateTitle(title: string): string {
+  if (title.length <= MAX_TITLE_LENGTH) return title;
+  const cut = title.slice(0, MAX_TITLE_LENGTH);
+  const lastSpace = cut.lastIndexOf(" ");
+  return `${cut.slice(0, lastSpace > 0 ? lastSpace : MAX_TITLE_LENGTH)}…`;
+}
+
 export function pageMetadata({
   locale,
   path,
@@ -58,12 +72,18 @@ export function pageMetadata({
   image?: string;
 }): Metadata {
   const displayTitle = `${title} | ${SITE_NAME}`;
+  // Only drop the brand suffix when keeping it would break the length budget — short titles
+  // (destination hubs, blog posts) still get the normal branded template applied by the
+  // [locale] layout (a bare string `title` inherits its parent's `template`); a `{ absolute }`
+  // title bypasses that template instead of just being a longer string for it to wrap.
+  const pageTitle: Metadata["title"] =
+    displayTitle.length > MAX_TITLE_LENGTH ? { absolute: truncateTitle(title) } : title;
   const trimmedDescription = description ? truncateDescription(description) : undefined;
   const ogImage = image || DEFAULT_OG_IMAGE;
   const languages = Object.fromEntries(LOCALES.map((l) => [l, `/${l}${path}`]));
 
   return {
-    title,
+    title: pageTitle,
     description: trimmedDescription,
     alternates: {
       canonical: `/${locale}${path}`,

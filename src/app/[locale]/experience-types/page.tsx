@@ -7,7 +7,7 @@ import { pageMetadata } from "@/lib/seo";
 const META = {
   fr: { title: "Nos expériences de voyage", description: "Trouvez le voyage qui vous ressemble — par qui voyage, ce que vous voulez faire, ou comment vous voulez voyager." },
   en: { title: "Our travel experiences", description: "Find the trip that's really you — by who's travelling, what you want to do, or how you want to travel." },
-  es: { title: "Nuestras experiencias de viaje", description: "Encuentre el viaje que se le parece — por quién viaja, qué desea hacer, o cómo desea viajar." },
+  es: { title: "Nuestras experiencias de viaje", description: "Encuentre el viaje que se le parece — por quién viaja, qué desea hacer, o cómo desea viajar por el mundo." },
 } as const satisfies Record<Locale, { title: string; description: string }>;
 
 export const revalidate = 3600;
