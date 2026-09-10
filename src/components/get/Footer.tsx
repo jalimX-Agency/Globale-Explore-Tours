@@ -1,27 +1,55 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import Image from "next/image";
 import { MessageCircle } from "lucide-react";
 import { useLanguage } from "@/lib/i18n/context";
 import { LocaleLink } from "@/components/get/LocaleLink";
 
-const EXPLORE = [
+const EXPLORE: { labelKey?: string; label?: string; href: string }[] = [
   { labelKey: "nav.tours", href: "/trouver-mon-voyage" },
+  { label: "Excursions", href: "/excursions" },
   { labelKey: "nav.blog", href: "/blog" },
+  { labelKey: "nav.bookNow", href: "/faire-une-demande" },
 ];
 
 const COMPANY: { labelKey?: string; label?: string; href: string }[] = [
   { labelKey: "nav.about", href: "/a-propos" },
+  { labelKey: "nav.contact", href: "/contact" },
   { label: "Mentions légales", href: "/mentions-legales" },
   { label: "Politique de confidentialité", href: "/politique-de-confidentialite" },
   { label: "Conditions de réservation", href: "/conditions-de-reservation" },
 ];
 
-export function Footer() {
-  const { t } = useLanguage();
+type DestinationLite = { slug: string; name: string; nameEn: string; nameEs: string; regionSlug: string };
+type ExperienceTypeLite = { slug: string; kind: string; cardTitle: string; cardTitleEn: string; cardTitleEs: string };
+type Language = "fr" | "en" | "es";
+
+function localizedName(d: DestinationLite, language: Language) {
+  if (language === "en") return d.nameEn || d.name;
+  if (language === "es") return d.nameEs || d.name;
+  return d.name;
+}
+
+function localizedCardTitle(e: ExperienceTypeLite, language: Language) {
+  if (language === "en") return e.cardTitleEn || e.cardTitle;
+  if (language === "es") return e.cardTitleEs || e.cardTitle;
+  return e.cardTitle;
+}
+
+export function Footer({
+  destinations = [],
+  experienceTypes = [],
+}: {
+  destinations?: DestinationLite[];
+  experienceTypes?: ExperienceTypeLite[];
+}) {
+  const { t, language } = useLanguage();
   const [email, setEmail] = useState("");
   const [sent, setSent] = useState(false);
+
+  const whoLinks = useMemo(() => experienceTypes.filter((e) => e.kind === "who"), [experienceTypes]);
+  const whatLinks = useMemo(() => experienceTypes.filter((e) => e.kind === "what"), [experienceTypes]);
 
   function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -32,8 +60,8 @@ export function Footer() {
   return (
     <footer className="bg-[var(--brand-ink)] text-white">
       <div className="mx-auto max-w-7xl px-6 py-16 lg:px-10">
-        <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-5">
-          <div className="lg:col-span-2">
+        <div className="grid grid-cols-2 gap-x-8 gap-y-12 md:grid-cols-3 lg:grid-cols-7">
+          <div className="col-span-2 lg:col-span-2">
             <div className="flex items-center gap-2.5">
               <Image src="/logo.png" alt="Globale Explore Tours" width={50} height={34} className="object-contain" />
               <span className="font-display text-base">Globale Explore Tours</span>
@@ -55,15 +83,63 @@ export function Footer() {
           <div>
             <p className="label-eyebrow text-white/40">{t("footer.explore")}</p>
             <ul className="mt-4 space-y-2.5">
-              {EXPLORE.map(({ labelKey, href }) => (
-                <li key={href}>
-                  <LocaleLink href={href} className="font-body text-sm text-white/75 hover:text-white">
-                    {t(labelKey)}
+              {EXPLORE.map((item) => (
+                <li key={item.href}>
+                  <LocaleLink href={item.href} className="font-body text-sm text-white/75 hover:text-white">
+                    {item.labelKey ? t(item.labelKey) : item.label}
                   </LocaleLink>
                 </li>
               ))}
             </ul>
           </div>
+
+          {destinations.length > 0 && (
+            <div>
+              <p className="label-eyebrow text-white/40">{t("nav.destinations")}</p>
+              <ul className="mt-4 space-y-2.5">
+                {destinations.map((d) => (
+                  <li key={d.slug}>
+                    <LocaleLink
+                      href={`/destinations/${d.regionSlug}/${d.slug}`}
+                      className="font-body text-sm text-white/75 hover:text-white"
+                    >
+                      {localizedName(d, language)}
+                    </LocaleLink>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {whoLinks.length > 0 && (
+            <div>
+              <p className="label-eyebrow text-white/40">{t("experienceTypes.subnavWho")}</p>
+              <ul className="mt-4 space-y-2.5">
+                {whoLinks.map((e) => (
+                  <li key={e.slug}>
+                    <LocaleLink href={`/experience-types/${e.slug}`} className="font-body text-sm text-white/75 hover:text-white">
+                      {localizedCardTitle(e, language)}
+                    </LocaleLink>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {whatLinks.length > 0 && (
+            <div>
+              <p className="label-eyebrow text-white/40">{t("experienceTypes.subnavWhat")}</p>
+              <ul className="mt-4 space-y-2.5">
+                {whatLinks.map((e) => (
+                  <li key={e.slug}>
+                    <LocaleLink href={`/experience-types/${e.slug}`} className="font-body text-sm text-white/75 hover:text-white">
+                      {localizedCardTitle(e, language)}
+                    </LocaleLink>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
 
           <div>
             <p className="label-eyebrow text-white/40">{t("footer.company")}</p>

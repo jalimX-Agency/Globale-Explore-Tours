@@ -31,7 +31,7 @@ const CONTENT: Record<Locale, string> = {
 <h2>Éditeur du site</h2>
 <p>
   <strong>Globale Explore Tours</strong><br />
-  Société par actions simplifiée à associé unique au capital de 14 000 €<br />
+  Société par actions simplifiée à associé unique<br />
   Immatriculée au Registre du Commerce et des Sociétés de Valenciennes sous le numéro 998 961 999<br />
   Siège social : 5 avenue du Sénateur Girard, 59300 Valenciennes, France<br />
   Directeur de la publication : Mourad Chentit, Président<br />
@@ -60,7 +60,7 @@ const CONTENT: Record<Locale, string> = {
 <h2>Site publisher</h2>
 <p>
   <strong>Globale Explore Tours</strong><br />
-  French simplified joint-stock company with a sole shareholder, share capital of €14,000<br />
+  French simplified joint-stock company with a sole shareholder<br />
   Registered with the Valenciennes Trade and Companies Register under number 998 961 999<br />
   Registered office: 5 avenue du Sénateur Girard, 59300 Valenciennes, France<br />
   Publication director: Mourad Chentit, President<br />
@@ -89,7 +89,7 @@ const CONTENT: Record<Locale, string> = {
 <h2>Editor del sitio</h2>
 <p>
   <strong>Globale Explore Tours</strong><br />
-  Sociedad por acciones simplificada con socio único, capital social de 14.000 €<br />
+  Sociedad por acciones simplificada con socio único<br />
   Inscrita en el Registro Mercantil de Valenciennes con el número 998 961 999<br />
   Domicilio social: 5 avenue du Sénateur Girard, 59300 Valenciennes, Francia<br />
   Director de la publicación: Mourad Chentit, Presidente<br />

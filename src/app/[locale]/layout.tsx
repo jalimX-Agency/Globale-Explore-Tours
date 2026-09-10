@@ -4,6 +4,7 @@ import { LOCALES, DEFAULT_LOCALE, isLocale, ogLocale, type Locale } from "@/lib/
 import { LanguageProvider } from "@/lib/i18n/context";
 import { SiteChrome } from "@/components/get/SiteChrome";
 import { NavigationServer } from "@/components/get/NavigationServer";
+import { FooterServer } from "@/components/get/FooterServer";
 import { SetHtmlLang } from "@/components/get/SetHtmlLang";
 import { DEFAULT_OG_IMAGE, safeJsonLd } from "@/lib/seo";
 
@@ -106,7 +107,9 @@ export default async function LocaleLayout({
     <LanguageProvider locale={locale}>
       <SetHtmlLang locale={locale} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: travelAgencySchema }} />
-      <SiteChrome nav={<NavigationServer />}>{children}</SiteChrome>
+      <SiteChrome nav={<NavigationServer />} footer={<FooterServer />}>
+        {children}
+      </SiteChrome>
     </LanguageProvider>
   );
 }
