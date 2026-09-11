@@ -169,6 +169,10 @@ export const fr = {
     subtitle: "Un premier échange suffit pour poser les bases de votre voyage.",
     cta: "Faire une demande",
   },
+  phoneCta: {
+    text: "Appelez-nous au +33 6 67 58 64 62",
+    cta: "Parler à un expert",
+  },
   footer: {
     description: "Globale Explore Tours conçoit des voyages et circuits sur-mesure dans le monde entier, avec des guides locaux reconnus.",
     explore: "Explorer",

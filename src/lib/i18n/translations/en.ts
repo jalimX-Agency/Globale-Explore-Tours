@@ -169,6 +169,10 @@ export const en = {
     subtitle: "One conversation is enough to lay the groundwork for your trip.",
     cta: "Enquire now",
   },
+  phoneCta: {
+    text: "Call us on +33 6 67 58 64 62",
+    cta: "Speak to an expert",
+  },
   footer: {
     description: "Globale Explore Tours designs tailor-made trips and tours worldwide, led by trusted local guides.",
     explore: "Explore",

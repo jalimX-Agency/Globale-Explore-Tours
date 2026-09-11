@@ -159,6 +159,13 @@
   --brand-duration: #2b6ca3;
 }
 
+/* @layer components (not plain rules): Tailwind v4 emits every utility class inside its own
+   CSS cascade layer, and per spec an unlayered rule always beats a layered one regardless of
+   source order or specificity — so a plain `.btn-primary { background: ... }` here would win
+   over a `bg-white` utility on the same element every time, no matter which comes first in the
+   compiled CSS. Layering these components lets a call site's own utility classes (e.g.
+   `btn-primary bg-white text-neutral-900`, used by several CTA buttons) actually override them. */
+@layer components {
 .font-display {
   font-family: var(--font-oswald), "Arial Narrow", sans-serif;
   text-transform: uppercase;
@@ -237,4 +244,5 @@
 }
 .no-scrollbar::-webkit-scrollbar {
   display: none;
+}
 }

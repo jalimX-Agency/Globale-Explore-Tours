@@ -10,6 +10,7 @@ import { DestinationOverview } from "@/components/get/DestinationOverview";
 import { ContentBlockSection } from "@/components/get/ContentBlockSection";
 import { BestOfGrid } from "@/components/get/BestOfGrid";
 import { ClientLovedGrid } from "@/components/get/ClientLovedGrid";
+import { PhoneCtaBar } from "@/components/get/PhoneCtaBar";
 import { TripsShowcase } from "@/components/get/TripsShowcase";
 import { FaqAccordion } from "@/components/get/FaqAccordion";
 import { OtherDestinationsCarousel, type OtherDestinationItem } from "@/components/get/OtherDestinationsCarousel";
@@ -197,6 +198,8 @@ export function RegionPageClient({
             title={t("destinationsPage.clientLoved")}
             blocks={blocks.filter((b) => b.section === "clientLoved")}
           />
+
+          <PhoneCtaBar />
         </div>
 
         <div id="faq" className="scroll-mt-40">
