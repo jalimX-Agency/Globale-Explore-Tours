@@ -3,7 +3,28 @@
 import { useLanguage } from "@/lib/i18n/context";
 import { LocaleLink } from "@/components/get/LocaleLink";
 import { Breadcrumb } from "@/components/get/Breadcrumb";
+import { TeamGrid, type TeamMemberData } from "@/components/get/TeamGrid";
 import { CheckCircle2, Users, Headset, Car } from "lucide-react";
+
+// The agency's own team (as opposed to TeamGrid's other use — per-destination local guides on
+// region/country pages). Only the two members with a supplied photo are listed for now; the
+// developer and the owner will be added once they have one.
+const TEAM: TeamMemberData[] = [
+  {
+    name: "Anaïs",
+    role: "Experte voyage partenaire",
+    roleEn: "Travel Expert Partner",
+    roleEs: "Experta de viajes socia",
+    photo: "https://cdn.globaleexploretours.com/team/anais.jpg",
+  },
+  {
+    name: "Marjorie",
+    role: "Experte voyage partenaire",
+    roleEn: "Travel Expert Partner",
+    roleEs: "Experta de viajes socia",
+    photo: "https://cdn.globaleexploretours.com/team/marjorie.jpg",
+  },
+];
 
 const PILLARS = [
   { icon: CheckCircle2, titleKey: "trust.noHiddenFees", bodyKey: "trust.noHiddenFeesDesc" },
@@ -31,6 +52,10 @@ export function AboutPageClient() {
         <h2 className="font-display text-xl text-neutral-900">{t("aboutPage.storyTitle")}</h2>
         <p className="font-body mt-4 text-base leading-relaxed text-neutral-700">{t("aboutPage.storyBody1")}</p>
         <p className="font-body mt-4 text-base leading-relaxed text-neutral-700">{t("aboutPage.storyBody2")}</p>
+      </div>
+
+      <div className="mt-16">
+        <TeamGrid title={t("aboutPage.teamTitle")} subtitle={t("aboutPage.teamSubtitle")} members={TEAM} />
       </div>
 
       <div className="mt-16">

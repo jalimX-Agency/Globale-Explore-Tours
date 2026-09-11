@@ -299,6 +299,8 @@ export const es = {
     storyTitle: "Por qué lo hacemos así",
     storyBody1: "Demasiadas agencias venden el mismo circuito a todo el mundo, y solo cambia el nombre del cliente en el presupuesto. Nosotros elegimos lo contrario: partir de lo que usted realmente busca — el ritmo, el ambiente, lo que de verdad le entusiasma — y construir el itinerario en torno a eso, nunca al revés.",
     storyBody2: "Eso significa etapas elegidas por una razón concreta, guías con nombre propio en lugar de una agencia anónima, y un itinerario que puede seguir cambiando una vez allí, si un lugar merece que se quede un poco más.",
+    teamTitle: "El equipo",
+    teamSubtitle: "Las personas detrás de sus viajes — el equipo sigue creciendo, empezando por nuestras dos expertas de viajes.",
     pillarsTitle: "Lo que nunca cambia",
     pillarsSubtitle: "Cuatro compromisos que se aplican a cada viaje, desde un fin de semana en Europa hasta el gran tour de Kenia.",
     ratingCallout: "Valorado 4.9/5 en TripAdvisor, con más de cien opiniones verificadas — no una valoración comprada.",

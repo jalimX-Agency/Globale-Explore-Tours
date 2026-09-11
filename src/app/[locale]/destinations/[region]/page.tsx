@@ -92,10 +92,9 @@ export default async function RegionPage({
 
   if (!region || destinations.length === 0) notFound();
 
-  const [blocks, faqs, team, tours, allOtherDestinations, otherRegions] = await Promise.all([
+  const [blocks, faqs, tours, allOtherDestinations, otherRegions] = await Promise.all([
     db.contentBlock.findMany({ where: { regionId: region.id }, orderBy: [{ section: "asc" }, { order: "asc" }] }),
     db.faq.findMany({ where: { regionId: region.id }, orderBy: { order: "asc" } }),
-    db.teamMember.findMany({ where: { regionId: region.id }, orderBy: { order: "asc" } }),
     db.tour.findMany({
       where: { destination: { regionSlug } },
       orderBy: [{ featured: "desc" }, { order: "asc" }],
@@ -157,7 +156,6 @@ export default async function RegionPage({
         destinations={destinations}
         blocks={blocks}
         faqs={faqs}
-        team={team}
         tours={toursWithHref}
         otherRegions={otherRegionItems}
       />

@@ -87,10 +87,9 @@ export default async function CountryPage({
   const destination = await getDestination(country);
   if (!destination || destination.regionSlug !== regionSlug) notFound();
 
-  const [blocks, faqs, team, tours, siblingDestinations] = await Promise.all([
+  const [blocks, faqs, tours, siblingDestinations] = await Promise.all([
     db.contentBlock.findMany({ where: { destinationId: destination.id }, orderBy: [{ section: "asc" }, { order: "asc" }] }),
     db.faq.findMany({ where: { destinationId: destination.id }, orderBy: { order: "asc" } }),
-    db.teamMember.findMany({ where: { destinationId: destination.id }, orderBy: { order: "asc" } }),
     db.tour.findMany({
       where: { destinationId: destination.id },
       orderBy: [{ featured: "desc" }, { order: "asc" }],
@@ -149,7 +148,6 @@ export default async function CountryPage({
         breadcrumb={breadcrumb}
         blocks={blocks}
         faqs={faqs}
-        team={team}
         tours={toursWithHref}
         otherDestinations={otherDestinations}
       />

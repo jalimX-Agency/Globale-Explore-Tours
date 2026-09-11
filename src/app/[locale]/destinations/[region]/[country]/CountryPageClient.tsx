@@ -8,7 +8,6 @@ import { DestinationOverview } from "@/components/get/DestinationOverview";
 import { ContentBlockSection } from "@/components/get/ContentBlockSection";
 import { BestOfGrid } from "@/components/get/BestOfGrid";
 import { ClientLovedGrid } from "@/components/get/ClientLovedGrid";
-import { TeamGrid } from "@/components/get/TeamGrid";
 import { TripsShowcase } from "@/components/get/TripsShowcase";
 import { FaqAccordion } from "@/components/get/FaqAccordion";
 import { OtherDestinationsCarousel, type OtherDestinationItem } from "@/components/get/OtherDestinationsCarousel";
@@ -42,7 +41,6 @@ type Block = {
   ctaHref: string;
 };
 type Faq = { question: string; questionEn: string; questionEs: string; answer: string; answerEn: string; answerEs: string };
-type Team = { name: string; role: string; roleEn: string; roleEs: string; photo: string };
 
 function localized(language: string, fr: string, en: string, es: string) {
   if (language === "en") return en || fr;
@@ -76,7 +74,6 @@ export function CountryPageClient({
   breadcrumb,
   blocks,
   faqs,
-  team,
   tours,
   otherDestinations,
 }: {
@@ -85,7 +82,6 @@ export function CountryPageClient({
   breadcrumb: BreadcrumbItem[];
   blocks: Block[];
   faqs: Faq[];
-  team: Team[];
   tours: TourCardData[];
   otherDestinations: OtherDestinationItem[];
 }) {
@@ -98,7 +94,6 @@ export function CountryPageClient({
     { id: "overview", label: t("destinationsPage.overview") },
     { id: "trips", label: t("destinationsPage.trips") },
     { id: "see-and-do", label: t("destinationsPage.seeAndDo") },
-    { id: "team", label: t("destinationsPage.team") },
     { id: "faq", label: t("destinationsPage.faq") },
   ];
 
@@ -136,10 +131,6 @@ export function CountryPageClient({
             title={t("destinationsPage.clientLoved")}
             blocks={blocks.filter((b) => b.section === "clientLoved")}
           />
-        </div>
-
-        <div id="team" className="scroll-mt-40">
-          <TeamGrid title={t("destinationsPage.team")} members={team} />
         </div>
 
         <div id="faq" className="scroll-mt-40">

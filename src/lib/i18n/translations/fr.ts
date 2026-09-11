@@ -299,6 +299,8 @@ export const fr = {
     storyTitle: "Pourquoi on fait ça",
     storyBody1: "Trop d'agences vendent le même circuit à tout le monde, avec juste le nom du client qui change sur le devis. On a fait le choix inverse : partir de ce que vous cherchez réellement — le rythme, l'ambiance, ce qui vous fait vibrer — et construire l'itinéraire autour de ça, jamais l'inverse.",
     storyBody2: "Ça veut dire des étapes choisies pour une raison précise, des guides nommés et non une agence anonyme, et un itinéraire qui peut encore bouger une fois sur place si un endroit mérite qu'on y reste plus longtemps.",
+    teamTitle: "L'équipe",
+    teamSubtitle: "Les visages derrière vos voyages — l'équipe s'agrandit, en commençant par nos deux expertes voyage.",
     pillarsTitle: "Ce qui ne change jamais",
     pillarsSubtitle: "Quatre engagements qui s'appliquent à chaque voyage, du week-end en Europe au grand tour du Kenya.",
     ratingCallout: "Noté 4.9/5 sur TripAdvisor, avec plus de cent avis vérifiés — pas une note achetée.",

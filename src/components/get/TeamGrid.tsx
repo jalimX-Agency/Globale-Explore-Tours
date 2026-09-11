@@ -26,7 +26,15 @@ function initials(name: string) {
     .toUpperCase();
 }
 
-export function TeamGrid({ title, members }: { title: string; members: TeamMemberData[] }) {
+export function TeamGrid({
+  title,
+  subtitle,
+  members,
+}: {
+  title: string;
+  subtitle?: string;
+  members: TeamMemberData[];
+}) {
   const { language } = useLanguage();
 
   if (members.length === 0) return null;
@@ -36,6 +44,7 @@ export function TeamGrid({ title, members }: { title: string; members: TeamMembe
       <h2 className="font-display text-center text-2xl font-normal tracking-wide text-neutral-800 sm:text-3xl">
         {title}
       </h2>
+      {subtitle && <p className="font-body mt-2 text-center text-sm text-neutral-500">{subtitle}</p>}
       <div className="mt-10 flex flex-wrap justify-center gap-8 sm:gap-12">
         {members.map((member, i) => {
           const role = localized(language, member.role, member.roleEn, member.roleEs);
