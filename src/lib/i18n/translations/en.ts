@@ -304,7 +304,7 @@ export const en = {
     storyBody1: "Too many agencies sell the same circuit to everyone, with only the client's name changing on the quote. We chose the opposite: start from what you're actually after — the pace, the mood, what genuinely excites you — and build the itinerary around that, never the other way round.",
     storyBody2: "That means stops chosen for a specific reason, named guides instead of an anonymous agency, and an itinerary that can still shift once you're there, if a place is worth staying in a little longer.",
     teamTitle: "The team",
-    teamSubtitle: "The people behind your trips — the team is growing, starting with our two travel expert partners.",
+    teamSubtitle: "The people behind your trips.",
     pillarsTitle: "What never changes",
     pillarsSubtitle: "Four commitments that apply to every trip, from a weekend in Europe to the great tour of Kenya.",
     ratingCallout: "Rated 4.9/5 on TripAdvisor, with over a hundred verified reviews — not a bought rating.",

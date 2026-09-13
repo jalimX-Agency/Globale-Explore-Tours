@@ -7,9 +7,15 @@ import { TeamGrid, type TeamMemberData } from "@/components/get/TeamGrid";
 import { CheckCircle2, Users, Headset, Car } from "lucide-react";
 
 // The agency's own team (as opposed to TeamGrid's other use — per-destination local guides on
-// region/country pages). Only the two members with a supplied photo are listed for now; the
-// developer and the owner will be added once they have one.
+// region/country pages).
 const TEAM: TeamMemberData[] = [
+  {
+    name: "Mourad Chentit",
+    role: "Fondateur & CEO",
+    roleEn: "Founder & CEO",
+    roleEs: "Fundador y CEO",
+    photo: "https://cdn.globaleexploretours.com/team/mourad.jpg",
+  },
   {
     name: "Anaïs",
     role: "Experte voyage partenaire",
@@ -23,6 +29,13 @@ const TEAM: TeamMemberData[] = [
     roleEn: "Travel Expert Partner",
     roleEs: "Experta de viajes socia",
     photo: "https://cdn.globaleexploretours.com/team/marjorie.jpg",
+  },
+  {
+    name: "Mohamed Jalim",
+    role: "Développeur",
+    roleEn: "Developer",
+    roleEs: "Desarrollador",
+    photo: "https://cdn.globaleexploretours.com/team/mohamed.jpg",
   },
 ];
 
