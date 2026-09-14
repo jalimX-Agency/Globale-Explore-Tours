@@ -77,6 +77,7 @@ export function BookingForm({
       phone: "",
       hearAboutUs: "",
       company: "",
+      gdprConsent: false,
     },
   });
 
@@ -338,6 +339,33 @@ export function BookingForm({
             </select>
           </div>
         </section>
+
+        <div>
+          <div className="flex items-start gap-3 rounded-sm border border-neutral-200 bg-neutral-50 p-4">
+            <input
+              id="gdprConsent"
+              type="checkbox"
+              className="mt-0.5 size-4 shrink-0 accent-neutral-900"
+              {...register("gdprConsent")}
+            />
+            <label htmlFor="gdprConsent" className="text-sm leading-relaxed text-neutral-600">
+              <span className="label-eyebrow mb-1 block text-neutral-500">
+                {t("bookingPage.gdprLabel")} <span className="text-[var(--brand-accent)]">*</span>
+              </span>
+              {t("bookingPage.gdprPrefix")}
+              <LocaleLink
+                href="/politique-de-confidentialite"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline hover:text-neutral-900"
+              >
+                {t("bookingPage.gdprLinkText")}
+              </LocaleLink>
+              {t("bookingPage.gdprSuffix")}
+            </label>
+          </div>
+          {errors.gdprConsent && <p className={errorClass}>{t("bookingPage.gdprError")}</p>}
+        </div>
 
         <button type="submit" disabled={pending} className="btn-accent w-full justify-center">
           {pending ? t("bookingPage.submitting") : t("bookingPage.submit")}

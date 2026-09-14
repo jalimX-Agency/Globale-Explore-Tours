@@ -21,10 +21,15 @@ export const bookingClientSchema = z
     phone: z.string(),
     hearAboutUs: z.string(),
     company: z.string(), // honeypot — real visitors never see or fill this field
+    gdprConsent: z.boolean(), // required via .refine below — never persisted, same as emailConfirm/company
   })
   .refine((data) => data.email === data.emailConfirm, {
     path: ["emailConfirm"],
     message: "mismatch",
+  })
+  .refine((data) => data.gdprConsent === true, {
+    path: ["gdprConsent"],
+    message: "required",
   });
 
 export type BookingClientValues = z.infer<typeof bookingClientSchema>;
