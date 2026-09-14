@@ -10,7 +10,7 @@ import { CheckCircle2, Users, Headset, Car } from "lucide-react";
 // region/country pages).
 const TEAM: TeamMemberData[] = [
   {
-    name: "Mourad Chentit",
+    name: "Mourad",
     role: "Fondateur & CEO",
     roleEn: "Founder & CEO",
     roleEs: "Fundador y CEO",
@@ -31,7 +31,7 @@ const TEAM: TeamMemberData[] = [
     photo: "https://cdn.globaleexploretours.com/team/marjorie.jpg",
   },
   {
-    name: "Mohamed Jalim",
+    name: "Mohamed",
     role: "Développeur",
     roleEn: "Developer",
     roleEs: "Desarrollador",
