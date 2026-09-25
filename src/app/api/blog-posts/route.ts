@@ -34,7 +34,22 @@ const blogPostApiSchema = z.object({
   content: z.string().min(1),
   contentEn: optionalText,
   contentEs: optionalText,
-  image: z.union([z.literal(""), z.string().url().startsWith("https://")]).default(""),
+  // Only hosts the site's Content-Security-Policy img-src allows (next.config.ts) — any other
+  // host would be accepted here but render as a broken image on the post.
+  image: z
+    .union([
+      z.literal(""),
+      z
+        .string()
+        .url()
+        .refine((value) => {
+          // zod still runs refinements after .url() fails, so an unparseable value must not throw.
+          if (!URL.canParse(value)) return false;
+          const { protocol, hostname } = new URL(value);
+          return protocol === "https:" && (hostname === "cdn.globaleexploretours.com" || hostname.endsWith(".r2.dev"));
+        }, "must be an https URL on cdn.globaleexploretours.com (upload it via /admin first)"),
+    ])
+    .default(""),
   category: optionalText,
   author: z.string().trim().default("Globale Explore Tours"),
   featured: z.boolean().default(false),

@@ -39,7 +39,9 @@ curl -X POST https://www.globaleexploretours.com/api/blog-posts \
   -d '{"slug":"mon-article","title":"Titre","content":"<p>…</p>"}'
 ```
 
-Champs optionnels : `titleEn/Es`, `excerpt(En/Es)`, `contentEn/Es`, `image` (URL https),
+Champs optionnels : `titleEn/Es`, `excerpt(En/Es)`, `contentEn/Es`, `image` (URL https sur
+`cdn.globaleexploretours.com` uniquement — la CSP du site bloque les autres domaines ; importer
+l'image via `/admin/blog` d'abord),
 `category`, `author`, `featured`, `order`. Un slug existant renvoie `409` (création uniquement —
 les modifications passent par `/admin/blog`). Exemple complet :
 `BLOG_API_KEY=… npx tsx scripts/publish-blog-seo-batch-1.ts`.
