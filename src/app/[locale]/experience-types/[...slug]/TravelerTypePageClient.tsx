@@ -5,6 +5,7 @@ import { useLanguage } from "@/lib/i18n/context";
 import { LocaleLink } from "@/components/get/LocaleLink";
 import { Breadcrumb, type BreadcrumbItem } from "@/components/get/Breadcrumb";
 import { Testimonials } from "@/components/get/Testimonials";
+import type { TestimonialItem } from "@/lib/testimonials";
 import { TripsShowcase } from "@/components/get/TripsShowcase";
 import { FaqAccordion } from "@/components/get/FaqAccordion";
 import { LinkedContentGrid } from "@/components/get/LinkedContentGrid";
@@ -31,11 +32,13 @@ export function TravelerTypePageClient({
   tours,
   categoryTours,
   breadcrumb,
+  testimonials,
 }: {
   content: TravelerTypePage;
   tours: TourCardData[];
   categoryTours?: Record<string, TourCardData[]>;
   breadcrumb: BreadcrumbItem[];
+  testimonials: TestimonialItem[];
 }) {
   const { language, t } = useLanguage();
 
@@ -191,7 +194,7 @@ export function TravelerTypePageClient({
         </section>
       )}
 
-      <Testimonials />
+      <Testimonials items={testimonials} />
 
       {/* ── FAQ ── */}
       {content.faqs.length > 0 && (

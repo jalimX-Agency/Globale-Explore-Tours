@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useLanguage } from "@/lib/i18n/context";
 import { LocaleLink } from "@/components/get/LocaleLink";
 import { Testimonials } from "@/components/get/Testimonials";
+import type { TestimonialItem } from "@/lib/testimonials";
 import { TripsShowcase } from "@/components/get/TripsShowcase";
 import { ExperienceCardRow, type ExperienceCard } from "@/components/get/ExperienceCardRow";
 import { type TourCardData } from "@/components/get/TourCard";
@@ -43,9 +44,11 @@ function scrollToSection(id: string) {
 export function ExperiencesPageClient({
   tours,
   experienceTypes,
+  testimonials,
 }: {
   tours: TourCardData[];
   experienceTypes: ExperienceTypeLite[];
+  testimonials: TestimonialItem[];
 }) {
   const { t, language } = useLanguage();
 
@@ -102,7 +105,7 @@ export function ExperiencesPageClient({
         </LocaleLink>
       </section>
 
-      <Testimonials />
+      <Testimonials items={testimonials} />
 
       {/* ── Who's travelling ── */}
       <section id="whos-travelling" className="scroll-mt-40 border-t border-neutral-100 bg-[var(--brand-sand)] py-20">

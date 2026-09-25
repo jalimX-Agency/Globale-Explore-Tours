@@ -54,6 +54,11 @@ export default async function BlogPostPage({
   const excerpt = pick(locale, post.excerpt, post.excerptEn, post.excerptEs);
   const journalLabel = locale === "en" ? "Travel Journal" : locale === "es" ? "Diario de viaje" : "Journal";
   const breadcrumb = [{ label: journalLabel, href: "/blog" }, { label: title }];
+  const byLabel = locale === "en" ? "By" : locale === "es" ? "Por" : "Par";
+  const updatedLabel = locale === "en" ? "Updated" : locale === "es" ? "Actualizado el" : "Mis à jour le";
+  // A visible, machine-readable date is a freshness signal both Google and AI answer engines
+  // weigh when picking which source to cite.
+  const updatedOn = post.updatedAt.toLocaleDateString(locale, { day: "numeric", month: "long", year: "numeric" });
 
   return (
     <main className="mx-auto max-w-3xl px-6 py-16 sm:py-24">
@@ -72,6 +77,7 @@ export default async function BlogPostPage({
             datePublished: post.createdAt,
             dateModified: post.updatedAt,
             author: post.author || undefined,
+            locale,
           }),
         }}
       />
@@ -88,7 +94,14 @@ export default async function BlogPostPage({
       <div className="mt-6 mb-8">
         {post.category && <p className="label-eyebrow text-neutral-400">{post.category}</p>}
         <h1 className="font-display mt-2 text-3xl sm:text-4xl">{title}</h1>
-        {post.author && <p className="mt-3 text-sm text-neutral-500">Par {post.author}</p>}
+        <p className="mt-3 text-sm text-neutral-500">
+          {post.author && (
+            <>
+              {byLabel} {post.author} ·{" "}
+            </>
+          )}
+          {updatedLabel} <time dateTime={post.updatedAt.toISOString()}>{updatedOn}</time>
+        </p>
       </div>
 
       {post.image && (

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { cache } from "react";
 import { notFound } from "next/navigation";
 import { db } from "@/lib/db";
+import { getTestimonials } from "@/lib/testimonials";
 import { isLocale, DEFAULT_LOCALE, type Locale } from "@/lib/i18n/locales";
 import { fr } from "@/lib/i18n/translations/fr";
 import { en } from "@/lib/i18n/translations/en";
@@ -220,6 +221,8 @@ export default async function ExperienceTypePage({
     });
   }
 
+  const testimonials = await getTestimonials();
+
   const faqSchema = faqJsonLd(
     row.faqs.map((f) => ({
       question: pick(locale, { fr: f.question, en: f.questionEn, es: f.questionEs }),
@@ -282,6 +285,7 @@ export default async function ExperienceTypePage({
           tours={toursWithHref}
           categoryTours={categoryTours}
           breadcrumb={fullBreadcrumb}
+          testimonials={testimonials}
         />
       </>
     );
@@ -348,6 +352,7 @@ export default async function ExperienceTypePage({
         tours={toursWithHref}
         related={related}
         breadcrumb={fullBreadcrumb}
+        testimonials={testimonials}
       />
     </>
   );

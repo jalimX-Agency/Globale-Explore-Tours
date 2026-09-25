@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/lib/i18n/context";
+import { TRIPADVISOR_RATING, TRIPADVISOR_URL } from "@/lib/seo";
+import type { TestimonialItem } from "@/lib/testimonials";
 
 const ROTATE_MS = 7000;
 
@@ -26,28 +28,10 @@ function useGroupSize() {
 }
 
 // Testimonials are fully managed from /admin/testimonials — this section simply reflects
-// whatever is published there, in order.
-function useTestimonialItems() {
-  const [items, setItems] = useState<readonly { quote: string; author: string }[]>([]);
-  useEffect(() => {
-    let cancelled = false;
-    fetch("/api/testimonials")
-      .then((res) => (res.ok ? res.json() : null))
-      .then((data) => {
-        if (!cancelled && data?.items) setItems(data.items);
-      })
-      .catch(() => {});
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-  return items;
-}
-
-export function Testimonials() {
+// whatever is published there, in order (loaded server-side, see getTestimonials).
+export function Testimonials({ items }: { items: readonly TestimonialItem[] }) {
   const { t } = useLanguage();
   const groupSize = useGroupSize();
-  const items = useTestimonialItems();
   const groups = chunk(items, groupSize);
   const [page, setPage] = useState(0);
   // Clamp instead of resetting via effect: groupSize changes on viewport resize, and the
@@ -86,7 +70,7 @@ export function Testimonials() {
 
         <div className="mt-12 flex flex-col items-center gap-5">
           <a
-            href="https://www.tripadvisor.com/Attraction_Review-g293731-d27487904-Reviews-Globale_Explore_Tours-Agadir_Souss_Massa.html"
+            href={TRIPADVISOR_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="font-body flex flex-col items-center gap-1.5 text-neutral-500 hover:text-neutral-800"
@@ -97,7 +81,8 @@ export function Testimonials() {
               ))}
             </span>
             <span className="text-xs">
-              <span className="font-semibold text-neutral-700">4.9/5</span> · 105 {t("testimonials.source")}
+              <span className="font-semibold text-neutral-700">{TRIPADVISOR_RATING.value}/5</span> · {TRIPADVISOR_RATING.count}{" "}
+              {t("testimonials.source")}
             </span>
           </a>
 

@@ -15,6 +15,9 @@ const nextConfig: NextConfig = {
     staticGenerationMaxConcurrency: 4,
     staticGenerationMinPagesPerWorker: 50,
     staticGenerationRetryCount: 2,
+    // The app has two root layouts (app/[locale], app/admin) and no app/layout.tsx — see
+    // src/app/global-not-found.tsx for the 404 served to URLs outside both.
+    globalNotFound: true,
   },
   images: {
     // Vercel's Image Optimization (resize + WebP/AVIF conversion on request) is metered per

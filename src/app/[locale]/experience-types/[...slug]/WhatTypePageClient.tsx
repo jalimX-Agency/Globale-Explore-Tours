@@ -5,6 +5,7 @@ import { useLanguage } from "@/lib/i18n/context";
 import { LocaleLink } from "@/components/get/LocaleLink";
 import { Breadcrumb, type BreadcrumbItem } from "@/components/get/Breadcrumb";
 import { Testimonials } from "@/components/get/Testimonials";
+import type { TestimonialItem } from "@/lib/testimonials";
 import { TripsShowcase } from "@/components/get/TripsShowcase";
 import { LinkedContentGrid } from "@/components/get/LinkedContentGrid";
 import type { TourCardData } from "@/components/get/TourCard";
@@ -29,11 +30,13 @@ export function WhatTypePageClient({
   tours,
   related,
   breadcrumb,
+  testimonials,
 }: {
   content: WhatTypeContent;
   tours: TourCardData[];
   related: WhatTypeContent[];
   breadcrumb: BreadcrumbItem[];
+  testimonials: TestimonialItem[];
 }) {
   const { language, t } = useLanguage();
 
@@ -107,7 +110,7 @@ export function WhatTypePageClient({
         </section>
       )}
 
-      <Testimonials />
+      <Testimonials items={testimonials} />
 
       {/* ── CTA band ── */}
       <section className="bg-[var(--brand-accent)] py-14 text-white">

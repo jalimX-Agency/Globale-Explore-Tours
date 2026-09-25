@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { db } from "@/lib/db";
+import { getTestimonials } from "@/lib/testimonials";
 import { isLocale, DEFAULT_LOCALE, type Locale } from "@/lib/i18n/locales";
 import { ExperiencesPageClient } from "./ExperiencesPageClient";
 import { pageMetadata } from "@/lib/seo";
@@ -43,7 +44,7 @@ const TOUR_CARD_SELECT = {
 } as const;
 
 export default async function ExperienceTypesPage() {
-  const [tours, experienceTypes] = await Promise.all([
+  const [tours, experienceTypes, testimonials] = await Promise.all([
     db.tour.findMany({
       orderBy: [{ featured: "desc" }, { order: "asc" }],
       take: 8,
@@ -64,6 +65,7 @@ export default async function ExperienceTypesPage() {
         cardDescriptionEs: true,
       },
     }),
+    getTestimonials(),
   ]);
 
   const toursWithHref = tours.map((tour) => ({
@@ -72,5 +74,5 @@ export default async function ExperienceTypesPage() {
     regionSlug: tour.destination?.regionSlug,
   }));
 
-  return <ExperiencesPageClient tours={toursWithHref} experienceTypes={experienceTypes} />;
+  return <ExperiencesPageClient tours={toursWithHref} experienceTypes={experienceTypes} testimonials={testimonials} />;
 }
