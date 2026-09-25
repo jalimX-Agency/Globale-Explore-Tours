@@ -11,6 +11,12 @@ const META = {
   es: { title: "Diario de viaje", description: "Nuestros consejos y relatos de viaje — destinos en todo el mundo, escritos por nuestro equipo de guías locales." },
 } as const satisfies Record<Locale, { title: string; description: string }>;
 
+const HEADING = {
+  fr: { heading: "Nos conseils et récits de voyage", empty: "Aucun article publié pour l'instant." },
+  en: { heading: "Our travel tips and stories", empty: "No articles published yet." },
+  es: { heading: "Nuestros consejos y relatos de viaje", empty: "Todavía no hay artículos publicados." },
+} as const satisfies Record<Locale, { heading: string; empty: string }>;
+
 export async function generateMetadata({
   params,
 }: {
@@ -54,12 +60,12 @@ export default async function BlogIndexPage({
   return (
     <main className="mx-auto max-w-6xl px-6 py-16 sm:py-24">
       <div className="mb-12 text-center">
-        <p className="label-eyebrow text-neutral-400">Journal</p>
-        <h1 className="font-display mt-2 text-3xl sm:text-4xl">Nos conseils et récits de voyage</h1>
+        <p className="label-eyebrow text-neutral-400">{META[locale].title}</p>
+        <h1 className="font-display mt-2 text-3xl sm:text-4xl">{HEADING[locale].heading}</h1>
       </div>
 
       {posts.length === 0 ? (
-        <p className="text-center text-neutral-500">Aucun article publié pour l&apos;instant.</p>
+        <p className="text-center text-neutral-500">{HEADING[locale].empty}</p>
       ) : (
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {posts.map((post) => (

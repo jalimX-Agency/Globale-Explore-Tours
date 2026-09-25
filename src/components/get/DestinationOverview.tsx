@@ -15,7 +15,13 @@ export function DestinationOverview({ heading, paragraphs }: { heading: string; 
       )}
       <div className="font-body mt-4 space-y-4 text-neutral-600">
         {paragraphs[0] && <p>{paragraphs[0]}</p>}
-        {expanded && extra.map((p, i) => <p key={i}>{p}</p>)}
+        {/* Hidden, not unmounted, when collapsed — keeps the "read more" copy in the server
+            HTML for crawlers that don't run JS. */}
+        {extra.map((p, i) => (
+          <p key={i} hidden={!expanded}>
+            {p}
+          </p>
+        ))}
       </div>
       {extra.length > 0 && (
         <button

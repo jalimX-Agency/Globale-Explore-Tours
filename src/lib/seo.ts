@@ -17,6 +17,77 @@ export const DEFAULT_OG_IMAGE = "https://cdn.globaleexploretours.com/destination
 
 const HOME_LABEL: Record<Locale, string> = { fr: fr.nav.home, en: en.nav.home, es: es.nav.home };
 
+// Stable @id anchors so every page's schema (trips, articles, the WebSite node) points at the
+// same agency entity instead of re-declaring a bare, unlinked "TravelAgency" each time — AI
+// answer engines and Google's Knowledge Graph both resolve entities through these ids.
+export const ORGANIZATION_ID = `${SITE_URL}/#organization`;
+const WEBSITE_ID = `${SITE_URL}/#website`;
+
+export const TRIPADVISOR_URL =
+  "https://www.tripadvisor.com/Attraction_Review-g293731-d27487904-Reviews-Globale_Explore_Tours-Agadir_Souss_Massa.html";
+const INSTAGRAM_URL = "https://www.instagram.com/globaleexploretours/";
+
+// Keep in sync with the rating shown in <Testimonials> and the trust copy in translations.
+export const TRIPADVISOR_RATING = { value: "4.9", count: 105 };
+
+const ORGANIZATION_DESCRIPTION: Record<Locale, string> = {
+  fr: "Agence de voyages sur-mesure basée à Valenciennes (France), qui conçoit des voyages et circuits privés dans le monde entier avec des guides locaux.",
+  en: "Tailor-made travel agency based in Valenciennes, France, designing private trips and tours worldwide with local guides.",
+  es: "Agencia de viajes a medida con sede en Valenciennes (Francia), que diseña viajes y circuitos privados en todo el mundo con guías locales.",
+};
+
+export function organizationJsonLd(locale: Locale) {
+  return safeJsonLd({
+    "@context": "https://schema.org",
+    "@type": "TravelAgency",
+    "@id": ORGANIZATION_ID,
+    name: SITE_NAME,
+    description: ORGANIZATION_DESCRIPTION[locale],
+    url: SITE_URL,
+    logo: { "@type": "ImageObject", url: `${SITE_URL}/logo.png` },
+    image: DEFAULT_OG_IMAGE,
+    telephone: "+33667586462",
+    email: "contact@globaleexploretours.com",
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: "5 Avenue du Sénateur Girard",
+      postalCode: "59300",
+      addressLocality: "Valenciennes",
+      addressCountry: "FR",
+    },
+    contactPoint: {
+      "@type": "ContactPoint",
+      contactType: "customer service",
+      telephone: "+33667586462",
+      email: "contact@globaleexploretours.com",
+      availableLanguage: ["French", "English", "Spanish"],
+    },
+    areaServed: "Worldwide",
+    currenciesAccepted: "EUR",
+    // Payment methods listed in the booking terms (conditions-de-reservation, article 4.1).
+    paymentAccepted: "Bank transfer, Cash, ANCV Chèques-Vacances, Credit card",
+    aggregateRating: {
+      "@type": "AggregateRating",
+      ratingValue: TRIPADVISOR_RATING.value,
+      reviewCount: String(TRIPADVISOR_RATING.count),
+      bestRating: "5",
+    },
+    sameAs: [TRIPADVISOR_URL, INSTAGRAM_URL],
+  });
+}
+
+export function websiteJsonLd(locale: Locale) {
+  return safeJsonLd({
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": WEBSITE_ID,
+    name: SITE_NAME,
+    url: `${SITE_URL}/${locale}`,
+    inLanguage: locale,
+    publisher: { "@id": ORGANIZATION_ID },
+  });
+}
+
 // JSON.stringify doesn't escape "<", so a "</script>" inside any admin-authored field (a blog
 // title, FAQ answer, tour name...) landing in these strings would close the JSON-LD <script>
 // tag early and let whatever follows execute as HTML on a page every visitor loads. Escaping
@@ -152,23 +223,42 @@ export function faqJsonLd(faqs: { question: string; answer: string }[]) {
   });
 }
 
+const TOURIST_TYPE_LABELS: Record<Locale, Record<string, string>> = {
+  fr: { family: "Familles", couples: "Couples", groups: "Groupes", honeymoon: "Voyages de noces", solo: "Voyageurs solo" },
+  en: { family: "Families", couples: "Couples", groups: "Groups", honeymoon: "Honeymooners", solo: "Solo travellers" },
+  es: { family: "Familias", couples: "Parejas", groups: "Grupos", honeymoon: "Lunas de miel", solo: "Viajeros solos" },
+};
+
 export function touristTripJsonLd({
+  locale,
   name,
   description,
   image,
   url,
   price,
   currency,
-  duration,
+  travelerTypes,
+  stops,
+  destinationName,
 }: {
+  locale: Locale;
   name: string;
   description?: string;
   image?: string;
   url: string;
   price?: number;
   currency?: string;
-  duration?: string;
+  /** Tour.travelerTypes, comma-separated keys (family, couples...). */
+  travelerTypes?: string;
+  /** Ordered stops — journey chapters, or a standard trip's distinct day-by-day locations. */
+  stops: string[];
+  destinationName: string;
 }) {
+  const touristType = (travelerTypes ?? "")
+    .split(",")
+    .map((key) => TOURIST_TYPE_LABELS[locale][key.trim()])
+    .filter(Boolean);
+
   return safeJsonLd({
     "@context": "https://schema.org",
     "@type": "TouristTrip",
@@ -176,19 +266,33 @@ export function touristTripJsonLd({
     description,
     image: image || undefined,
     url,
-    ...(duration ? { itinerary: { "@type": "ItemList", name: duration } } : {}),
+    ...(touristType.length > 0 ? { touristType } : {}),
+    // A real ordered route (previously this held the duration string as an ItemList "name",
+    // which carried no itinerary at all) — the part of a trip page AI answer engines lift
+    // when asked "what does a X-day trip to Y look like".
+    itinerary: {
+      "@type": "ItemList",
+      numberOfItems: stops.length || 1,
+      itemListElement: (stops.length > 0 ? stops : [destinationName]).map((stop, i) => ({
+        "@type": "ListItem",
+        position: i + 1,
+        item: { "@type": "Place", name: stop },
+      })),
+    },
     ...(price
       ? {
           offers: {
             "@type": "Offer",
+            // Trip pages show this as a per-person starting price for a tailor-made quote.
             price,
             priceCurrency: currency || "EUR",
             availability: "https://schema.org/InStock",
             url,
+            offeredBy: { "@id": ORGANIZATION_ID },
           },
         }
       : {}),
-    provider: { "@type": "TravelAgency", name: SITE_NAME, url: SITE_URL },
+    provider: { "@type": "TravelAgency", "@id": ORGANIZATION_ID, name: SITE_NAME, url: SITE_URL },
   });
 }
 
@@ -200,6 +304,7 @@ export function articleJsonLd({
   datePublished,
   dateModified,
   author,
+  locale,
 }: {
   headline: string;
   description?: string;
@@ -208,19 +313,24 @@ export function articleJsonLd({
   datePublished: Date;
   dateModified: Date;
   author?: string;
+  locale: Locale;
 }) {
   return safeJsonLd({
     "@context": "https://schema.org",
     "@type": "Article",
     headline,
     description,
+    inLanguage: locale,
     image: image || undefined,
     mainEntityOfPage: { "@type": "WebPage", "@id": url },
     datePublished: datePublished.toISOString(),
     dateModified: dateModified.toISOString(),
-    author: author ? { "@type": "Person", name: author } : { "@type": "Organization", name: SITE_NAME },
+    author: author
+      ? { "@type": "Person", name: author }
+      : { "@type": "Organization", "@id": ORGANIZATION_ID, name: SITE_NAME },
     publisher: {
       "@type": "Organization",
+      "@id": ORGANIZATION_ID,
       name: SITE_NAME,
       logo: { "@type": "ImageObject", url: `${SITE_URL}/logo.png` },
     },

@@ -67,6 +67,12 @@ const getTour = cache((slug: string) => {
       },
       sections: { orderBy: { order: "asc" } },
       hotels: { orderBy: { order: "asc" } },
+      // Standard-format trips' day-by-day stops — only used for the TouristTrip schema's route.
+      itineraryDays: {
+        where: { chapterId: null },
+        orderBy: [{ dayNumber: "asc" }, { order: "asc" }],
+        select: { location: true, locationEn: true, locationEs: true },
+      },
     },
   });
 });
@@ -148,15 +154,23 @@ export default async function TripPage({
 
   const tripDescription =
     pick(locale, tour.description, tour.descriptionEn, tour.descriptionEs) || pick(locale, tour.tagline, tour.taglineEn, tour.taglineEs);
-  const tripDuration = pick(locale, tour.duration, tour.durationEn, tour.durationEs);
+  const stopNames =
+    tour.format === "journey"
+      ? tour.chapters.map((c) => pick(locale, c.title, c.titleEn, c.titleEs))
+      : tour.itineraryDays.map((d) => pick(locale, d.location, d.locationEn, d.locationEs));
+  // Consecutive days in the same place collapse to one stop; empty locations are dropped.
+  const stops = stopNames.filter((stop, i) => stop && stop !== stopNames[i - 1]);
   const tripSchema = touristTripJsonLd({
+    locale,
     name: tripLabel,
     description: tripDescription || undefined,
     image: tour.image || undefined,
     url: `${SITE_URL}/${locale}/destinations/${regionSlug}/${country}/${slug}`,
     price: tour.price || undefined,
     currency: tour.currency,
-    duration: tripDuration || undefined,
+    travelerTypes: tour.travelerTypes,
+    stops,
+    destinationName: countryLabel,
   });
 
   const schemas = (

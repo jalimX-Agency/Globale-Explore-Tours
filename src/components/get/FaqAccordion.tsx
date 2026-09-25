@@ -47,7 +47,13 @@ export function FaqAccordion({ faqs }: { faqs: FaqData[] }) {
                   className={`h-4 w-4 flex-shrink-0 text-neutral-500 transition-transform ${isOpen ? "rotate-180" : ""}`}
                 />
               </button>
-              {isOpen && <p className="font-body pb-5 text-sm text-neutral-600 sm:text-base">{answer}</p>}
+              {/* Always rendered, only visually hidden when closed: unmounting it left every
+                  answer out of the server HTML, so crawlers that don't run JS (most AI
+                  answer engines) saw questions with no answers — and Google requires FAQPage
+                  schema answers to exist on the page. */}
+              <p hidden={!isOpen} className="font-body pb-5 text-sm text-neutral-600 sm:text-base">
+                {answer}
+              </p>
             </div>
           );
         })}

@@ -5,8 +5,9 @@ import { LanguageProvider } from "@/lib/i18n/context";
 import { SiteChrome } from "@/components/get/SiteChrome";
 import { NavigationServer } from "@/components/get/NavigationServer";
 import { FooterServer } from "@/components/get/FooterServer";
-import { SetHtmlLang } from "@/components/get/SetHtmlLang";
-import { DEFAULT_OG_IMAGE, safeJsonLd } from "@/lib/seo";
+import { HtmlDocument } from "@/components/HtmlDocument";
+import { DEFAULT_OG_IMAGE, organizationJsonLd, websiteJsonLd } from "@/lib/seo";
+import "../globals.css";
 
 export function generateStaticParams() {
   return LOCALES.map((locale) => ({ locale }));
@@ -46,6 +47,8 @@ export async function generateMetadata({
   const bingVerification = process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION;
 
   return {
+    metadataBase: new URL("https://www.globaleexploretours.com"),
+    robots: { index: true, follow: true },
     title: { default: meta.title, template: "%s | Globale Explore Tours" },
     description: meta.description,
     alternates: {
@@ -81,35 +84,15 @@ export default async function LocaleLayout({
   if (!isLocale(rawLocale)) notFound();
   const locale = rawLocale;
 
-  const travelAgencySchema = safeJsonLd({
-    "@context": "https://schema.org",
-    "@type": "TravelAgency",
-    name: "Globale Explore Tours",
-    description: "Agence de voyages sur-mesure basée à Valenciennes, France, proposant des voyages et circuits sur-mesure dans le monde entier.",
-    url: "https://www.globaleexploretours.com",
-    telephone: "+33667586462",
-    email: "contact@globaleexploretours.com",
-    address: {
-      "@type": "PostalAddress",
-      streetAddress: "5 Avenue du Sénateur Girard",
-      postalCode: "59300",
-      addressLocality: "Valenciennes",
-      addressCountry: "FR",
-    },
-    areaServed: "Worldwide",
-    aggregateRating: { "@type": "AggregateRating", ratingValue: "4.9", reviewCount: "105", bestRating: "5" },
-    sameAs: [
-      "https://www.tripadvisor.com/Attraction_Review-g293731-d27487904-Reviews-Globale_Explore_Tours-Agadir_Souss_Massa.html",
-    ],
-  });
-
   return (
-    <LanguageProvider locale={locale}>
-      <SetHtmlLang locale={locale} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: travelAgencySchema }} />
-      <SiteChrome nav={<NavigationServer />} footer={<FooterServer />}>
-        {children}
-      </SiteChrome>
-    </LanguageProvider>
+    <HtmlDocument lang={locale}>
+      <LanguageProvider locale={locale}>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: organizationJsonLd(locale) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: websiteJsonLd(locale) }} />
+        <SiteChrome nav={<NavigationServer />} footer={<FooterServer />}>
+          {children}
+        </SiteChrome>
+      </LanguageProvider>
+    </HtmlDocument>
   );
 }
