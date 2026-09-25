@@ -4,6 +4,10 @@ import { LOCALES } from "@/lib/i18n/locales";
 
 const BASE = "https://www.globaleexploretours.com";
 
+// Without this the sitemap is generated once at build time, so posts published afterwards
+// (from /admin/blog or /api/blog-posts) stayed out of it until the next deploy.
+export const revalidate = 3600;
+
 // Every entry is emitted once per locale, with hreflang alternates pointing at its
 // siblings — this is what makes each language crawlable and indexable on its own URL.
 function withLocales(

@@ -7,17 +7,13 @@ export {};
 // Idempotent: a post whose slug already exists is skipped. Hero images reuse photos already on
 // the CDN, checked live before anything is written.
 //   npx tsx scripts/seed-blog-seo-batch-1.ts
+// Needs the production DATABASE_URL — without it, publish through the API instead:
+// scripts/publish-blog-seo-batch-1.ts.
 
 process.loadEnvFile(".env");
 
 import { SEO_BLOG_POSTS_BATCH_1 } from "./lib/blogPostsSeoBatch1";
-
-function addLocalePrefix(html: string, locale: string): string {
-  return html
-    .replace(/href="\/destinations\//g, `href="/${locale}/destinations/`)
-    .replace(/href="\/experience-types\//g, `href="/${locale}/experience-types/`)
-    .replace(/href="\/faire-une-demande"/g, `href="/${locale}/faire-une-demande"`);
-}
+import { addLocalePrefix } from "./lib/blogLinks";
 
 async function main() {
   const { db } = await import("../src/lib/db");
