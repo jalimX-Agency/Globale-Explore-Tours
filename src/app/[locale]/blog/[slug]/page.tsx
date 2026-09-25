@@ -113,7 +113,7 @@ export default async function BlogPostPage({
       {/* `content` is authored HTML entered by an admin (see /admin/blog), never raw
           visitor input, so there is no XSS risk from rendering it directly. */}
       <div
-        className="prose prose-neutral max-w-none prose-headings:font-display prose-img:rounded-sm"
+        className="blog-content prose prose-neutral max-w-none prose-headings:font-display prose-img:rounded-sm"
         dangerouslySetInnerHTML={{ __html: content }}
       />
     </main>
