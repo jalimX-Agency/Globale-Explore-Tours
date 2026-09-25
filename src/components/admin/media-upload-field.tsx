@@ -5,6 +5,7 @@ import { useController } from "react-hook-form";
 import { toast } from "sonner";
 import { Loader2, Upload, X, ImageIcon, Video } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { isVideoUrl } from "@/lib/media";
 
@@ -57,6 +58,7 @@ export function MediaUploadField({
   const { field } = useController({ control, name });
   const [uploading, setUploading] = useState(false);
   const [dragOver, setDragOver] = useState(false);
+  const [urlDraft, setUrlDraft] = useState("");
   const value = (field.value as string) || "";
   const inputId = `media-upload-${name.replace(/\./g, "-")}`;
   const maxWidth = size === "lg" ? "max-w-none" : "max-w-xs";
@@ -74,6 +76,19 @@ export function MediaUploadField({
     } finally {
       setUploading(false);
     }
+  }
+
+  // Images hosted elsewhere (e.g. found online) can be used as-is instead of uploaded — the
+  // site's CSP allows any https image host. Plain http is refused: browsers block it as
+  // mixed content on the https site.
+  function applyUrl() {
+    const url = urlDraft.trim();
+    if (!URL.canParse(url) || new URL(url).protocol !== "https:") {
+      toast.error("Collez une adresse d'image valide commençant par https://");
+      return;
+    }
+    field.onChange(url);
+    setUrlDraft("");
   }
 
   return (
@@ -172,6 +187,29 @@ export function MediaUploadField({
             }}
           />
         </label>
+      )}
+
+      {!value && (
+        <div className={cn("flex gap-2", maxWidth)}>
+          <Input
+            type="url"
+            value={urlDraft}
+            onChange={(e) => setUrlDraft(e.target.value)}
+            onKeyDown={(e) => {
+              // Enter would otherwise submit the whole admin form.
+              if (e.key === "Enter") {
+                e.preventDefault();
+                applyUrl();
+              }
+            }}
+            placeholder="…ou collez l'URL d'une image (https://…)"
+            className="h-8 text-xs"
+            disabled={uploading}
+          />
+          <Button type="button" variant="outline" size="sm" onClick={applyUrl} disabled={uploading || !urlDraft.trim()}>
+            Utiliser
+          </Button>
+        </div>
       )}
     </div>
   );

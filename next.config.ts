@@ -72,7 +72,10 @@ const nextConfig: NextConfig = {
       // invitejs.trustpilot.com serves the Trustpilot review-invitation widget (TrustpilotWidget.tsx).
       `script-src ${scriptSrc} https://www.googletagmanager.com https://connect.facebook.net https://invitejs.trustpilot.com`,
       "style-src 'self' 'unsafe-inline'",
-      "img-src 'self' data: blob: https://*.r2.dev https://cdn.globaleexploretours.com https://www.googletagmanager.com https://www.google-analytics.com https://www.facebook.com",
+      // Any https image host, not just the R2 CDN: blog posts (admin or /api/blog-posts) may use
+      // images hosted elsewhere. Images can't run script, so this doesn't widen the XSS surface;
+      // the trade-off is that such images load from — and can be removed by — third parties.
+      "img-src 'self' data: blob: https:",
       "media-src 'self' https://*.r2.dev https://cdn.globaleexploretours.com",
       "font-src 'self' data:",
       // *.r2.dev is the public CDN read path; *.r2.cloudflarestorage.com is the direct
