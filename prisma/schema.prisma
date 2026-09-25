@@ -406,3 +406,21 @@ model RateLimitHit {
 
   @@index([key, createdAt])
 }
+
+// ── BlogTopic — the editorial calendar ("Planning blog" in the admin). The daily publishing
+// routine asks GET /api/blog-topics/next for the first `planned` topic, publishes a post with
+// the same slug through POST /api/blog-posts (which flips the topic to `published`), and
+// reports failures/details through POST /api/blog-topics/report. ──
+model BlogTopic {
+  id          String    @id @default(cuid())
+  slug        String    @unique // becomes the post's slug
+  title       String // French working title — the angle the post must answer
+  notes       String    @default("") // optional brief: target query, trips to feature, angle...
+  status      String    @default("planned") // planned | published | failed | skipped
+  order       Int       @default(0)
+  lastReport  String    @default("") // routine's last report: links, sources, word counts or the error
+  lastRunAt   DateTime?
+  publishedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
