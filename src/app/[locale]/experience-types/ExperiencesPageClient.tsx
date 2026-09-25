@@ -63,7 +63,7 @@ export function ExperiencesPageClient({
       <section className="relative flex h-[65vh] min-h-[460px] items-center justify-center overflow-hidden">
         <Image
           src={`${R2}/experiences/hero.jpg`}
-          alt=""
+          alt={t("experienceTypes.heroTitle")}
           fill
           priority
           className="object-cover"

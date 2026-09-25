@@ -7,6 +7,8 @@ import { ContactForm } from "./ContactForm";
 export function ContactPageClient() {
   const { t } = useLanguage();
 
+  // Section labels are <h2>s (styled as eyebrows): the page had no H2 at all, leaving its
+  // phone/email/address sections without any heading structure for crawlers to key on.
   return (
     <main className="mx-auto max-w-5xl px-6 py-16 sm:py-24">
       <div className="mb-14 text-center">
@@ -18,7 +20,7 @@ export function ContactPageClient() {
       <div className="grid grid-cols-1 gap-14 lg:grid-cols-[minmax(0,20rem)_1fr]">
         <div className="space-y-10">
           <div>
-            <p className="label-eyebrow text-neutral-400">{t("contactPage.travelEnquiries")}</p>
+            <h2 className="label-eyebrow text-neutral-400">{t("contactPage.travelEnquiries")}</h2>
             <p className="mt-3 text-sm leading-relaxed text-neutral-600">{t("contactPage.travelEnquiriesBody")}</p>
             <LocaleLink href="/faire-une-demande" className="btn-primary mt-4 inline-flex text-xs">
               {t("contactPage.planTrip")}
@@ -26,7 +28,7 @@ export function ContactPageClient() {
           </div>
 
           <div>
-            <p className="label-eyebrow text-neutral-400">{t("contactPage.emailUs")}</p>
+            <h2 className="label-eyebrow text-neutral-400">{t("contactPage.emailUs")}</h2>
             <p className="mt-3 text-sm text-neutral-600">{t("contactPage.generalEnquiry")}</p>
             <a href="mailto:contact@globaleexploretours.com" className="mt-1 block text-sm text-neutral-900 hover:text-[var(--brand-accent)]">
               contact@globaleexploretours.com
@@ -34,7 +36,7 @@ export function ContactPageClient() {
           </div>
 
           <div>
-            <p className="label-eyebrow text-neutral-400">Téléphone</p>
+            <h2 className="label-eyebrow text-neutral-400">{t("contactPage.phoneTitle")}</h2>
             <a href="tel:+33667586462" className="mt-3 block text-sm text-neutral-900 hover:text-[var(--brand-accent)]">
               +33 6 67 58 64 62
             </a>
@@ -44,7 +46,7 @@ export function ContactPageClient() {
           </div>
 
           <div>
-            <p className="label-eyebrow text-neutral-400">Adresse</p>
+            <h2 className="label-eyebrow text-neutral-400">{t("contactPage.addressTitle")}</h2>
             <p className="mt-3 text-sm text-neutral-600">5 Avenue du Sénateur Girard, 59300 Valenciennes, France</p>
             {/* Google's free "share > embed a map" iframe — no API key or billing required,
                 unlike the Maps Embed API / Locator Plus widget. */}
@@ -63,7 +65,7 @@ export function ContactPageClient() {
         </div>
 
         <div>
-          <p className="label-eyebrow mb-5 text-neutral-400">{t("contactPage.formTitle")}</p>
+          <h2 className="label-eyebrow mb-5 text-neutral-400">{t("contactPage.formTitle")}</h2>
           <ContactForm />
         </div>
       </div>

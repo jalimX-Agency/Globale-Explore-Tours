@@ -138,7 +138,7 @@ export function RegionPageClient({
       <div className="mx-auto flex max-w-7xl flex-col gap-16 px-6 py-12 lg:px-10">
         <div id="countries" className="scroll-mt-40">
           <h2 className="font-display text-3xl font-normal tracking-wide text-neutral-800 sm:text-4xl">
-            {t("destinationsPage.countries")}
+            {t("destinationsPage.countriesIn").replace("{place}", regionLabel)}
           </h2>
           <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3">
             {destinations.map((d) => {
@@ -180,7 +180,7 @@ export function RegionPageClient({
         </div>
 
         <div id="trips" className="scroll-mt-40">
-          <TripsShowcase heading={t("destinationsPage.topTrips")} blurb={t("destinationsPage.topTripsBlurb")} tours={tours} />
+          <TripsShowcase heading={t("destinationsPage.topTripsIn").replace("{place}", regionLabel)} blurb={t("destinationsPage.topTripsBlurb")} tours={tours} />
         </div>
 
         <div id="see-and-do" className="scroll-mt-40 space-y-16">

@@ -15,17 +15,17 @@ export function generateStaticParams() {
 
 const META_BY_LOCALE: Record<Locale, { title: string; description: string }> = {
   fr: {
-    title: "Globale Explore Tours | Voyages & Circuits sur-mesure dans le monde",
+    title: "Voyages sur-mesure dans le monde | Globale Explore Tours",
     description:
       "Voyages et circuits sur-mesure dans le monde entier, avec des guides locaux reconnus. Noté 4.9/5 sur TripAdvisor.",
   },
   en: {
-    title: "Globale Explore Tours | Tailor-made Trips & Tours Worldwide",
+    title: "Tailor-made Trips & Tours Worldwide | Globale Explore Tours",
     description:
       "Tailor-made trips and tours worldwide, designed around you and led by trusted local guides. Rated 4.9/5 on TripAdvisor.",
   },
   es: {
-    title: "Globale Explore Tours | Viajes y circuitos a medida en todo el mundo",
+    title: "Viajes a medida en todo el mundo | Globale Explore Tours",
     description:
       "Viajes y circuitos a medida en todo el mundo, con guías locales de confianza. Valorado 4.9/5 en TripAdvisor.",
   },

@@ -6,24 +6,35 @@ import { MessageCircle } from "lucide-react";
 import { useLanguage } from "@/lib/i18n/context";
 import { LocaleLink } from "@/components/get/LocaleLink";
 
-const EXPLORE: { labelKey?: string; label?: string; href: string }[] = [
+type Language = "fr" | "en" | "es";
+type FooterLink = { labelKey?: string; label?: Record<Language, string>; href: string };
+
+// "Excursions" used to point at /excursions, which has no index page (only legacy
+// /excursions/[slug] redirects) — a 404 linked from every page on the site. The experiences hub
+// is the closest real equivalent.
+const EXPLORE: FooterLink[] = [
   { labelKey: "nav.tours", href: "/trouver-mon-voyage" },
-  { label: "Excursions", href: "/excursions" },
+  { labelKey: "nav.experiences", href: "/experience-types" },
   { labelKey: "nav.blog", href: "/blog" },
   { labelKey: "nav.bookNow", href: "/faire-une-demande" },
 ];
 
-const COMPANY: { labelKey?: string; label?: string; href: string }[] = [
+const COMPANY: FooterLink[] = [
   { labelKey: "nav.about", href: "/a-propos" },
   { labelKey: "nav.contact", href: "/contact" },
-  { label: "Mentions légales", href: "/mentions-legales" },
-  { label: "Politique de confidentialité", href: "/politique-de-confidentialite" },
-  { label: "Conditions de réservation", href: "/conditions-de-reservation" },
+  { label: { fr: "Mentions légales", en: "Legal notice", es: "Aviso legal" }, href: "/mentions-legales" },
+  {
+    label: { fr: "Politique de confidentialité", en: "Privacy policy", es: "Política de privacidad" },
+    href: "/politique-de-confidentialite",
+  },
+  {
+    label: { fr: "Conditions de réservation", en: "Booking terms", es: "Condiciones de reserva" },
+    href: "/conditions-de-reservation",
+  },
 ];
 
 type DestinationLite = { slug: string; name: string; nameEn: string; nameEs: string; regionSlug: string };
 type ExperienceTypeLite = { slug: string; kind: string; cardTitle: string; cardTitleEn: string; cardTitleEs: string };
-type Language = "fr" | "en" | "es";
 
 function localizedName(d: DestinationLite, language: Language) {
   if (language === "en") return d.nameEn || d.name;
@@ -69,13 +80,16 @@ export function Footer({
             <p className="font-body mt-4 max-w-sm text-sm leading-relaxed text-white/60">{t("footer.description")}</p>
             <div className="mt-6 flex items-center gap-4">
               <a href="https://wa.me/33667586462" aria-label="WhatsApp" className="text-white/70 hover:text-white">
-                <MessageCircle className="h-5 w-5" />
+                <MessageCircle className="h-5 w-5" aria-hidden="true" />
+                <span className="sr-only">WhatsApp</span>
               </a>
               <a href="https://www.instagram.com/globaleexploretours/" aria-label="Instagram" className="text-white/70 hover:text-white">
                 <InstagramIcon />
+                <span className="sr-only">Instagram</span>
               </a>
               <a href="#" aria-label="Facebook" className="text-white/70 hover:text-white">
                 <FacebookIcon />
+                <span className="sr-only">Facebook</span>
               </a>
             </div>
           </div>
@@ -86,7 +100,7 @@ export function Footer({
               {EXPLORE.map((item) => (
                 <li key={item.href}>
                   <LocaleLink href={item.href} className="font-body text-sm text-white/75 hover:text-white">
-                    {item.labelKey ? t(item.labelKey) : item.label}
+                    {item.labelKey ? t(item.labelKey) : item.label?.[language]}
                   </LocaleLink>
                 </li>
               ))}
@@ -147,7 +161,7 @@ export function Footer({
               {COMPANY.map((item) => (
                 <li key={item.href}>
                   <LocaleLink href={item.href} className="font-body text-sm text-white/75 hover:text-white">
-                    {item.labelKey ? t(item.labelKey) : item.label}
+                    {item.labelKey ? t(item.labelKey) : item.label?.[language]}
                   </LocaleLink>
                 </li>
               ))}

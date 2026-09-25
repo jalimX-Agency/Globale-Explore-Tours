@@ -108,6 +108,9 @@ export function safeJsonLd(data: unknown): string {
 // over-long admin-authored description (blog excerpt, experience-type overview...) never
 // gets clipped mid-word in search results.
 const MAX_DESCRIPTION_LENGTH = 155;
+// Below this a description reads as a fragment in search results (a 2026-09 crawl flagged a
+// 69-char experience-type subtitle) — see composeDescription.
+const MIN_DESCRIPTION_LENGTH = 120;
 
 function truncateDescription(description: string): string {
   if (description.length <= MAX_DESCRIPTION_LENGTH) return description;
@@ -116,11 +119,31 @@ function truncateDescription(description: string): string {
   return `${cut.slice(0, lastSpace > 0 ? lastSpace : MAX_DESCRIPTION_LENGTH)}…`;
 }
 
-// Google's <title> display cutoff (a site crawl audit on 2026-09-08 flagged every trip-detail
-// page — all 249 of them — past this length; the shortest flagged title was exactly 71 chars,
-// confirming 70 as the tool's own threshold). Tour/experience names are full descriptive
-// phrases (e.g. "Maroc en profondeur : villes impériales & Sahara"), long enough on their own
-// that appending " | Globale Explore Tours" (24 chars) regularly pushed them over.
+/**
+ * Joins admin-authored text fields, in order of preference, until the result is long enough to
+ * make a useful meta description (pageMetadata then trims anything past the display limit).
+ * For pages whose best field is a one-line tagline, e.g. a hero subtitle followed by the
+ * overview body.
+ */
+export function composeDescription(...parts: (string | null | undefined)[]): string | undefined {
+  let out = "";
+  for (const raw of parts) {
+    const part = raw?.trim();
+    if (!part) continue;
+    out = out ? `${/[.!?…]$/.test(out) ? out : `${out}.`} ${part}` : part;
+    if (out.length >= MIN_DESCRIPTION_LENGTH) break;
+  }
+  return out || undefined;
+}
+
+// Past this, the " | Globale Explore Tours" suffix is dropped rather than appended: ~60 chars
+// (≈561px) is where Google starts cutting titles off in results — a 2026-09 crawl flagged 37
+// pages whose titles only crossed it because of the suffix. Google shows the site name above
+// the title in results anyway.
+const MAX_BRANDED_TITLE_LENGTH = 60;
+
+// Bare titles (brand suffix already dropped) are only cut past this — trip names are long,
+// descriptive phrases, and cutting them at 60 would lose the part that makes them distinct.
 const MAX_TITLE_LENGTH = 70;
 
 function truncateTitle(title: string): string {
@@ -149,7 +172,7 @@ export function pageMetadata({
   // [locale] layout (a bare string `title` inherits its parent's `template`); a `{ absolute }`
   // title bypasses that template instead of just being a longer string for it to wrap.
   const pageTitle: Metadata["title"] =
-    displayTitle.length > MAX_TITLE_LENGTH ? { absolute: truncateTitle(title) } : title;
+    displayTitle.length > MAX_BRANDED_TITLE_LENGTH ? { absolute: truncateTitle(title) } : title;
   const trimmedDescription = description ? truncateDescription(description) : undefined;
   const ogImage = image || DEFAULT_OG_IMAGE;
   const languages = Object.fromEntries(LOCALES.map((l) => [l, `/${l}${path}`]));

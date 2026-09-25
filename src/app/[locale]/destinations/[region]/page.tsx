@@ -60,14 +60,17 @@ export async function generateMetadata({
   const locale = isLocale(rawLocale) ? rawLocale : DEFAULT_LOCALE;
   const [rep, region] = await Promise.all([
     db.destination.findFirst({ where: { regionSlug }, select: { region: true, regionEn: true, regionEs: true } }),
-    db.region.findUnique({ where: { slug: regionSlug }, select: { intro: true, introEn: true, introEs: true, heroImage: true } }),
+    db.region.findUnique({ where: { slug: regionSlug }, select: { heading: true, headingEn: true, headingEs: true, intro: true, introEn: true, introEs: true, heroImage: true } }),
   ]);
   const label = rep ? pick(locale, rep.region, rep.regionEn, rep.regionEs) : regionSlug;
   const description = region ? pick(locale, region.intro, region.introEn, region.introEs) : undefined;
+  // The region's own heading ("Voyages sur mesure en Asie") rather than its bare name — "Asie |
+  // Globale Explore Tours" was too short to say what the page offers (flagged under 30 chars).
+  const heading = region ? pick(locale, region.heading, region.headingEn, region.headingEs) : "";
   return pageMetadata({
     locale,
     path: `/destinations/${regionSlug}`,
-    title: label,
+    title: heading || label,
     description: description || undefined,
     image: region?.heroImage || undefined,
   });

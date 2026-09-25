@@ -114,7 +114,7 @@ export function CountryPageClient({
 
       <div className="mx-auto flex max-w-7xl flex-col gap-16 px-6 py-12 lg:px-10">
         <div id="trips" className="scroll-mt-40">
-          <TripsShowcase heading={t("destinationsPage.topTrips")} blurb={t("destinationsPage.topTripsBlurb")} tours={tours} />
+          <TripsShowcase heading={t("destinationsPage.topTripsIn").replace("{place}", countryLabel)} blurb={t("destinationsPage.topTripsBlurb")} tours={tours} />
         </div>
 
         <div id="see-and-do" className="scroll-mt-40 space-y-16">
