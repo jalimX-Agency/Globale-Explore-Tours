@@ -80,11 +80,17 @@ export async function POST(request: NextRequest) {
   });
 
   // A post whose slug matches a topic of the editorial calendar (/admin/blog/planning) marks
-  // that topic published.
-  await db.blogTopic.updateMany({
-    where: { slug: post.slug, status: { not: "published" } },
-    data: { status: "published", publishedAt: new Date(), lastRunAt: new Date() },
-  });
+  // that topic published. Best effort: the post is already saved, so a planning failure (e.g.
+  // the BlogTopic table not created yet with `prisma db push`) must not turn this into an error
+  // response that makes the caller retry a publish that succeeded.
+  try {
+    await db.blogTopic.updateMany({
+      where: { slug: post.slug, status: { not: "published" } },
+      data: { status: "published", publishedAt: new Date(), lastRunAt: new Date() },
+    });
+  } catch (err) {
+    console.error("Could not mark the blog topic as published", err);
+  }
 
   revalidatePath("/admin/blog");
   revalidatePath("/admin/blog/planning");
