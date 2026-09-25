@@ -10,7 +10,7 @@ import { es } from "@/lib/i18n/translations/es";
 import { getTravelerTypePage, type TravelerTypePage, type Localized, type LinkCardGroup } from "@/lib/experienceTypesData";
 import { TravelerTypePageClient } from "./TravelerTypePageClient";
 import { WhatTypePageClient, type WhatTypeContent } from "./WhatTypePageClient";
-import { pageMetadata, breadcrumbJsonLd, faqJsonLd } from "@/lib/seo";
+import { pageMetadata, breadcrumbJsonLd, faqJsonLd, composeDescription } from "@/lib/seo";
 
 const NAV_EXPERIENCES = { fr: fr.nav.experiences, en: en.nav.experiences, es: es.nav.experiences };
 
@@ -196,7 +196,10 @@ export async function generateMetadata({
     locale,
     path: `/experience-types/${slug.join("/")}`,
     title: pick(locale, { fr: row.heroTitle, en: row.heroTitleEn, es: row.heroTitleEs }),
-    description: pick(locale, { fr: row.heroSubtitle || row.overviewBody, en: row.heroSubtitleEn || row.overviewBodyEn, es: row.heroSubtitleEs || row.overviewBodyEs }) || undefined,
+    description: composeDescription(
+      pick(locale, { fr: row.heroSubtitle, en: row.heroSubtitleEn, es: row.heroSubtitleEs }),
+      pick(locale, { fr: row.overviewBody, en: row.overviewBodyEn, es: row.overviewBodyEs })
+    ),
     image: row.heroImage || undefined,
   });
 }
@@ -353,6 +356,7 @@ export default async function ExperienceTypePage({
         related={related}
         breadcrumb={fullBreadcrumb}
         testimonials={testimonials}
+        faqs={row.faqs}
       />
     </>
   );

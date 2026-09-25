@@ -47,7 +47,7 @@ export function TravelerTypes({ types }: { types: TravelerTypeCard[] }) {
                 {/* eslint-disable-next-line @next/next/no-img-element -- external R2 asset, no next/image domain config needed for this fixed set */}
                 <img
                   src={type.image}
-                  alt=""
+                  alt={localizedTitle(type, language)}
                   loading="lazy"
                   className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />

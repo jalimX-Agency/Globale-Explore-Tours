@@ -57,7 +57,7 @@ export function TravelerTypePageClient({
     <div className="bg-white text-neutral-900">
       {/* ── Hero ── */}
       <section className="relative flex h-[60vh] min-h-[420px] items-center justify-center overflow-hidden">
-        <Image src={content.heroImage} alt="" fill priority className="object-cover" sizes="100vw" />
+        <Image src={content.heroImage} alt={localized(language, content.heroTitle)} fill priority className="object-cover" sizes="100vw" />
         <div className="absolute inset-0 bg-black/35" />
         <div className="relative z-10 flex flex-col items-center px-6 text-center text-white">
           <h1 className="font-display max-w-3xl text-4xl leading-tight sm:text-5xl lg:text-6xl">
@@ -98,9 +98,13 @@ export function TravelerTypePageClient({
 
       {/* ── Overview ── */}
       <section id="overview" className="scroll-mt-40 mx-auto max-w-3xl px-6 py-16 text-center">
-        <h2 className="font-display text-2xl text-neutral-900 sm:text-3xl">
-          {localized(language, content.overviewTitle)}
-        </h2>
+        {/* Sub-pages (family-holidays/*, luxury-honeymoons/*) often have no overview title of
+            their own — rendering the tag anyway left an empty <h2> on every one of them. */}
+        {localized(language, content.overviewTitle) && (
+          <h2 className="font-display text-2xl text-neutral-900 sm:text-3xl">
+            {localized(language, content.overviewTitle)}
+          </h2>
+        )}
         {overviewParagraphs.map((p, i) => (
           <p key={i} className="font-body mt-5 text-base leading-relaxed text-neutral-600">
             {p}

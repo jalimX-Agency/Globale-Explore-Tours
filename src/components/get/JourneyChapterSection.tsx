@@ -119,7 +119,7 @@ export function JourneyChapterSection({
                       <p className="font-body mt-4 text-sm leading-relaxed text-neutral-600">{dayDescription}</p>
                     </div>
                     <div className="relative aspect-[4/3] w-full sm:aspect-auto sm:w-2/5 sm:min-h-[22rem]">
-                      <DayCarousel images={images} alt={dayTitle} />
+                      <DayCarousel images={images} alt={dayTitle || `${title} — ${t("tripDetailPage.day")} ${day.dayNumber}`} />
                     </div>
                   </div>
                 </div>

@@ -8,6 +8,7 @@ import { Testimonials } from "@/components/get/Testimonials";
 import type { TestimonialItem } from "@/lib/testimonials";
 import { TripsShowcase } from "@/components/get/TripsShowcase";
 import { LinkedContentGrid } from "@/components/get/LinkedContentGrid";
+import { FaqAccordion, type FaqData } from "@/components/get/FaqAccordion";
 import type { TourCardData } from "@/components/get/TourCard";
 import type { Localized, LinkCardGroup } from "@/lib/experienceTypesData";
 
@@ -31,12 +32,14 @@ export function WhatTypePageClient({
   related,
   breadcrumb,
   testimonials,
+  faqs,
 }: {
   content: WhatTypeContent;
   tours: TourCardData[];
   related: WhatTypeContent[];
   breadcrumb: BreadcrumbItem[];
   testimonials: TestimonialItem[];
+  faqs: FaqData[];
 }) {
   const { language, t } = useLanguage();
 
@@ -44,7 +47,7 @@ export function WhatTypePageClient({
     <div className="bg-white text-neutral-900">
       {/* ── Hero ── */}
       <section className="relative flex h-[50vh] min-h-[380px] items-center justify-center overflow-hidden">
-        <Image src={content.heroImage} alt="" fill priority className="object-cover" sizes="100vw" />
+        <Image src={content.heroImage} alt={localized(language, content.heroTitle)} fill priority className="object-cover" sizes="100vw" />
         <div className="absolute inset-0 bg-black/35" />
         <div className="relative z-10 flex flex-col items-center px-6 text-center text-white">
           <h1 className="font-display max-w-2xl text-3xl leading-tight sm:text-4xl lg:text-5xl">
@@ -111,6 +114,14 @@ export function WhatTypePageClient({
       )}
 
       <Testimonials items={testimonials} />
+
+      {/* ── FAQ ── the page already emitted FAQPage schema for these but never showed them, which
+          Google's structured-data rules don't allow (the answers must be visible on the page). */}
+      {faqs.length > 0 && (
+        <section id="faq" className="scroll-mt-40 mx-auto max-w-7xl px-6 py-16">
+          <FaqAccordion faqs={faqs} />
+        </section>
+      )}
 
       {/* ── CTA band ── */}
       <section className="bg-[var(--brand-accent)] py-14 text-white">
