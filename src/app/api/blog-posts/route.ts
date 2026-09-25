@@ -1,8 +1,8 @@
-import { createHash, timingSafeEqual } from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { db } from "@/lib/db";
+import { requireBlogApiKey } from "@/lib/blog-api-auth";
 
 // Publishes a blog post with a secret key instead of an admin session — for scripts and
 // automation that have no access to the production database (e.g. a cloud coding session).
@@ -16,8 +16,6 @@ import { db } from "@/lib/db";
 // /admin/blog. `content*` is HTML rendered as-is on the post page (same trust level as the
 // admin editor), so the key must be treated like an admin password. The endpoint is disabled
 // (404) until BLOG_API_KEY is set to a random value of at least 32 characters.
-const MIN_KEY_LENGTH = 32;
-
 const optionalText = z.string().trim().default("");
 
 const blogPostApiSchema = z.object({
@@ -53,24 +51,9 @@ const blogPostApiSchema = z.object({
   order: z.number().int().optional(),
 });
 
-// Hashing both sides first gives equal-length buffers, so timingSafeEqual never throws and
-// the comparison time doesn't depend on how much of the key was guessed right.
-function keyMatches(provided: string, expected: string): boolean {
-  const a = createHash("sha256").update(provided).digest();
-  const b = createHash("sha256").update(expected).digest();
-  return timingSafeEqual(a, b);
-}
-
 export async function POST(request: NextRequest) {
-  const expected = process.env.BLOG_API_KEY ?? "";
-  if (expected.length < MIN_KEY_LENGTH) {
-    return NextResponse.json({ error: "Not found" }, { status: 404 });
-  }
-
-  const provided = request.headers.get("authorization")?.replace(/^Bearer\s+/i, "") ?? "";
-  if (!provided || !keyMatches(provided, expected)) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const denied = requireBlogApiKey(request);
+  if (denied) return denied;
 
   let body: unknown;
   try {
@@ -96,7 +79,15 @@ export async function POST(request: NextRequest) {
     data: { ...values, order: order ?? (last?.order ?? -1) + 1 },
   });
 
+  // A post whose slug matches a topic of the editorial calendar (/admin/blog/planning) marks
+  // that topic published.
+  await db.blogTopic.updateMany({
+    where: { slug: post.slug, status: { not: "published" } },
+    data: { status: "published", publishedAt: new Date(), lastRunAt: new Date() },
+  });
+
   revalidatePath("/admin/blog");
+  revalidatePath("/admin/blog/planning");
   revalidatePath("/[locale]/blog", "page");
   revalidatePath("/sitemap.xml");
   revalidatePath("/llms.txt");
