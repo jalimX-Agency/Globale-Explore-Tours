@@ -34,20 +34,16 @@ const blogPostApiSchema = z.object({
   content: z.string().min(1),
   contentEn: optionalText,
   contentEs: optionalText,
-  // Only hosts the site's Content-Security-Policy img-src allows (next.config.ts) — any other
-  // host would be accepted here but render as a broken image on the post.
+  // Any https host — the site's CSP img-src allows them (next.config.ts). Plain http is refused
+  // because browsers block it as mixed content on an https page.
   image: z
     .union([
       z.literal(""),
       z
         .string()
         .url()
-        .refine((value) => {
-          // zod still runs refinements after .url() fails, so an unparseable value must not throw.
-          if (!URL.canParse(value)) return false;
-          const { protocol, hostname } = new URL(value);
-          return protocol === "https:" && (hostname === "cdn.globaleexploretours.com" || hostname.endsWith(".r2.dev"));
-        }, "must be an https URL on cdn.globaleexploretours.com (upload it via /admin first)"),
+        // zod still runs refinements after .url() fails, so an unparseable value must not throw.
+        .refine((value) => URL.canParse(value) && new URL(value).protocol === "https:", "must be an https URL"),
     ])
     .default(""),
   category: optionalText,
