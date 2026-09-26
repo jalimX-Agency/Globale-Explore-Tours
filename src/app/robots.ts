@@ -26,6 +26,9 @@ export default function robots(): MetadataRoute.Robots {
           "CCBot",
         ],
         allow: "/",
+        // A crawler obeys only the most specific group that names it, so the "*" group's
+        // disallows don't apply to the bots listed here — they must be repeated.
+        disallow: ["/admin/", "/api/"],
       },
     ],
     sitemap: "https://www.globaleexploretours.com/sitemap.xml",

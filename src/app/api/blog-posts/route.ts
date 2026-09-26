@@ -95,6 +95,8 @@ export async function POST(request: NextRequest) {
   revalidatePath("/admin/blog");
   revalidatePath("/admin/blog/planning");
   revalidatePath("/[locale]/blog", "page");
+  // A visit to this slug before it existed may have cached the 404.
+  revalidatePath("/[locale]/blog/[slug]", "page");
   revalidatePath("/sitemap.xml");
   revalidatePath("/llms.txt");
 
