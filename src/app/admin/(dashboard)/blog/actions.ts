@@ -19,6 +19,9 @@ export async function createBlogPost(raw: BlogPostFormValues) {
   const post = await db.blogPost.create({ data: values });
   revalidatePath("/admin/blog");
   revalidatePath("/[locale]/blog", "page");
+  revalidatePath("/[locale]/blog/[slug]", "page");
+  revalidatePath("/sitemap.xml");
+  revalidatePath("/llms.txt");
   redirect(`/admin/blog/${post.id}`);
 }
 
@@ -35,6 +38,8 @@ export async function updateBlogPost(id: string, raw: BlogPostFormValues) {
   revalidatePath("/admin/blog");
   revalidatePath("/[locale]/blog", "page");
   revalidatePath("/[locale]/blog/[slug]", "page");
+  revalidatePath("/sitemap.xml");
+  revalidatePath("/llms.txt");
 }
 
 export async function deleteBlogPost(id: string) {
@@ -47,4 +52,7 @@ export async function deleteBlogPost(id: string) {
 
   revalidatePath("/admin/blog");
   revalidatePath("/[locale]/blog", "page");
+  revalidatePath("/[locale]/blog/[slug]", "page");
+  revalidatePath("/sitemap.xml");
+  revalidatePath("/llms.txt");
 }

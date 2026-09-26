@@ -14,6 +14,14 @@ const getPost = cache((slug: string) => db.blogPost.findUnique({ where: { slug }
 
 export const revalidate = 3600;
 
+// Without generateStaticParams (even an empty one) Next renders a dynamic route on every
+// request and ignores `revalidate`: each post view hit the database uncached, and a burst of
+// crawler requests timed out into 500s. Returning [] builds no post at deploy time but caches
+// each one on its first visit (ISR); publishing, editing or deleting a post revalidates it.
+export async function generateStaticParams() {
+  return [];
+}
+
 function pick(locale: Locale, frText: string, enText: string, esText: string) {
   if (locale === "en") return enText || frText;
   if (locale === "es") return esText || frText;

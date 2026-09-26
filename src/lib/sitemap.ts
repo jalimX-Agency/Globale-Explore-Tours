@@ -4,10 +4,6 @@ import { LOCALES } from "@/lib/i18n/locales";
 
 const BASE = "https://www.globaleexploretours.com";
 
-// Without this the sitemap is generated once at build time, so posts published afterwards
-// (from /admin/blog or /api/blog-posts) stayed out of it until the next deploy.
-export const revalidate = 3600;
-
 // Every entry is emitted once per locale, with hreflang alternates pointing at its
 // siblings — this is what makes each language crawlable and indexable on its own URL.
 function withLocales(
@@ -26,7 +22,8 @@ function withLocales(
   }));
 }
 
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+// Entries for /sitemap.xml (see app/sitemap.xml/route.ts).
+export async function sitemapEntries(): Promise<MetadataRoute.Sitemap> {
   const [tours, blogPosts, regions, destinations, experienceTypes] = await Promise.all([
     db.tour.findMany({
       select: { slug: true, updatedAt: true, destination: { select: { slug: true, regionSlug: true } } },
