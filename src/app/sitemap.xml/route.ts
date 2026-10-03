@@ -1,11 +1,15 @@
 import { sitemapEntries } from "@/lib/sitemap";
 
-// /sitemap.xml as a route handler rather than the app/sitemap.ts metadata convention: on Vercel
-// the metadata version was served from the build-time cache indefinitely (26h+ old, x-vercel-cache
-// HIT) despite `revalidate = 3600`, so posts published after a deploy — including the daily ones
-// from /api/blog-posts — never reached the sitemap. Route handlers revalidate reliably (llms.txt
-// uses the same setup), and revalidatePath("/sitemap.xml") after a publish now takes effect.
-export const revalidate = 3600;
+// /sitemap.xml is generated per request and cached by Vercel's CDN through Cache-Control,
+// not by Next's ISR. Both ISR attempts left it frozen in production: the app/sitemap.ts
+// metadata route, and then this route handler with `revalidate = 3600`, which a week after the
+// deploy still served (x-vercel-cache HIT) without any post published since. Daily posts from
+// /api/blog-posts never reached it, while llms.txt with the same setup did refresh. A CDN cache
+// with a plain max-age has no regeneration step to get stuck in: a new post shows up within
+// ~15 min (plus up to an hour of stale-while-revalidate), and the 5 queries behind it are cheap.
+export const dynamic = "force-dynamic";
+
+const CACHE_CONTROL = "public, max-age=0, s-maxage=900, stale-while-revalidate=3600";
 
 function escapeXml(value: string) {
   return value
@@ -45,5 +49,5 @@ export async function GET() {
     "",
   ].join("\n");
 
-  return new Response(xml, { headers: { "Content-Type": "application/xml; charset=utf-8" } });
+  return new Response(xml, { headers: { "Content-Type": "application/xml; charset=utf-8", "Cache-Control": CACHE_CONTROL } });
 }
