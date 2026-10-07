@@ -209,7 +209,20 @@ export function Footer({
         </div>
 
         <div className="mt-10 flex flex-col gap-2 border-t border-white/10 pt-6 text-xs text-white/40 sm:flex-row sm:items-center sm:justify-between">
-          <span>© {new Date().getFullYear()} Globale Explore Tours. {t("footer.copyright")}</span>
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4">
+            <span>© {new Date().getFullYear()} Globale Explore Tours. {t("footer.copyright")}</span>
+            <span>
+              {t("footer.creditPrefix")}{" "}
+              <a
+                href={language === "fr" ? "https://www.jalimx.com/fr" : "https://www.jalimx.com"}
+                target="_blank"
+                rel="noopener"
+                className="text-white/60 underline underline-offset-2 hover:text-white focus-visible:text-white focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-white"
+              >
+                JalimX
+              </a>
+            </span>
+          </div>
           <span>4.9/5 sur TripAdvisor</span>
         </div>
       </div>

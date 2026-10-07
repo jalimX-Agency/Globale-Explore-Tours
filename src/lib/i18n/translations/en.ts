@@ -183,6 +183,7 @@ export const en = {
     newsletter: "Get our best travel addresses",
     newsletterCta: "Sign up",
     copyright: "All rights reserved.",
+    creditPrefix: "Website by",
   },
   tripDetailPage: {
     when: "When",

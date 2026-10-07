@@ -183,6 +183,7 @@ export const es = {
     newsletter: "Reciba nuestras mejores direcciones de viaje",
     newsletterCta: "Suscribirse",
     copyright: "Todos los derechos reservados.",
+    creditPrefix: "Sitio web por",
   },
   tripDetailPage: {
     when: "Cuándo",
