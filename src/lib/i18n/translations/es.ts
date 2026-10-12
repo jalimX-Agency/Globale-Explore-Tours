@@ -127,6 +127,7 @@ export const es = {
     },
   },
   destinationsPage: {
+    heroEyebrow: "Viajes a medida",
     overview: "Resumen",
     readMore: "Leer más +",
     readLess: "Leer menos −",

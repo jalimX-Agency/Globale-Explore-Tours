@@ -127,6 +127,7 @@ export const fr = {
     },
   },
   destinationsPage: {
+    heroEyebrow: "Voyage sur mesure",
     overview: "Aperçu",
     readMore: "Lire la suite +",
     readLess: "Réduire −",

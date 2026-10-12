@@ -100,7 +100,7 @@ export function CountryPageClient({
 
   return (
     <div>
-      <DestinationHero image={destination.heroImage} title={countryLabel} />
+      <DestinationHero image={destination.heroImage} title={countryLabel} eyebrow={t("destinationsPage.heroEyebrow")} />
 
       <DestinationSubNav tabs={tabs} />
 

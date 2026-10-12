@@ -25,7 +25,11 @@ export function proxy(request: NextRequest) {
   const locale = detectLocale(request);
   const url = request.nextUrl.clone();
   url.pathname = `/${locale}${pathname === "/" ? "" : pathname}`;
-  return NextResponse.redirect(url);
+  // Permanent (308), not the default temporary 307: with a temporary redirect Google kept the
+  // unprefixed URLs indexed alongside the /fr ones, splitting each page's signals in two.
+  const response = NextResponse.redirect(url, 308);
+  response.headers.set("Vary", "Accept-Language");
+  return response;
 }
 
 export const config = {

@@ -53,6 +53,11 @@ const nextConfig: NextConfig = {
     return [
       { source: "/:locale/reserver", destination: "/:locale/faire-une-demande", permanent: true },
       { source: "/:locale/reserver/:path*", destination: "/:locale/faire-une-demande/:path*", permanent: true },
+      // The previous site's Agadir day-excursion pages (/trip/<slug>/) still rank on page 1 but
+      // have no equivalent trip here, so they were ending in a 404. The Morocco page is the
+      // closest match; English because those pages were written in English.
+      { source: "/trip/:path*", destination: "/en/destinations/afrique/maroc", permanent: true },
+      { source: "/:locale(fr|en|es)/trip/:path*", destination: "/en/destinations/afrique/maroc", permanent: true },
     ];
   },
   // Baseline security headers. External origins allowlisted below: the R2 image bucket (see

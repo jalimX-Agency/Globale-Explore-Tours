@@ -62,16 +62,29 @@ export async function generateMetadata({
   const destination = await getDestination(country);
   if (!destination) return { title: country };
   const label = pick(locale, destination.name, destination.nameEn, destination.nameEs);
-  const regionLabel = pick(locale, destination.region, destination.regionEn, destination.regionEs);
   const description = pick(locale, destination.description, destination.descriptionEn, destination.descriptionEs);
+  // Worded as the search a buyer types ("voyage japon sur mesure", "circuit japon") rather than
+  // the bare country name, which only ever matched place-name lookups. No preposition before
+  // the country in French, so one template is correct for all of them (au/en/aux/à vary).
+  // The wording differs per language, which also keeps <title> unique where a country name is
+  // spelled the same in two languages (Kenya, Cuba, Laos...).
+  const title = pick(
+    locale,
+    `Voyage ${label} sur mesure : circuits et séjours`,
+    `${label} Tailor-Made Trips & Tours`,
+    `Viajes a ${label} a medida: circuitos y estancias`
+  );
+  const lead = pick(
+    locale,
+    `Voyage ${label} sur mesure avec Globale Explore Tours.`,
+    `Tailor-made trips to ${label} with Globale Explore Tours.`,
+    `Viajes a ${label} a medida con Globale Explore Tours.`
+  );
   return pageMetadata({
     locale,
     path: `/destinations/${regionSlug}/${country}`,
-    // Country names alone collide across locales when a name is spelled the same way in two
-    // languages (Kenya, Cuba, Laos...) — the region differs by locale (Africa/Afrique/África),
-    // which keeps <title> unique per language even when the country name doesn't.
-    title: `${label}, ${regionLabel}`,
-    description: description || undefined,
+    title,
+    description: description ? `${lead} ${description}` : lead,
     image: destination.heroImage || undefined,
   });
 }
