@@ -3,6 +3,7 @@ import Image from "next/image";
 import { db } from "@/lib/db";
 import { isLocale, DEFAULT_LOCALE, type Locale } from "@/lib/i18n/locales";
 import { LocaleLink } from "@/components/get/LocaleLink";
+import { notFound } from "next/navigation";
 import { pageMetadata } from "@/lib/seo";
 
 const META = {
@@ -56,6 +57,9 @@ export default async function BlogIndexPage({
     db.blogPost.count(),
   ]);
   const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
+  // Without this, every ?page=N past the end still returned 200 with a "Next" link to N+1 —
+  // an endless chain of empty pages for crawlers to follow.
+  if (page > totalPages) notFound();
 
   return (
     <main className="mx-auto max-w-6xl px-6 py-16 sm:py-24">
@@ -116,17 +120,18 @@ export default async function BlogIndexPage({
                 ? `Página ${page} de ${totalPages}`
                 : `Page ${page} sur ${totalPages}`}
           </span>
-          <LocaleLink
-            href={`/blog?page=${page + 1}`}
-            aria-disabled={page >= totalPages}
-            className={`label-eyebrow rounded-sm border px-4 py-2 transition-colors ${
-              page >= totalPages
-                ? "pointer-events-none border-neutral-100 text-neutral-300"
-                : "border-neutral-200 text-neutral-600 hover:border-neutral-400"
-            }`}
-          >
-            {locale === "en" ? "Next" : locale === "es" ? "Siguiente" : "Suivant"}
-          </LocaleLink>
+          {page >= totalPages ? (
+            <span aria-disabled className="label-eyebrow rounded-sm border border-neutral-100 px-4 py-2 text-neutral-300">
+              {locale === "en" ? "Next" : locale === "es" ? "Siguiente" : "Suivant"}
+            </span>
+          ) : (
+            <LocaleLink
+              href={`/blog?page=${page + 1}`}
+              className="label-eyebrow rounded-sm border border-neutral-200 px-4 py-2 text-neutral-600 transition-colors hover:border-neutral-400"
+            >
+              {locale === "en" ? "Next" : locale === "es" ? "Siguiente" : "Suivant"}
+            </LocaleLink>
+          )}
         </nav>
       )}
     </main>
