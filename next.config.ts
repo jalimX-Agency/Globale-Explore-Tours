@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { RETIRED_TRIPS } from "./src/lib/retiredTrips";
 
 const nextConfig: NextConfig = {
   // No `output: "standalone"` — that's for Docker/self-hosted builds and breaks Vercel's
@@ -58,6 +59,19 @@ const nextConfig: NextConfig = {
       // closest match; English because those pages were written in English.
       { source: "/trip/:path*", destination: "/en/destinations/afrique/maroc", permanent: true },
       { source: "/:locale(fr|en|es)/trip/:path*", destination: "/en/destinations/afrique/maroc", permanent: true },
+      // Trips replaced by a supplier circuit keep their old URL as a redirect to the replacement.
+      ...RETIRED_TRIPS.flatMap(({ region, country, from, to }) => [
+        {
+          source: `/:locale(fr|en|es)/destinations/${region}/${country}/${from}`,
+          destination: `/:locale/destinations/${region}/${country}/${to}`,
+          permanent: true,
+        },
+        {
+          source: `/:locale(fr|en|es)/excursions/${from}`,
+          destination: `/:locale/destinations/${region}/${country}/${to}`,
+          permanent: true,
+        },
+      ]),
     ];
   },
   // Baseline security headers. External origins allowlisted below: the R2 image bucket (see
