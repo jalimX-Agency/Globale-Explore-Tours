@@ -1,4 +1,4 @@
-// Egypt circuits, batch 1 — photos from the supplier's own gallery for each circuit. Run with:
+// Egypt circuits (both batches) — photos from the supplier's own gallery for each circuit. Run with:
 //   npx tsx scripts/upload-images-egypte-circuits.ts
 // Safe to re-run — already-uploaded keys are skipped (see scripts/lib/uploadImages.ts).
 
@@ -38,6 +38,35 @@ const GALLERIES: Array<[string, string, string[]]> = [
   ["dh", "LFDC/CIRCUITS/EGYPTE/REGRD_SUR_LE_NIL_EN_DAHABIEH", [
     "1-_EG_Louxor_shutterstock_1056922610.jpg", "", "1-_pour_Croisiere_Caire.jpg", "EG_Temple_de_Kom-Ombo_shut_238443574.jpg",
     "IMG_1146_enhanced_sharpened.JPG", "IMG_8685.jpg",
+  ]],
+  // ── batch 2 ──
+  ["tc", "MOYEN_ORIENT/EGYPTE/LES_TROIS_CAPITALES_DU_NIL_EN_PRIVATIF", [
+    "AdobeStock_557081828_Editorial_Use_Only.jpeg", "AdobeStock_1609253566.jpeg", "AdobeStock_179534758.jpeg", "AdobeStock_263270074.jpeg",
+    "AdobeStock_300118952.jpeg", "AdobeStock_310960152.jpeg", "AdobeStock_448986708.jpeg", "AdobeStock_508924220.jpeg",
+    "AdobeStock_59171711.jpeg", "AdobeStock_619440136.jpeg", "AdobeStock_690073017.jpeg", "AdobeStock_77102600.jpeg",
+    "AdobeStock_802662094.jpeg", "AdobeStock_89846173.jpeg",
+  ]],
+  ["cm", "AFRIQUE/EGYPTE/CONTRASTES_NIL_ET_MER_ROUGE_HURGHADA_STD", [
+    "1.jpg", "2.jpg", "3.jpg", "4.jpg", "5.jpg", "6.jpg", "7.jpg", "8.jpg", "9.jpg", "91.jpg",
+  ]],
+  ["ln", "AFRIQUE/EGYPTE/SPLENDEURS_DU_NIL_ET_LAC_NASSER", [
+    "1.jpeg", "2.jpeg", "3.jpeg", "4.jpeg", "5.jpeg", "", "7.jpeg", "8.jpeg", "9.jpeg", "91.jpg",
+  ]],
+  ["fy", "AFRIQUE/EGYPTE/NIL_ET_OASIS_DY_FAYOUM", [
+    "1.jpeg", "2.jpeg", "3.jpeg", "", "7.JPG", "9.jpeg", "abdelrahman-ismail-BWZAs4SrHA8-unsplash.jpg", "AdobeStock_125181133.jpeg",
+    "AdobeStock_534075969.jpeg", "AdobeStock_84412026.jpeg", "Img2038x----------cxx.jpg", "Regency-342-Edit.jpg",
+  ]],
+  ["gv", "AFRIQUE/EGYPTE/CAIRE_ET_NIL_AU_GRE_DU_VENT", [
+    "", "2.jpeg", "3.jpeg", "4.jpeg", "5.jpeg", "6.jpeg", "7.jpeg", "8.jpeg", "", "91.jpeg", "", "", "94.jpg", "96.jpg", "97.jpg",
+  ]],
+  ["od", "MOYEN_ORIENT/EGYPTE/ODYSSEE_DES_PHARAONS", [
+    "AdobeStock_1446027445.jpeg", "AdobeStock_1574994047.jpeg", "AdobeStock_17154542.jpeg", "AdobeStock_277948865.jpeg",
+    "AdobeStock_703746184_Editorial_Use_Only.jpeg", "AdobeStock_790283230.jpeg", "AdobeStock_925034430.jpeg", "DSC_0133xxxokxxC.jpg",
+    "DSC_0156xxx.jpg", "DSC_9774xxxxxxxokxV.jpg", "", "Img14897xxsxvXXokxcC.jpg",
+  ]],
+  ["ej", "MOYEN_ORIENT/EGYPTE/COMBINE_EGYPTE_JORDANIE", [
+    "1.jpeg", "3.jpeg", "4.jpeg", "6.jpeg", "8.jpeg", "AdobeStock_115968547.jpeg", "AdobeStock_174829787.jpeg", "",
+    "AdobeStock_216694893.jpeg", "AdobeStock_229313180.jpeg", "AdobeStock_313956308.jpeg", "AdobeStock_34217213.jpeg",
   ]],
 ];
 

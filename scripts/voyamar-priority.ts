@@ -34,6 +34,14 @@ const PRIORITY: Record<string, string[]> = {
     "egypte-paysages-nil-caire-9j",
     "egypte-decouvertes-caire-nil-9j",
     "egypte-splendeurs-caire-nil-12j",
+    "egypte-trois-capitales-nil-privatif-10j",
+    "egypte-nil-mer-rouge-hurghada-15j",
+    "egypte-jordanie-combine-nil-petra-16j",
+    "egypte-nil-oasis-fayoum-13j",
+    "egypte-nil-lac-nasser-abou-simbel-11j",
+    "egypte-caire-nil-dahabeya-9j",
+    "egypte-odyssee-pharaons-11j",
+    "egypte-secrets-nil-caire-assouan-16j",
   ],
 };
 
