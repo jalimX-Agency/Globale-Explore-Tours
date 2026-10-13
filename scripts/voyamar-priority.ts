@@ -25,6 +25,16 @@ const PRIORITY: Record<string, string[]> = {
     "kenya-train-savanes-plages-9j",
     "kenya-tanzanie-combine-safari-12j",
   ],
+  egypte: [
+    "egypte-croisiere-fil-du-nil-8j",
+    "egypte-incontournables-nil-8j",
+    "egypte-croisiere-nil-pharaonique-8j",
+    "egypte-le-caire-pyramides-4j",
+    "egypte-dahabeya-nil-8j",
+    "egypte-paysages-nil-caire-9j",
+    "egypte-decouvertes-caire-nil-9j",
+    "egypte-splendeurs-caire-nil-12j",
+  ],
 };
 
 async function main() {

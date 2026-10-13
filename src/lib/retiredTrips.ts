@@ -10,4 +10,5 @@ export const RETIRED_TRIPS: RetiredTrip[] = [
   { region: "afrique", country: "maroc", from: "maroc-en-profondeur-villes-imperiales-sahara", to: "maroc-circuit-villes-imperiales-8j" },
   { region: "afrique", country: "maroc", from: "maroc-du-nord-fes-chefchaouen-tanger", to: "maroc-fes-chefchaouen-5j" },
   { region: "afrique", country: "maroc", from: "grand-desert-marrakech-erg-chigaga", to: "maroc-desert-riad-kasbah-5j" },
+  { region: "afrique", country: "egypte", from: "egypte-caire-assouan", to: "egypte-decouvertes-caire-nil-9j" },
 ];
