@@ -13,4 +13,5 @@ export const RETIRED_TRIPS: RetiredTrip[] = [
   { region: "afrique", country: "egypte", from: "egypte-caire-assouan", to: "egypte-decouvertes-caire-nil-9j" },
   { region: "afrique", country: "egypte", from: "egypte-mer-rouge-hurghada", to: "egypte-nil-mer-rouge-hurghada-15j" },
   { region: "afrique", country: "egypte", from: "egypte-croisiere-mer-rouge", to: "egypte-nil-mer-rouge-hurghada-15j" },
+  { region: "afrique", country: "tanzanie", from: "tanzanie-serengeti-zanzibar", to: "tanzanie-couleurs-quatre-parcs-10j" },
 ];

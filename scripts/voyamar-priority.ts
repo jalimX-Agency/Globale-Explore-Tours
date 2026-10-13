@@ -43,6 +43,15 @@ const PRIORITY: Record<string, string[]> = {
     "egypte-odyssee-pharaons-11j",
     "egypte-secrets-nil-caire-assouan-16j",
   ],
+  tanzanie: [
+    "tanzanie-zanzibar-epices-ocean-10j",
+    "tanzanie-saadani-safari-zanzibar-11j",
+    "tanzanie-essentiel-safari-nord-8j",
+    "tanzanie-escapade-terre-sauvage-10j",
+    "tanzanie-couleurs-quatre-parcs-10j",
+    "tanzanie-autrement-lac-natron-11j",
+    "tanzanie-evasion-safari-zanzibar-11j",
+  ],
 };
 
 async function main() {
