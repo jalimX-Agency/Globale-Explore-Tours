@@ -17,4 +17,7 @@ export const RETIRED_TRIPS: RetiredTrip[] = [
   { region: "afrique", country: "afrique-du-sud", from: "afrique-du-sud-cap-kruger", to: "afrique-du-sud-le-cap-kruger-eswatini-13j" },
   { region: "afrique", country: "afrique-du-sud", from: "afrique-du-sud-garden-route", to: "afrique-du-sud-grand-tour-route-jardin-18j" },
   { region: "afrique", country: "afrique-du-sud", from: "afrique-du-sud-kwazulu-natal", to: "afrique-du-sud-drakensberg-lesotho-le-cap-15j" },
+  { region: "afrique", country: "namibie", from: "namibie-sossusvlei-damaraland", to: "namibie-decouverte-etosha-sossusvlei-12j" },
+  { region: "afrique", country: "namibie", from: "namibie-etosha", to: "namibie-couleurs-4x4-petit-groupe-14j" },
+  { region: "afrique", country: "namibie", from: "namibie-caprivi", to: "namibie-victoria-chobe-caprivi-etosha-16j" },
 ];

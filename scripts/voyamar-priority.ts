@@ -60,6 +60,11 @@ const PRIORITY: Record<string, string[]> = {
     "afrique-du-sud-grand-tour-route-jardin-18j",
     "afrique-du-sud-le-cap-kruger-victoria-chobe-13j",
   ],
+  namibie: [
+    "namibie-decouverte-etosha-sossusvlei-12j",
+    "namibie-couleurs-4x4-petit-groupe-14j",
+    "namibie-victoria-chobe-caprivi-etosha-16j",
+  ],
 };
 
 async function main() {
