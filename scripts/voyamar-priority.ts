@@ -65,6 +65,14 @@ const PRIORITY: Record<string, string[]> = {
     "namibie-couleurs-4x4-petit-groupe-14j",
     "namibie-victoria-chobe-caprivi-etosha-16j",
   ],
+  senegal: [
+    "senegal-authentique-slow-travel-9j",
+    "senegal-decouverte-saint-louis-lompoul-9j",
+    "senegal-visages-saloum-casamance-9j",
+  ],
+  tunisie: ["tunisie-mer-oasis-sahara-8j", "tunisie-saharienne-djerba-ksar-ghilane-8j"],
+  botswana: ["botswana-okavango-moremi-chobe-12j"],
+  rwanda: ["rwanda-gorilles-akagera-nyungwe-kivu-12j"],
 };
 
 async function main() {
