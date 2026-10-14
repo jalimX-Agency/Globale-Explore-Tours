@@ -14,4 +14,7 @@ export const RETIRED_TRIPS: RetiredTrip[] = [
   { region: "afrique", country: "egypte", from: "egypte-mer-rouge-hurghada", to: "egypte-nil-mer-rouge-hurghada-15j" },
   { region: "afrique", country: "egypte", from: "egypte-croisiere-mer-rouge", to: "egypte-nil-mer-rouge-hurghada-15j" },
   { region: "afrique", country: "tanzanie", from: "tanzanie-serengeti-zanzibar", to: "tanzanie-couleurs-quatre-parcs-10j" },
+  { region: "afrique", country: "afrique-du-sud", from: "afrique-du-sud-cap-kruger", to: "afrique-du-sud-le-cap-kruger-eswatini-13j" },
+  { region: "afrique", country: "afrique-du-sud", from: "afrique-du-sud-garden-route", to: "afrique-du-sud-grand-tour-route-jardin-18j" },
+  { region: "afrique", country: "afrique-du-sud", from: "afrique-du-sud-kwazulu-natal", to: "afrique-du-sud-drakensberg-lesotho-le-cap-15j" },
 ];

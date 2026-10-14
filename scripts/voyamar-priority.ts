@@ -52,6 +52,14 @@ const PRIORITY: Record<string, string[]> = {
     "tanzanie-autrement-lac-natron-11j",
     "tanzanie-evasion-safari-zanzibar-11j",
   ],
+  "afrique-du-sud": [
+    "afrique-du-sud-safari-dream-kruger-eswatini-10j",
+    "afrique-du-sud-le-cap-kruger-eswatini-13j",
+    "afrique-du-sud-intimiste-petit-groupe-13j",
+    "afrique-du-sud-drakensberg-lesotho-le-cap-15j",
+    "afrique-du-sud-grand-tour-route-jardin-18j",
+    "afrique-du-sud-le-cap-kruger-victoria-chobe-13j",
+  ],
 };
 
 async function main() {
