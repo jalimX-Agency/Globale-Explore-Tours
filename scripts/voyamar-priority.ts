@@ -99,6 +99,14 @@ const PRIORITY: Record<string, string[]> = {
     "indonesie-bali-java-celebes-toraja-17j",
     "indonesie-evasion-privilege-bali-12j",
   ],
+  cambodge: [
+    "cambodge-magie-angkor-battambang-kampot-14j",
+    "cambodge-intimiste-angkor-koh-sdach-14j",
+    "cambodge-indispensable-prive-11j",
+    "cambodge-thailande-angkor-chiang-mai-13j",
+    "cambodge-laos-luang-prabang-angkor-12j",
+    "cambodge-immersion-mondulkiri-ratanakiri-17j",
+  ],
 };
 
 async function main() {

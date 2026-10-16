@@ -36,4 +36,6 @@ export const RETIRED_TRIPS: RetiredTrip[] = [
   { region: "asie-du-sud-est", country: "indonesie", from: "indonesie-ubud-uluwatu", to: "indonesie-instant-balinais-prive-11j" },
   { region: "asie-du-sud-est", country: "indonesie", from: "indonesie-kawahijen-java", to: "indonesie-perles-bali-java-bromo-13j" },
   { region: "asie-du-sud-est", country: "indonesie", from: "indonesie-komodo-dragons", to: "indonesie-bali-autre-angle-prive-14j" },
+  { region: "asie-du-sud-est", country: "cambodge", from: "cambodge-siem-reap-tonle-sap", to: "cambodge-magie-angkor-battambang-kampot-14j" },
+  { region: "asie-du-sud-est", country: "cambodge", from: "cambodge-battambang-campagne", to: "cambodge-intimiste-angkor-koh-sdach-14j" },
 ];
