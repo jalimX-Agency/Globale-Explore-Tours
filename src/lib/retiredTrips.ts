@@ -30,4 +30,7 @@ export const RETIRED_TRIPS: RetiredTrip[] = [
   { region: "afrique", country: "rwanda", from: "rwanda-kigali-parc-volcans", to: "rwanda-gorilles-akagera-nyungwe-kivu-12j" },
   { region: "afrique", country: "rwanda", from: "rwanda-kivu-akagera", to: "rwanda-gorilles-akagera-nyungwe-kivu-12j" },
   { region: "afrique", country: "rwanda", from: "rwanda-nyungwe", to: "rwanda-gorilles-akagera-nyungwe-kivu-12j" },
+  { region: "asie", country: "thailande", from: "thailande-bangkok-koh-yao-noi", to: "thailande-bangkok-khao-lak-sejour-11j" },
+  { region: "asie", country: "thailande", from: "thailande-chiangmai-triangle-or", to: "thailande-incontournables-bangkok-chiang-mai-10j" },
+  { region: "asie", country: "thailande", from: "thailande-sukhothai-kohlanta", to: "thailande-grand-tour-koh-lanta-krabi-17j" },
 ];

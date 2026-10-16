@@ -73,6 +73,16 @@ const PRIORITY: Record<string, string[]> = {
   tunisie: ["tunisie-mer-oasis-sahara-8j", "tunisie-saharienne-djerba-ksar-ghilane-8j"],
   botswana: ["botswana-okavango-moremi-chobe-12j"],
   rwanda: ["rwanda-gorilles-akagera-nyungwe-kivu-12j"],
+  thailande: [
+    "thailande-incontournables-bangkok-chiang-mai-10j",
+    "thailande-bangkok-khao-lak-sejour-11j",
+    "thailande-sud-khao-sok-krabi-koh-lanta-11j",
+    "thailande-paradis-phuket-krabi-phi-phi-12j",
+    "thailande-intimiste-kanchanaburi-chiang-mai-13j",
+    "thailande-nord-sud-khao-sok-khao-lak-15j",
+    "thailande-joyaux-sud-phang-nga-phi-phi-12j",
+    "thailande-grand-tour-koh-lanta-krabi-17j",
+  ],
 };
 
 async function main() {
