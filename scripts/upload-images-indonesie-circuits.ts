@@ -1,0 +1,133 @@
+// Indonesia circuits — photos from each circuit's gallery on the supplier site (some galleries
+// are hosted by the local partner on Cloudinary), listed with their full source URL and
+// published as journeys/<key>.jpg. Run with:
+//   npx tsx scripts/upload-images-indonesie-circuits.ts
+// Safe to re-run — already-uploaded keys are skipped (see scripts/lib/uploadImages.ts).
+
+export {};
+
+process.loadEnvFile(".env");
+
+// [key, source URL] — route maps and duplicate pictures were left out.
+const IMAGES: Array<[string, string]> = [
+  ["indonesie-cu1", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/ASIE/INDONESIE/COMBINE_UBUD_ET_PLAGES_2025/5_NUITS_UBUD_4_NUITS_SANUR_STD/1.jpeg"],
+  ["indonesie-cu2", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/ASIE/INDONESIE/COMBINE_UBUD_ET_PLAGES_2025/5_NUITS_UBUD_4_NUITS_SANUR_STD/2.jpeg"],
+  ["indonesie-cu3", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/ASIE/INDONESIE/COMBINE_UBUD_ET_PLAGES_2025/5_NUITS_UBUD_4_NUITS_SANUR_STD/3.jpeg"],
+  ["indonesie-cu4", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/ASIE/INDONESIE/COMBINE_UBUD_ET_PLAGES_2025/5_NUITS_UBUD_4_NUITS_SANUR_STD/4.jpeg"],
+  ["indonesie-cu5", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/ASIE/INDONESIE/COMBINE_UBUD_ET_PLAGES_2025/5_NUITS_UBUD_4_NUITS_SANUR_STD/5.jpeg"],
+  ["indonesie-cu6", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/ASIE/INDONESIE/COMBINE_UBUD_ET_PLAGES_2025/5_NUITS_UBUD_4_NUITS_SANUR_STD/6.jpeg"],
+  ["indonesie-cu7", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/ASIE/INDONESIE/COMBINE_UBUD_ET_PLAGES_2025/5_NUITS_UBUD_4_NUITS_SANUR_STD/7.jpeg"],
+  ["indonesie-cu8", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/ASIE/INDONESIE/COMBINE_UBUD_ET_PLAGES_2025/5_NUITS_UBUD_4_NUITS_SANUR_STD/8.jpeg"],
+  ["indonesie-rl1", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/ASIE/INDONESIE/BALI_EN_ROUE_LIBRE/1.jpg"],
+  ["indonesie-rl2", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/ASIE/INDONESIE/BALI_EN_ROUE_LIBRE/2.jpeg"],
+  ["indonesie-rl3", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/ASIE/INDONESIE/BALI_EN_ROUE_LIBRE/3.jpeg"],
+  ["indonesie-rl4", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/ASIE/INDONESIE/BALI_EN_ROUE_LIBRE/4.jpeg"],
+  ["indonesie-rl5", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/ASIE/INDONESIE/BALI_EN_ROUE_LIBRE/5.jpeg"],
+  ["indonesie-rl6", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/ASIE/INDONESIE/BALI_EN_ROUE_LIBRE/6.jpeg"],
+  ["indonesie-rl7", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/ASIE/INDONESIE/BALI_EN_ROUE_LIBRE/7.jpeg"],
+  ["indonesie-rl8", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/ASIE/INDONESIE/BALI_EN_ROUE_LIBRE/8.jpeg"],
+  ["indonesie-ib1", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/ASIE/INDONESIE/INSANTS_BALINAIS/1.jpeg"],
+  ["indonesie-ib2", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/ASIE/INDONESIE/INSANTS_BALINAIS/2.jpeg"],
+  ["indonesie-ib3", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/ASIE/INDONESIE/INSANTS_BALINAIS/3.jpeg"],
+  ["indonesie-ib4", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/ASIE/INDONESIE/INSANTS_BALINAIS/4.jpeg"],
+  ["indonesie-ib5", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/ASIE/INDONESIE/INSANTS_BALINAIS/5.jpeg"],
+  ["indonesie-ib6", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/ASIE/INDONESIE/INSANTS_BALINAIS/6.jpeg"],
+  ["indonesie-ib7", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/ASIE/INDONESIE/INSANTS_BALINAIS/7.jpeg"],
+  ["indonesie-ib8", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/ASIE/INDONESIE/INSANTS_BALINAIS/8.jpeg"],
+  ["indonesie-bp1", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/ASIE/INDONESIE/BALI_PASSION/1.jpeg"],
+  ["indonesie-bp2", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/ASIE/INDONESIE/BALI_PASSION/2.jpeg"],
+  ["indonesie-bp3", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/ASIE/INDONESIE/BALI_PASSION/3.jpeg"],
+  ["indonesie-bp4", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/ASIE/INDONESIE/BALI_PASSION/4.jpeg"],
+  ["indonesie-bp5", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/ASIE/INDONESIE/BALI_PASSION/5.jpeg"],
+  ["indonesie-bp6", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/ASIE/INDONESIE/BALI_PASSION/6.jpeg"],
+  ["indonesie-bp7", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/ASIE/INDONESIE/BALI_PASSION/7.jpeg"],
+  ["indonesie-ug1", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/ASIE/INDONESIE/COMBINE_UBUD_ET_PLAGES_2025/UBUD_ET_GILI_STD/1.jpeg"],
+  ["indonesie-ug3", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/ASIE/INDONESIE/COMBINE_UBUD_ET_PLAGES_2025/UBUD_ET_GILI_STD/3.jpeg"],
+  ["indonesie-ug4", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/ASIE/INDONESIE/COMBINE_UBUD_ET_PLAGES_2025/UBUD_ET_GILI_STD/4.jpeg"],
+  ["indonesie-ug6", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/ASIE/INDONESIE/COMBINE_UBUD_ET_PLAGES_2025/UBUD_ET_GILI_STD/6.jpeg"],
+  ["indonesie-ug7", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/ASIE/INDONESIE/COMBINE_UBUD_ET_PLAGES_2025/UBUD_ET_GILI_STD/7.jpeg"],
+  ["indonesie-ug8", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/ASIE/INDONESIE/COMBINE_UBUD_ET_PLAGES_2025/UBUD_ET_GILI_STD/8.jpeg"],
+  ["indonesie-aa1", "https://res.cloudinary.com/djvactfsk/image/upload/c_scale,w_1200/v1/EXCHANGE/TOURS/PRODUCTION/uqpxvsmticqyutwyzkrc.jpg"],
+  ["indonesie-aa2", "https://res.cloudinary.com/djvactfsk/image/upload/c_scale,w_1200/v1/EXCHANGE/TOURS/PRODUCTION/rgfrqaeorg01nbjbcieo.jpg"],
+  ["indonesie-aa3", "https://res.cloudinary.com/djvactfsk/image/upload/c_scale,w_1200/v1/EXCHANGE/TOURS/PRODUCTION/dxnhfnsfsdg8nhnhrqr8.jpg"],
+  ["indonesie-aa4", "https://res.cloudinary.com/djvactfsk/image/upload/c_scale,w_1200/v1/EXCHANGE/TOURS/PRODUCTION/cdbw9fyempzsoebd15if.jpg"],
+  ["indonesie-aa5", "https://res.cloudinary.com/djvactfsk/image/upload/c_scale,w_1200/v1/EXCHANGE/TOURS/PRODUCTION/wpje5rorqpmfk6sgn21v.jpg"],
+  ["indonesie-aa6", "https://res.cloudinary.com/djvactfsk/image/upload/c_scale,w_1200/v1/EXCHANGE/TOURS/PRODUCTION/vfviv3qzsyxlx68meaaf.jpg"],
+  ["indonesie-aa7", "https://res.cloudinary.com/djvactfsk/image/upload/c_scale,w_1200/v1/EXCHANGE/TOURS/PRODUCTION/dmdq8vbkijkugvfwwt61.jpg"],
+  ["indonesie-aa8", "https://res.cloudinary.com/djvactfsk/image/upload/c_scale,w_1200/v1/EXCHANGE/TOURS/PRODUCTION/rfcxb9awpwgoa6vfbpgc.jpg"],
+  ["indonesie-aa9", "https://res.cloudinary.com/djvactfsk/image/upload/c_scale,w_1200/v1/EXCHANGE/TOURS/PRODUCTION/jg2oupr7h09ffflq1d8r.jpg"],
+  ["indonesie-aa10", "https://res.cloudinary.com/djvactfsk/image/upload/c_scale,w_1200/v1/EXCHANGE/TOURS/PRODUCTION/vxbkqzso6vp7sewlz7jb.jpg"],
+  ["indonesie-aa11", "https://res.cloudinary.com/djvactfsk/image/upload/c_scale,w_1200/v1/EXCHANGE/TOURS/PRODUCTION/iyeq2ztlulc55zra2dif.jpg"],
+  ["indonesie-aa12", "https://res.cloudinary.com/djvactfsk/image/upload/c_scale,w_1200/v1/EXCHANGE/TOURS/PRODUCTION/vo3enj9jja5pkdwqeqjn.jpg"],
+  ["indonesie-tr1", "https://res.cloudinary.com/djvactfsk/image/upload/c_scale,w_1200/v1/EXCHANGE/TOURS/PRODUCTION/b2c9gfavpjhr8riddtjt.jpg"],
+  ["indonesie-tr2", "https://res.cloudinary.com/djvactfsk/image/upload/c_scale,w_1200/v1/EXCHANGE/TOURS/PRODUCTION/tirwxhw0dveeeakecovh.jpg"],
+  ["indonesie-tr3", "https://res.cloudinary.com/djvactfsk/image/upload/c_scale,w_1200/v1/EXCHANGE/TOURS/PRODUCTION/gddtrf84fxdbcl2qavbo.jpg"],
+  ["indonesie-tr4", "https://res.cloudinary.com/djvactfsk/image/upload/c_scale,w_1200/v1/EXCHANGE/TOURS/PRODUCTION/klzku7jgdaoill3hjrlg.jpg"],
+  ["indonesie-tr5", "https://res.cloudinary.com/djvactfsk/image/upload/c_scale,w_1200/v1/EXCHANGE/TOURS/PRODUCTION/szsuq8iuzrm3vmcyvc7x.jpg"],
+  ["indonesie-tr7", "https://res.cloudinary.com/djvactfsk/image/upload/c_scale,w_1200/v1/EXCHANGE/TOURS/PRODUCTION/pxmicbjslafrukxrz7c9.jpg"],
+  ["indonesie-tr8", "https://res.cloudinary.com/djvactfsk/image/upload/c_scale,w_1200/v1/EXCHANGE/TOURS/PRODUCTION/vdwpcdtpp2cqq9w2thig.jpg"],
+  ["indonesie-bo1", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/ASIE/INDONESIE/BOHEME_ET_GILI_TRAWANGA/1.jpeg"],
+  ["indonesie-bo2", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/ASIE/INDONESIE/BOHEME_ET_GILI_TRAWANGA/2.jpeg"],
+  ["indonesie-bo4", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/ASIE/INDONESIE/BOHEME_ET_GILI_TRAWANGA/4.jpeg"],
+  ["indonesie-bo5", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/ASIE/INDONESIE/BOHEME_ET_GILI_TRAWANGA/5.jpeg"],
+  ["indonesie-bo6", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/ASIE/INDONESIE/BOHEME_ET_GILI_TRAWANGA/6.jpeg"],
+  ["indonesie-bo7", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/ASIE/INDONESIE/BOHEME_ET_GILI_TRAWANGA/7.jpeg"],
+  ["indonesie-bo8", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/ASIE/INDONESIE/BOHEME_ET_GILI_TRAWANGA/8.jpeg"],
+  ["indonesie-bo9", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/ASIE/INDONESIE/BOHEME_ET_GILI_TRAWANGA/9.jpeg"],
+  ["indonesie-au1", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/INDONESIE/BALI/BALI_AUTHENTIQUE/1.jpeg"],
+  ["indonesie-au2", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/INDONESIE/BALI/BALI_AUTHENTIQUE/2.jpeg"],
+  ["indonesie-au3", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/INDONESIE/BALI/BALI_AUTHENTIQUE/3.jpeg"],
+  ["indonesie-au4", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/INDONESIE/BALI/BALI_AUTHENTIQUE/4.jpeg"],
+  ["indonesie-au5", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/INDONESIE/BALI/BALI_AUTHENTIQUE/5.jpeg"],
+  ["indonesie-au6", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/INDONESIE/BALI/BALI_AUTHENTIQUE/6.jpeg"],
+  ["indonesie-au8", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/INDONESIE/BALI/BALI_AUTHENTIQUE/8.jpeg"],
+  ["indonesie-au9", "https://res.cloudinary.com/djvactfsk/image/upload/c_scale,w_1200/v1/EXCHANGE/TOURS/PRODUCTION/o5ftix1exzd1di2einkq.jpg"],
+  ["indonesie-rv2", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/ASIE/INDONESIE/REVERIE_BALINAISE_EN_ROUE_LIBRE/2.jpeg"],
+  ["indonesie-rv3", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/ASIE/INDONESIE/REVERIE_BALINAISE_EN_ROUE_LIBRE/3.jpeg"],
+  ["indonesie-rv4", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/ASIE/INDONESIE/REVERIE_BALINAISE_EN_ROUE_LIBRE/4.jpeg"],
+  ["indonesie-rv5", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/ASIE/INDONESIE/REVERIE_BALINAISE_EN_ROUE_LIBRE/5.jpeg"],
+  ["indonesie-rv6", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/ASIE/INDONESIE/REVERIE_BALINAISE_EN_ROUE_LIBRE/6.jpeg"],
+  ["indonesie-rv7", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/ASIE/INDONESIE/REVERIE_BALINAISE_EN_ROUE_LIBRE/7.jpeg"],
+  ["indonesie-rv8", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/ASIE/INDONESIE/REVERIE_BALINAISE_EN_ROUE_LIBRE/8.jpeg"],
+  ["indonesie-es1", "https://res.cloudinary.com/djvactfsk/image/upload/c_scale,w_1200/v1/EXCHANGE/TOURS/PRODUCTION/qxrvrgau5aivpbd0y9dc.jpg"],
+  ["indonesie-es2", "https://res.cloudinary.com/djvactfsk/image/upload/c_scale,w_1200/v1/EXCHANGE/TOURS/PRODUCTION/gn5rjm1xqcti7noqwemh.jpg"],
+  ["indonesie-es3", "https://res.cloudinary.com/djvactfsk/image/upload/c_scale,w_1200/v1/EXCHANGE/TOURS/PRODUCTION/cqnvtsebwmd1l8yxcvyv.jpg"],
+  ["indonesie-es4", "https://res.cloudinary.com/djvactfsk/image/upload/c_scale,w_1200/v1/EXCHANGE/TOURS/PRODUCTION/fzlcr1egcpbjhzslfbwm.jpg"],
+  ["indonesie-es5", "https://res.cloudinary.com/djvactfsk/image/upload/c_scale,w_1200/v1/EXCHANGE/TOURS/PRODUCTION/pnqqr7fzszue6r0ogvdb.jpg"],
+  ["indonesie-es6", "https://res.cloudinary.com/djvactfsk/image/upload/c_scale,w_1200/v1/EXCHANGE/TOURS/PRODUCTION/szmpu1pflad6ya9116vp.jpg"],
+  ["indonesie-es7", "https://res.cloudinary.com/djvactfsk/image/upload/c_scale,w_1200/v1/EXCHANGE/TOURS/PRODUCTION/gryuhd6m47vaalsbubdf.jpg"],
+  ["indonesie-es8", "https://res.cloudinary.com/djvactfsk/image/upload/c_scale,w_1200/v1/EXCHANGE/TOURS/PRODUCTION/sluqwgpyvnczmfvbozap.jpg"],
+  ["indonesie-es9", "https://res.cloudinary.com/djvactfsk/image/upload/c_scale,w_1200/v1/EXCHANGE/TOURS/PRODUCTION/b2cagz1vmddtxeuzvjne.jpg"],
+  ["indonesie-es10", "https://res.cloudinary.com/djvactfsk/image/upload/c_scale,w_1200/v1/EXCHANGE/TOURS/PRODUCTION/itytm1one6razxuzpmnb.jpg"],
+  ["indonesie-es11", "https://res.cloudinary.com/djvactfsk/image/upload/c_scale,w_1200/v1/EXCHANGE/TOURS/PRODUCTION/emnojjg1wdej9lqbnamh.jpg"],
+  ["indonesie-es12", "https://res.cloudinary.com/djvactfsk/image/upload/c_scale,w_1200/v1/EXCHANGE/TOURS/PRODUCTION/tn7klhpp3sqorjiastba.jpg"],
+  ["indonesie-pj1", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/ASIE/INDONESIE/PERLES_DE_BALI_JAVA_SANUR/1.jpeg"],
+  ["indonesie-pj2", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/ASIE/INDONESIE/PERLES_DE_BALI_JAVA_SANUR/2.jpeg"],
+  ["indonesie-pj3", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/ASIE/INDONESIE/PERLES_DE_BALI_JAVA_SANUR/3.jpeg"],
+  ["indonesie-pj4", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/ASIE/INDONESIE/PERLES_DE_BALI_JAVA_SANUR/4.jpeg"],
+  ["indonesie-pj5", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/ASIE/INDONESIE/PERLES_DE_BALI_JAVA_SANUR/5.jpeg"],
+  ["indonesie-pj6", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/ASIE/INDONESIE/PERLES_DE_BALI_JAVA_SANUR/6.jpeg"],
+  ["indonesie-pj7", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/ASIE/INDONESIE/PERLES_DE_BALI_JAVA_SANUR/7.jpeg"],
+  ["indonesie-pj8", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/ASIE/INDONESIE/PERLES_DE_BALI_JAVA_SANUR/8.jpeg"],
+  ["indonesie-ev1", "https://res.cloudinary.com/djvactfsk/image/upload/c_scale,w_1200/v1/EXCHANGE/TOURS/PRODUCTION/gmer5ohxp1krqosaqeo1.jpg"],
+  ["indonesie-ev2", "https://res.cloudinary.com/djvactfsk/image/upload/c_scale,w_1200/v1/EXCHANGE/TOURS/PRODUCTION/tqkadljol2qevyzoae7o.jpg"],
+  ["indonesie-ev3", "https://res.cloudinary.com/djvactfsk/image/upload/c_scale,w_1200/v1/EXCHANGE/TOURS/PRODUCTION/hijwagc6babfpeuz65rv.jpg"],
+  ["indonesie-ev4", "https://res.cloudinary.com/djvactfsk/image/upload/c_scale,w_1200/v1/EXCHANGE/TOURS/PRODUCTION/ido1wqzocblyz9zfd8d0.jpg"],
+  ["indonesie-ev5", "https://res.cloudinary.com/djvactfsk/image/upload/c_scale,w_1200/v1/EXCHANGE/TOURS/PRODUCTION/sahoobizigisthwmww1y.jpg"],
+  ["indonesie-ev6", "https://res.cloudinary.com/djvactfsk/image/upload/c_scale,w_1200/v1/EXCHANGE/TOURS/PRODUCTION/ti8foqtgww66azphslnc.jpg"],
+  ["indonesie-ev7", "https://res.cloudinary.com/djvactfsk/image/upload/c_scale,w_1200/v1/EXCHANGE/TOURS/PRODUCTION/we5gecpucriphi623jcp.jpg"],
+  ["indonesie-ev8", "https://res.cloudinary.com/djvactfsk/image/upload/c_scale,w_1200/v1/EXCHANGE/TOURS/PRODUCTION/ufwtscqzebh4ha98ecwj.jpg"],
+];
+
+async function main() {
+  const { uploadImageBatch } = await import("./lib/uploadImages");
+  await uploadImageBatch(
+    IMAGES.map(([key, url]) => ({ key: `journeys/${key}.jpg`, url })),
+    "scripts/.manifests/indonesie-circuits.json"
+  );
+}
+
+main().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});

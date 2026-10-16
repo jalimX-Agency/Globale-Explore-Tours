@@ -83,6 +83,22 @@ const PRIORITY: Record<string, string[]> = {
     "thailande-joyaux-sud-phang-nga-phi-phi-12j",
     "thailande-grand-tour-koh-lanta-krabi-17j",
   ],
+  indonesie: [
+    "indonesie-bali-ubud-plage-sejour-12j",
+    "indonesie-bali-roue-libre-chauffeur-11j",
+    "indonesie-instant-balinais-prive-11j",
+    "indonesie-bali-passion-12j",
+    "indonesie-bali-ubud-gili-sejour-14j",
+    "indonesie-bali-autre-angle-prive-14j",
+    "indonesie-trio-iles-bali-nusa-penida-lembongan-11j",
+    "indonesie-boheme-balinaise-gili-15j",
+    "indonesie-bali-authentique-14j",
+    "indonesie-reverie-balinaise-chauffeur-16j",
+    "indonesie-esprit-balinais-prive-15j",
+    "indonesie-perles-bali-java-bromo-13j",
+    "indonesie-bali-java-celebes-toraja-17j",
+    "indonesie-evasion-privilege-bali-12j",
+  ],
 };
 
 async function main() {

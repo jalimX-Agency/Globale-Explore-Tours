@@ -33,4 +33,7 @@ export const RETIRED_TRIPS: RetiredTrip[] = [
   { region: "asie", country: "thailande", from: "thailande-bangkok-koh-yao-noi", to: "thailande-bangkok-khao-lak-sejour-11j" },
   { region: "asie", country: "thailande", from: "thailande-chiangmai-triangle-or", to: "thailande-incontournables-bangkok-chiang-mai-10j" },
   { region: "asie", country: "thailande", from: "thailande-sukhothai-kohlanta", to: "thailande-grand-tour-koh-lanta-krabi-17j" },
+  { region: "asie-du-sud-est", country: "indonesie", from: "indonesie-ubud-uluwatu", to: "indonesie-instant-balinais-prive-11j" },
+  { region: "asie-du-sud-est", country: "indonesie", from: "indonesie-kawahijen-java", to: "indonesie-perles-bali-java-bromo-13j" },
+  { region: "asie-du-sud-est", country: "indonesie", from: "indonesie-komodo-dragons", to: "indonesie-bali-autre-angle-prive-14j" },
 ];
