@@ -72,4 +72,7 @@ export const RETIRED_TRIPS: RetiredTrip[] = [
   { region: "moyen-orient", country: "oman", from: "oman-mascate-wahiba", to: "oman-decouverte-mascate-nizwa-wahiba-sur-8j" },
   { region: "amerique-du-nord", country: "etats-unis", from: "etats-unis-newyork-nouvelle-angleterre", to: "etats-unis-est-intimiste-niagara-cape-cod-12j" },
   { region: "amerique-du-nord", country: "etats-unis", from: "etats-unis-vegas-grand-canyon", to: "etats-unis-ouest-en-famille-universal-yosemite-15j" },
+  { region: "amerique-du-nord", country: "canada", from: "canada-banff-jasper", to: "canada-decouverte-des-rocheuses-canadiennes-11j" },
+  { region: "amerique-du-nord", country: "canada", from: "canada-nouvelle-ecosse-ipe", to: "canada-pays-du-homard-bleu-gaspesie-maritimes-14j" },
+  { region: "amerique-du-nord", country: "canada", from: "canada-quebec-charlevoix", to: "canada-cap-sur-la-belle-province-quebec-saguenay-8j" },
 ];

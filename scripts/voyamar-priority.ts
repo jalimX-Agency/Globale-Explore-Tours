@@ -255,6 +255,25 @@ const PRIORITY: Record<string, string[]> = {
     "etats-unis-grand-tour-des-rocheuses-intimiste-santa-fe-16j",
     "etats-unis-echappee-sauvage-intimiste-glacier-seattle-15j",
   ],
+  canada: [
+    "canada-cap-sur-la-belle-province-quebec-saguenay-8j",
+    "canada-i-love-canada-toronto-niagara-quebec-8j",
+    "canada-incontournables-du-canada-niagara-tadoussac-10j",
+    "canada-beautes-de-l-est-canadien-12j",
+    "canada-magie-du-canada-gaspesie-14j",
+    "canada-est-canadien-intimiste-12j",
+    "canada-pays-du-homard-bleu-gaspesie-maritimes-14j",
+    "canada-autotour-le-quebec-c-est-chouette-14j",
+    "canada-decouverte-des-rocheuses-canadiennes-11j",
+    "canada-grandeur-canadienne-saint-laurent-rocheuses-18j",
+    "canada-usa-canada-west-rocheuses-yellowstone-15j",
+    "canada-i-love-usa-canada-quebec-new-york-11j",
+    "canada-merveilles-usa-canada-boston-washington-12j",
+    "canada-au-coeur-de-l-hiver-canadien-saguenay-9j",
+    "canada-naya-hiver-au-lac-morency-8j",
+    "canada-autotour-entre-glace-et-erables-9j",
+    "canada-autotour-toi-moi-et-le-froid-10j",
+  ],
 };
 
 async function main() {
