@@ -215,6 +215,29 @@ const PRIORITY: Record<string, string[]> = {
   oman: [
     "oman-decouverte-mascate-nizwa-wahiba-sur-8j",
   ],
+  "etats-unis": [
+    "etats-unis-new-york-big-apple-6j",
+    "etats-unis-new-york-magie-manhattan-high-line-6j",
+    "etats-unis-new-york-frenchies-city-pass-6j",
+    "etats-unis-new-york-big-apple-autrement-bronx-brooklyn-6j",
+    "etats-unis-incontournables-est-boston-washington-9j",
+    "etats-unis-essentiel-floride-keys-everglades-9j",
+    "etats-unis-cap-sur-la-floride-saint-augustine-9j",
+    "etats-unis-floride-croisiere-msc-bahamas-12j",
+    "etats-unis-decouverte-louisiane-plantations-bayous-9j",
+    "etats-unis-new-york-intimiste-7j",
+    "etats-unis-new-york-noel-tresors-7j",
+    "etats-unis-new-york-chicago-niagara-12j",
+    "etats-unis-new-york-key-west-charleston-savannah-13j",
+    "etats-unis-rythmes-du-sud-houston-memphis-nashville-12j",
+    "etats-unis-grand-tour-du-sud-atlanta-key-west-14j",
+    "etats-unis-ame-du-sud-texas-bayous-atlanta-14j",
+    "etats-unis-casinos-aux-bayous-route-66-14j",
+    "etats-unis-music-road-dallas-memphis-chicago-14j",
+    "etats-unis-est-intimiste-niagara-cape-cod-12j",
+    "etats-unis-texas-louisiane-intimiste-14j",
+    "etats-unis-south-music-intimiste-blues-bayous-15j",
+  ],
 };
 
 async function main() {
