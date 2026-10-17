@@ -38,4 +38,6 @@ export const RETIRED_TRIPS: RetiredTrip[] = [
   { region: "asie-du-sud-est", country: "indonesie", from: "indonesie-komodo-dragons", to: "indonesie-bali-autre-angle-prive-14j" },
   { region: "asie-du-sud-est", country: "cambodge", from: "cambodge-siem-reap-tonle-sap", to: "cambodge-magie-angkor-battambang-kampot-14j" },
   { region: "asie-du-sud-est", country: "cambodge", from: "cambodge-battambang-campagne", to: "cambodge-intimiste-angkor-koh-sdach-14j" },
+  { region: "sous-continent-indien", country: "sri-lanka", from: "sri-lanka-triangle-culturel", to: "sri-lanka-incontournables-sigiriya-kandy-galle-10j" },
+  { region: "sous-continent-indien", country: "sri-lanka", from: "sri-lanka-kandy-mirissa", to: "sri-lanka-grand-tour-anuradhapura-udawalawe-12j" },
 ];

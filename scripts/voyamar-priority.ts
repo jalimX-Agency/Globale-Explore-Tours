@@ -107,6 +107,17 @@ const PRIORITY: Record<string, string[]> = {
     "cambodge-laos-luang-prabang-angkor-12j",
     "cambodge-immersion-mondulkiri-ratanakiri-17j",
   ],
+  "sri-lanka": [
+    "sri-lanka-incontournables-sigiriya-kandy-galle-10j",
+    "sri-lanka-grand-tour-anuradhapura-udawalawe-12j",
+    "sri-lanka-magie-haputale-yala-12j",
+    "sri-lanka-experiences-knuckles-gal-oya-13j",
+    "sri-lanka-merveille-ceylan-prive-11j",
+    "sri-lanka-aventure-trincomalee-mirissa-prive-12j",
+    "sri-lanka-grand-tour-jaffna-prive-14j",
+    "sri-lanka-sigiriya-kandy-plage-beruwala-10j",
+    "sri-lanka-grand-tour-maldives-15j",
+  ],
 };
 
 async function main() {
