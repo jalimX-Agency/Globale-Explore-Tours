@@ -75,4 +75,6 @@ export const RETIRED_TRIPS: RetiredTrip[] = [
   { region: "amerique-du-nord", country: "canada", from: "canada-banff-jasper", to: "canada-decouverte-des-rocheuses-canadiennes-11j" },
   { region: "amerique-du-nord", country: "canada", from: "canada-nouvelle-ecosse-ipe", to: "canada-pays-du-homard-bleu-gaspesie-maritimes-14j" },
   { region: "amerique-du-nord", country: "canada", from: "canada-quebec-charlevoix", to: "canada-cap-sur-la-belle-province-quebec-saguenay-8j" },
+  { region: "amerique-du-nord", country: "mexique", from: "mexique-riviera-maya", to: "mexique-cap-sur-le-yucatan-palenque-chichen-itza-9j" },
+  { region: "amerique-du-nord", country: "mexique", from: "mexique-oaxaca", to: "mexique-incontournables-oaxaca-chiapas-yucatan-12j" },
 ];

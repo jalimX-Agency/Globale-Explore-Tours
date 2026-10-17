@@ -274,6 +274,14 @@ const PRIORITY: Record<string, string[]> = {
     "canada-autotour-entre-glace-et-erables-9j",
     "canada-autotour-toi-moi-et-le-froid-10j",
   ],
+  mexique: [
+    "mexique-cap-sur-le-yucatan-palenque-chichen-itza-9j",
+    "mexique-decouverte-du-yucatan-petit-groupe-9j",
+    "mexique-cap-sur-le-mexique-mexico-chiapas-yucatan-11j",
+    "mexique-incontournables-oaxaca-chiapas-yucatan-12j",
+    "mexique-hola-mexico-privatif-12j",
+    "mexique-couleurs-du-mexique-villes-coloniales-14j",
+  ],
 };
 
 async function main() {
