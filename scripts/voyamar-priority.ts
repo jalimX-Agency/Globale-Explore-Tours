@@ -143,6 +143,19 @@ const PRIORITY: Record<string, string[]> = {
     "chine-pays-des-pandas-chengdu-prive-16j",
     "chine-millenaire-croisiere-yangtze-17j",
   ],
+  japon: [
+    "japon-incontournables-himeji-kyoto-fuji-tokyo-12j",
+    "japon-trio-tokyo-hakone-kyoto-liberte-12j",
+    "japon-megalopoles-tokyo-kyoto-koya-hiroshima-liberte-14j",
+    "japon-magie-hiroshima-koya-takayama-fuji-14j",
+    "japon-beaute-tokyo-osaka-hiroshima-kyoto-liberte-16j",
+    "japon-famille-tokyo-kyoto-universal-liberte-16j",
+    "japon-esprit-shikoku-naoshima-kyoto-liberte-16j",
+    "japon-instant-manga-okayama-miyajima-liberte-17j",
+    "japon-panorama-fukuoka-okinawa-liberte-21j",
+    "japon-autre-angle-kinosaki-matsue-tsuwano-liberte-21j",
+    "japon-merveilles-du-nord-hokkaido-tohoku-18j",
+  ],
 };
 
 async function main() {

@@ -49,4 +49,6 @@ export const RETIRED_TRIPS: RetiredTrip[] = [
   { region: "asie", country: "chine", from: "chine-pekin-xian", to: "chine-incontournables-shaolin-suzhou-13j" },
   { region: "asie", country: "chine", from: "chine-guilin-longsheng", to: "chine-passion-pekin-guilin-hong-kong-15j" },
   { region: "asie", country: "chine", from: "chine-zhangjiajie-fenghuang", to: "chine-joyaux-pekin-pingyao-xian-shanghai-12j" },
+  { region: "asie", country: "japon", from: "japon-kyoto-tokyo", to: "japon-trio-tokyo-hakone-kyoto-liberte-12j" },
+  { region: "asie", country: "japon", from: "japon-alpes-shirakawago", to: "japon-magie-hiroshima-koya-takayama-fuji-14j" },
 ];
