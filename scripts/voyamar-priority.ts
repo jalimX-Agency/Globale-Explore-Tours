@@ -304,6 +304,29 @@ const PRIORITY: Record<string, string[]> = {
   belize: [
     "belize-guatemala-et-belize-tikal-atitlan-ambergris-16j",
   ],
+  perou: [
+    "perou-incontournables-du-perou-titicaca-machu-picchu-11j",
+    "perou-hola-perou-nasca-arequipa-machu-picchu-11j",
+    "perou-impressions-du-perou-colca-titicaca-cuzco-14j",
+  ],
+  bolivie: [
+    "bolivie-cap-sur-la-bolivie-sucre-uyuni-titicaca-15j",
+    "bolivie-couleurs-du-perou-et-de-la-bolivie-17j",
+    "bolivie-perles-des-andes-chili-bolivie-perou-17j",
+  ],
+  equateur: [
+    "equateur-decouverte-de-l-equateur-amazonie-cuenca-13j",
+    "equateur-tresors-de-l-equateur-et-des-galapagos-13j",
+  ],
+  colombie: [
+    "colombie-cap-sur-la-colombie-medellin-carthagene-10j",
+    "colombie-couleurs-de-colombie-salento-guatape-11j",
+  ],
+  chili: [
+    "chili-couleurs-du-chili-patagonie-atacama-13j",
+    "chili-merveilles-du-chili-atacama-ile-de-paques-12j",
+    "chili-merveilles-du-chili-patagonie-ile-de-paques-15j",
+  ],
 };
 
 async function main() {
