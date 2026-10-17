@@ -398,6 +398,48 @@ const PRIORITY: Record<string, string[]> = {
     "islande-charme-de-l-islande-myvatn-snaefellsnes-8j",
     "islande-merveilles-de-l-islande-fjords-de-l-ouest-12j",
   ],
+  irlande: [
+    "irlande-cap-sur-l-irlande-du-nord-chaussee-des-geants-5j",
+    "irlande-cap-sur-l-irlande-kerry-dingle-connemara-8j",
+    "irlande-beautes-irlandaises-connemara-moher-kerry-8j",
+    "irlande-de-l-irlande-sauvage-aux-highlands-d-ecosse-12j",
+  ],
+  portugal: [
+    "portugal-decouverte-de-l-algarve-8j",
+    "portugal-magie-du-portugal-lisbonne-porto-8j",
+    "portugal-au-fil-du-douro-croisiere-8j",
+  ],
+  autriche: [
+    "autriche-merveilles-de-vienne-bratislava-budapest-5j",
+    "autriche-tresors-d-europe-centrale-vienne-budapest-prague-8j",
+  ],
+  "republique-tcheque": [
+    "republique-tcheque-prague-ville-aux-cent-clochers-4j",
+    "republique-tcheque-cap-sur-prague-et-vienne-cesky-krumlov-6j",
+  ],
+  "royaume-uni": [
+    "royaume-uni-terres-celtiques-irlande-ecosse-6j",
+    "royaume-uni-charmes-et-traditions-anglaises-cornouailles-8j",
+    "royaume-uni-cap-sur-l-ecosse-highlands-skye-8j",
+  ],
+  croatie: [
+    "croatie-la-croatie-d-ile-en-ile-en-bateau-10j",
+  ],
+  france: [
+    "france-merveilles-de-la-corse-8j",
+  ],
+  malte: [
+    "malte-decouverte-de-malte-la-valette-gozo-8j",
+  ],
+  georgie: [
+    "georgie-cap-sur-la-georgie-tbilissi-kakhetie-kazbegi-8j",
+  ],
+  hongrie: [
+    "hongrie-decouverte-de-budapest-privatif-4j",
+  ],
+  montenegro: [
+    "montenegro-essentiel-du-montenegro-kotor-budva-8j",
+  ],
 };
 
 async function main() {
