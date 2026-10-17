@@ -156,6 +156,14 @@ const PRIORITY: Record<string, string[]> = {
     "japon-autre-angle-kinosaki-matsue-tsuwano-liberte-21j",
     "japon-merveilles-du-nord-hokkaido-tohoku-18j",
   ],
+  "coree-du-sud": [
+    "coree-du-sud-pays-du-matin-calme-12j",
+    "coree-du-sud-panorama-liberte-seoul-busan-12j",
+    "coree-du-sud-japon-passion-liberte-15j",
+  ],
+  mongolie: [
+    "mongolie-pays-des-nomades-gobi-orkhon-15j",
+  ],
 };
 
 async function main() {
