@@ -46,4 +46,7 @@ export const RETIRED_TRIPS: RetiredTrip[] = [
   { region: "asie-du-sud-est", country: "malaisie", from: "malaisie-kuala-lumpur-cameron-highlands", to: "malaisie-a-la-folie-taman-negara-cameron-penang-prive-10j" },
   { region: "asie-du-sud-est", country: "malaisie", from: "malaisie-penang-georgetown", to: "malaisie-joyaux-malacca-ipoh-penang-10j" },
   { region: "asie-du-sud-est", country: "malaisie", from: "malaisie-perhentian-tamannegara", to: "malaisie-kuala-lumpur-perhentian-10j" },
+  { region: "asie", country: "chine", from: "chine-pekin-xian", to: "chine-incontournables-shaolin-suzhou-13j" },
+  { region: "asie", country: "chine", from: "chine-guilin-longsheng", to: "chine-passion-pekin-guilin-hong-kong-15j" },
+  { region: "asie", country: "chine", from: "chine-zhangjiajie-fenghuang", to: "chine-joyaux-pekin-pingyao-xian-shanghai-12j" },
 ];

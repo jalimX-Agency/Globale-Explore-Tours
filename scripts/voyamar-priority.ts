@@ -133,6 +133,16 @@ const PRIORITY: Record<string, string[]> = {
     "malaisie-kuala-lumpur-langkawi-rebak-10j",
     "malaisie-kuala-lumpur-perhentian-10j",
   ],
+  chine: [
+    "chine-joyaux-pekin-pingyao-xian-shanghai-12j",
+    "chine-incontournables-shaolin-suzhou-13j",
+    "chine-passion-pekin-guilin-hong-kong-15j",
+    "chine-essentiels-pekin-xian-shanghai-prive-14j",
+    "chine-tresors-du-yunnan-13j",
+    "chine-hong-kong-guilin-pekin-15j",
+    "chine-pays-des-pandas-chengdu-prive-16j",
+    "chine-millenaire-croisiere-yangtze-17j",
+  ],
 };
 
 async function main() {
