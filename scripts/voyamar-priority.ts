@@ -470,6 +470,20 @@ const PRIORITY: Record<string, string[]> = {
     "lituanie-marches-de-noel-a-vilnius-4j",
     "lituanie-splendeurs-des-pays-baltes-de-vilnius-a-tallinn-8j",
   ],
+  armenie: [
+    "armenie-magie-de-l-armenie-erevan-tatev-sevan-8j",
+    "armenie-merveilles-de-l-armenie-et-de-la-georgie-12j",
+  ],
+  albanie: [
+    "albanie-essentiel-de-l-albanie-butrint-gjirokaster-berat-8j",
+    "albanie-souffle-de-l-albanie-shkodra-riviera-korca-kruja-8j",
+  ],
+  bulgarie: [
+    "bulgarie-magie-de-la-bulgarie-plovdiv-rila-nessebar-8j",
+  ],
+  roumanie: [
+    "roumanie-cap-sur-la-roumanie-transylvanie-bucovine-8j",
+  ],
 };
 
 async function main() {
