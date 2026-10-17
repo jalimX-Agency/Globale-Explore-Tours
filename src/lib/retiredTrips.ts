@@ -63,4 +63,11 @@ export const RETIRED_TRIPS: RetiredTrip[] = [
   { region: "ocean-indien", country: "reunion", from: "reunion-saint-denis-piton-fournaise", to: "reunion-joyau-ocean-indien-cirques-volcan-10j" },
   { region: "ocean-indien", country: "reunion", from: "reunion-cilaos", to: "reunion-joyau-ocean-indien-cirques-volcan-10j" },
   { region: "ocean-indien", country: "reunion", from: "reunion-sud-sauvage-saintleu", to: "reunion-autotour-volcans-lagons-11j" },
+  { region: "moyen-orient", country: "jordanie", from: "jordanie-amman-petra-wadi-rum", to: "jordanie-incontournables-chateaux-petra-wadi-rum-8j" },
+  { region: "moyen-orient", country: "jordanie", from: "jordanie-jerash-aqaba", to: "jordanie-intimiste-petra-wadi-rum-aqaba-8j" },
+  { region: "moyen-orient", country: "emirats-arabes-unis", from: "emirats-arabes-unis-dubai-desert", to: "emirats-arabes-unis-dubai-abu-dhabi-al-ain-musandam-7j" },
+  { region: "moyen-orient", country: "emirats-arabes-unis", from: "emirats-arabes-unis-abu-dhabi-culture", to: "emirats-arabes-unis-il-etait-une-fois-6j" },
+  { region: "moyen-orient", country: "israel", from: "israel-jerusalem-mer-morte", to: "israel-super-bleu-tel-aviv-massada-jerusalem-galilee-8j" },
+  { region: "moyen-orient", country: "israel", from: "israel-telaviv-cote", to: "israel-super-bleu-tel-aviv-massada-jerusalem-galilee-8j" },
+  { region: "moyen-orient", country: "oman", from: "oman-mascate-wahiba", to: "oman-decouverte-mascate-nizwa-wahiba-sur-8j" },
 ];

@@ -193,6 +193,28 @@ const PRIORITY: Record<string, string[]> = {
   maldives: [
     "maldives-sri-lanka-incontournables-adaaran-13j",
   ],
+  jordanie: [
+    "jordanie-incontournables-chateaux-petra-wadi-rum-8j",
+    "jordanie-entre-nous-salt-petra-mer-morte-8j",
+    "jordanie-express-petra-wadi-rum-5j",
+    "jordanie-circuit-et-sejour-mer-morte-ou-aqaba-10j",
+    "jordanie-intimiste-petra-wadi-rum-aqaba-8j",
+    "jordanie-etoile-aqaba-petra-wadi-rum-privatif-8j",
+    "jordanie-legendes-privatif-petra-mer-morte-8j",
+    "jordanie-magnifique-privatif-5-etoiles-10j",
+  ],
+  "emirats-arabes-unis": [
+    "emirats-arabes-unis-dubai-abu-dhabi-al-ain-musandam-7j",
+    "emirats-arabes-unis-il-etait-une-fois-6j",
+    "emirats-arabes-unis-oman-entre-mers-et-deserts-12j",
+  ],
+  israel: [
+    "israel-super-bleu-tel-aviv-massada-jerusalem-galilee-8j",
+    "israel-escapade-autour-de-jerusalem-8j",
+  ],
+  oman: [
+    "oman-decouverte-mascate-nizwa-wahiba-sur-8j",
+  ],
 };
 
 async function main() {
