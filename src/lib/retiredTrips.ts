@@ -43,4 +43,7 @@ export const RETIRED_TRIPS: RetiredTrip[] = [
   { region: "asie-du-sud-est", country: "vietnam", from: "vietnam-hanoi-halong-bay", to: "vietnam-intimiste-pu-luong-lan-ha-17j" },
   { region: "asie-du-sud-est", country: "vietnam", from: "vietnam-hoian-cote-centrale", to: "vietnam-incontournables-halong-hoi-an-mekong-12j" },
   { region: "asie-du-sud-est", country: "vietnam", from: "vietnam-mekong-phuquoc", to: "vietnam-magie-halong-hue-delta-mekong-15j" },
+  { region: "asie-du-sud-est", country: "malaisie", from: "malaisie-kuala-lumpur-cameron-highlands", to: "malaisie-a-la-folie-taman-negara-cameron-penang-prive-10j" },
+  { region: "asie-du-sud-est", country: "malaisie", from: "malaisie-penang-georgetown", to: "malaisie-joyaux-malacca-ipoh-penang-10j" },
+  { region: "asie-du-sud-est", country: "malaisie", from: "malaisie-perhentian-tamannegara", to: "malaisie-kuala-lumpur-perhentian-10j" },
 ];

@@ -124,6 +124,15 @@ const PRIORITY: Record<string, string[]> = {
     "vietnam-intimiste-pu-luong-lan-ha-17j",
     "vietnam-cambodge-incontournables-angkor-15j",
   ],
+  malaisie: [
+    "malaisie-joyaux-malacca-ipoh-penang-10j",
+    "malaisie-a-la-folie-taman-negara-cameron-penang-prive-10j",
+    "malaisie-sur-la-route-autotour-malacca-penang-10j",
+    "malaisie-trio-malacca-kuala-lumpur-langkawi-prive-10j",
+    "malaisie-passion-taman-negara-tioman-prive-10j",
+    "malaisie-kuala-lumpur-langkawi-rebak-10j",
+    "malaisie-kuala-lumpur-perhentian-10j",
+  ],
 };
 
 async function main() {
