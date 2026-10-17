@@ -109,4 +109,9 @@ export const RETIRED_TRIPS: RetiredTrip[] = [
   { region: "europe", country: "turquie", from: "turquie-pamukkale-ephese", to: "turquie-merveilles-de-la-turquie-cappadoce-pamukkale-ephese-8j" },
   { region: "europe", country: "pologne", from: "pologne-cracovie-wieliczka", to: "pologne-cracovie-en-liberte-noel-nouvel-an-4j" },
   { region: "europe", country: "pologne", from: "pologne-cracovie-zakopane-tatras", to: "pologne-cap-sur-cracovie-et-les-tatras-5j" },
+  { region: "europe", country: "norvege", from: "norvege-bergen-fjords-lofoten", to: "norvege-cap-sur-la-norvege-et-les-iles-lofoten-11j" },
+  { region: "europe", country: "norvege", from: "norvege-tromso-aurores", to: "norvege-cap-sur-la-norvege-en-hiver-tromso-lofoten-7j" },
+  { region: "europe", country: "islande", from: "islande-feu-glace", to: "islande-aventure-islandaise-tour-de-l-ile-8j" },
+  { region: "europe", country: "islande", from: "islande-westfjords", to: "islande-merveilles-de-l-islande-fjords-de-l-ouest-12j" },
+  { region: "europe", country: "islande", from: "islande-snaefellsnes-landmannalaugar", to: "islande-charme-de-l-islande-myvatn-snaefellsnes-8j" },
 ];

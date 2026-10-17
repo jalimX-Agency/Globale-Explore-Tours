@@ -377,6 +377,27 @@ const PRIORITY: Record<string, string[]> = {
     "pologne-merveilles-de-la-pologne-cracovie-gdansk-varsovie-8j",
     "pologne-cap-sur-la-pologne-gdansk-torun-wroclaw-cracovie-8j",
   ],
+  norvege: [
+    "norvege-escapade-dans-les-fjords-enneiges-5j",
+    "norvege-decouverte-des-fjords-geiranger-bergen-8j",
+    "norvege-cap-sur-les-capitales-scandinaves-oslo-copenhague-stockholm-8j",
+    "norvege-cap-sur-la-norvege-en-hiver-tromso-lofoten-7j",
+    "norvege-norvege-du-nord-tromso-lofoten-cap-nord-8j",
+    "norvege-tresors-de-l-arctique-cap-nord-laponie-8j",
+    "norvege-norvege-du-sud-en-train-et-en-bateau-8j",
+    "norvege-le-meilleur-des-fjords-route-atlantique-lysefjord-10j",
+    "norvege-cap-sur-la-norvege-cap-nord-lofoten-bergen-11j",
+    "norvege-cap-sur-la-norvege-et-les-iles-lofoten-11j",
+    "norvege-cap-sur-la-scandinavie-norvege-finlande-suede-14j",
+  ],
+  islande: [
+    "islande-islande-du-sud-autotour-5j",
+    "islande-cap-sur-l-islande-en-hiver-6j",
+    "islande-splendeurs-boreales-8j",
+    "islande-aventure-islandaise-tour-de-l-ile-8j",
+    "islande-charme-de-l-islande-myvatn-snaefellsnes-8j",
+    "islande-merveilles-de-l-islande-fjords-de-l-ouest-12j",
+  ],
 };
 
 async function main() {

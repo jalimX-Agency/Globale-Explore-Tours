@@ -1,0 +1,128 @@
+// Norway Iceland circuits — photos from each circuit's gallery on the supplier site, listed with their
+// full source URL and published as journeys/<key>.jpg. Run with:
+//   npx tsx scripts/upload-images-nor-circuits.ts
+// Safe to re-run — already-uploaded keys are skipped (see scripts/lib/uploadImages.ts).
+
+export {};
+
+process.loadEnvFile(".env");
+
+// [key, source URL] — duplicate pictures were left out.
+const IMAGES: Array<[string, string]> = [
+  ["nor-df1", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/NORVEGE/DECOUVERTE_DES_FJORDS/1.jpeg"],
+  ["nor-df2", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/NORVEGE/DECOUVERTE_DES_FJORDS/2.jpeg"],
+  ["nor-df3", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/NORVEGE/DECOUVERTE_DES_FJORDS/3.jpeg"],
+  ["nor-df4", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/NORVEGE/DECOUVERTE_DES_FJORDS/4.jpeg"],
+  ["nor-df5", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/NORVEGE/DECOUVERTE_DES_FJORDS/5.jpg"],
+  ["nor-df6", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/NORVEGE/DECOUVERTE_DES_FJORDS/6.jpeg"],
+  ["nor-df7", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/NORVEGE/DECOUVERTE_DES_FJORDS/7.jpeg"],
+  ["nor-mf1", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/NORVEGE/LE_MEILLEUR_DES_FJORDS_27/1.jpeg"],
+  ["nor-mf2", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/NORVEGE/LE_MEILLEUR_DES_FJORDS_27/2.jpeg"],
+  ["nor-mf3", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/NORVEGE/LE_MEILLEUR_DES_FJORDS_27/3.jpeg"],
+  ["nor-mf4", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/NORVEGE/LE_MEILLEUR_DES_FJORDS_27/4.jpeg"],
+  ["nor-mf5", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/NORVEGE/LE_MEILLEUR_DES_FJORDS_27/5.jpeg"],
+  ["nor-mf6", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/NORVEGE/LE_MEILLEUR_DES_FJORDS_27/6.jpeg"],
+  ["nor-ts1", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/NORVEGE/27_NORVEGE_DU_SUD_EN_TRAIN_ET_BATEAU/1.jpeg"],
+  ["nor-ts2", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/NORVEGE/27_NORVEGE_DU_SUD_EN_TRAIN_ET_BATEAU/2.jpeg"],
+  ["nor-ts3", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/NORVEGE/27_NORVEGE_DU_SUD_EN_TRAIN_ET_BATEAU/3.jpeg"],
+  ["nor-ts4", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/NORVEGE/27_NORVEGE_DU_SUD_EN_TRAIN_ET_BATEAU/4.jpeg"],
+  ["nor-ts5", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/NORVEGE/27_NORVEGE_DU_SUD_EN_TRAIN_ET_BATEAU/5.jpeg"],
+  ["nor-ts6", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/NORVEGE/27_NORVEGE_DU_SUD_EN_TRAIN_ET_BATEAU/6.jpeg"],
+  ["nor-fe1", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/NORVEGE/ESCAPADE_FJORDS_ENNEIGES/1.jpeg"],
+  ["nor-fe2", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/NORVEGE/ESCAPADE_FJORDS_ENNEIGES/2.jpeg"],
+  ["nor-fe3", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/NORVEGE/ESCAPADE_FJORDS_ENNEIGES/3.jpeg"],
+  ["nor-fe4", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/NORVEGE/ESCAPADE_FJORDS_ENNEIGES/4.jpeg"],
+  ["nor-fe5", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/NORVEGE/ESCAPADE_FJORDS_ENNEIGES/5.jpeg"],
+  ["nor-fe6", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/NORVEGE/ESCAPADE_FJORDS_ENNEIGES/6.jpeg"],
+  ["nor-nh1", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/NORVEGE/CAP_SUR_LA_NORVEGE_EN_HIVER/A.jpeg"],
+  ["nor-nh2", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/NORVEGE/CAP_SUR_LA_NORVEGE_EN_HIVER/B.jpeg"],
+  ["nor-nh3", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/NORVEGE/CAP_SUR_LA_NORVEGE_EN_HIVER/C.jpeg"],
+  ["nor-nh4", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/NORVEGE/CAP_SUR_LA_NORVEGE_EN_HIVER/D.jpeg"],
+  ["nor-nh5", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/NORVEGE/CAP_SUR_LA_NORVEGE_EN_HIVER/E.jpeg"],
+  ["nor-nh6", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/NORVEGE/CAP_SUR_LA_NORVEGE_EN_HIVER/F.jpeg"],
+  ["nor-nn1", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/NORVEGE/NORVEGE_DU_NORD/1.jpeg"],
+  ["nor-nn2", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/NORVEGE/NORVEGE_DU_NORD/2.jpeg"],
+  ["nor-nn3", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/NORVEGE/NORVEGE_DU_NORD/3.jpeg"],
+  ["nor-nn4", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/NORVEGE/NORVEGE_DU_NORD/4.jpeg"],
+  ["nor-nn5", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/NORVEGE/NORVEGE_DU_NORD/5.jpeg"],
+  ["nor-nn6", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/NORVEGE/NORVEGE_DU_NORD/6.jpeg"],
+  ["nor-ta1", "https://res.cloudinary.com/djvactfsk/image/upload/c_scale,w_1200/v1/EXCHANGE/TOURS/PRODUCTION/xssy3hnpk8vfkrwit4pj.jpg"],
+  ["nor-ta2", "https://res.cloudinary.com/djvactfsk/image/upload/c_scale,w_1200/v1/EXCHANGE/TOURS/PRODUCTION/oqhfqe9oz9ou4avf0aoz.jpg"],
+  ["nor-ta3", "https://res.cloudinary.com/djvactfsk/image/upload/c_scale,w_1200/v1/EXCHANGE/TOURS/PRODUCTION/zldht3azloecnvqrstcn.jpg"],
+  ["nor-ta4", "https://res.cloudinary.com/djvactfsk/image/upload/c_scale,w_1200/v1/EXCHANGE/TOURS/PRODUCTION/kbirlatzglpzswe77g7q.jpg"],
+  ["nor-cn1", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/NORVEGE/CAP_SUR_LA_NORVEGE/1.jpeg"],
+  ["nor-cn2", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/NORVEGE/CAP_SUR_LA_NORVEGE/2.jpeg"],
+  ["nor-cn3", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/NORVEGE/CAP_SUR_LA_NORVEGE/3.jpg"],
+  ["nor-cn4", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/NORVEGE/CAP_SUR_LA_NORVEGE/4.jpg"],
+  ["nor-cn5", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/NORVEGE/CAP_SUR_LA_NORVEGE/5.jpeg"],
+  ["nor-cn6", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/NORVEGE/CAP_SUR_LA_NORVEGE/6.jpg"],
+  ["nor-cl1", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/NORVEGE/27_-CAP_NORVEGE_ET_LOFOTEN/1.jpeg"],
+  ["nor-cl2", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/NORVEGE/27_-CAP_NORVEGE_ET_LOFOTEN/2.jpeg"],
+  ["nor-cl3", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/NORVEGE/27_-CAP_NORVEGE_ET_LOFOTEN/3.jpeg"],
+  ["nor-cl4", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/NORVEGE/27_-CAP_NORVEGE_ET_LOFOTEN/4.jpeg"],
+  ["nor-cl5", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/NORVEGE/27_-CAP_NORVEGE_ET_LOFOTEN/5-1.jpeg"],
+  ["nor-cl6", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/NORVEGE/27_-CAP_NORVEGE_ET_LOFOTEN/5.jpeg"],
+  ["nor-cl7", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/NORVEGE/27_-CAP_NORVEGE_ET_LOFOTEN/6.jpeg"],
+  ["nor-sc1", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/NORVEGE/CAP_SCANDINAVIE/25-26/1.jpeg"],
+  ["nor-sc2", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/NORVEGE/CAP_SCANDINAVIE/25-26/2.jpeg"],
+  ["nor-sc3", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/NORVEGE/CAP_SCANDINAVIE/25-26/3.jpeg"],
+  ["nor-sc4", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/NORVEGE/CAP_SCANDINAVIE/25-26/4.jpeg"],
+  ["nor-sc5", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/NORVEGE/CAP_SCANDINAVIE/25-26/5.jpeg"],
+  ["nor-sc6", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/NORVEGE/CAP_SCANDINAVIE/25-26/6.jpeg"],
+  ["nor-sc7", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/NORVEGE/CAP_SCANDINAVIE/25-26/7.jpeg"],
+  ["nor-ks1", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/NORVEGE/CAP_SUR_LES_CAPITALES_SCANDINAVES/1.jpeg"],
+  ["nor-ks2", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/NORVEGE/CAP_SUR_LES_CAPITALES_SCANDINAVES/2.jpeg"],
+  ["nor-ks3", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/NORVEGE/CAP_SUR_LES_CAPITALES_SCANDINAVES/3.jpeg"],
+  ["nor-ks4", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/NORVEGE/CAP_SUR_LES_CAPITALES_SCANDINAVES/4.jpeg"],
+  ["nor-ks5", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/NORVEGE/CAP_SUR_LES_CAPITALES_SCANDINAVES/5.jpeg"],
+  ["nor-ks6", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/NORVEGE/CAP_SUR_LES_CAPITALES_SCANDINAVES/6.jpeg"],
+  ["nor-ai2", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/ISLANDE/AVENTURES_ISLANDAISES/2.jpeg"],
+  ["nor-ai3", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/ISLANDE/AVENTURES_ISLANDAISES/3.jpeg"],
+  ["nor-ai4", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/ISLANDE/AVENTURES_ISLANDAISES/4.jpeg"],
+  ["nor-ai5", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/ISLANDE/AVENTURES_ISLANDAISES/5.jpeg"],
+  ["nor-ai6", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/ISLANDE/AVENTURES_ISLANDAISES/6.jpeg"],
+  ["nor-ai7", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/ISLANDE/AVENTURES_ISLANDAISES/7.jpeg"],
+  ["nor-ci1", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/ISLANDE/CHARMES_DE_L_ISLANDE/10.jpeg"],
+  ["nor-ci2", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/ISLANDE/CHARMES_DE_L_ISLANDE/20.jpeg"],
+  ["nor-ci3", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/ISLANDE/CHARMES_DE_L_ISLANDE/30.jpeg"],
+  ["nor-ci4", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/ISLANDE/CHARMES_DE_L_ISLANDE/40.jpeg"],
+  ["nor-ci5", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/ISLANDE/CHARMES_DE_L_ISLANDE/50.jpeg"],
+  ["nor-ci6", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/ISLANDE/CHARMES_DE_L_ISLANDE/60.jpeg"],
+  ["nor-mi1", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/ISLANDE/MERVEILLES_ISLANDE_2025/1.jpeg"],
+  ["nor-mi2", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/ISLANDE/MERVEILLES_ISLANDE_2025/2.jpeg"],
+  ["nor-mi3", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/ISLANDE/MERVEILLES_ISLANDE_2025/3.jpeg"],
+  ["nor-mi4", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/ISLANDE/MERVEILLES_ISLANDE_2025/4.jpeg"],
+  ["nor-mi5", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/ISLANDE/MERVEILLES_ISLANDE_2025/5.jpeg"],
+  ["nor-mi6", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/ISLANDE/MERVEILLES_ISLANDE_2025/6.jpeg"],
+  ["nor-sb1", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/ISLANDE/SPLENDEURS_BOREALES/a.jpeg"],
+  ["nor-sb2", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/ISLANDE/SPLENDEURS_BOREALES/b.jpeg"],
+  ["nor-sb3", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/ISLANDE/SPLENDEURS_BOREALES/c.jpeg"],
+  ["nor-sb4", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/ISLANDE/SPLENDEURS_BOREALES/d.jpeg"],
+  ["nor-sb5", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/ISLANDE/SPLENDEURS_BOREALES/e.jpeg"],
+  ["nor-sb6", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/ISLANDE/SPLENDEURS_BOREALES/f.jpeg"],
+  ["nor-ih1", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/ISLANDE/CAP_ISLANDE_HIVER/A.jpeg"],
+  ["nor-ih2", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/ISLANDE/CAP_ISLANDE_HIVER/B.jpeg"],
+  ["nor-ih3", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/ISLANDE/CAP_ISLANDE_HIVER/C.jpeg"],
+  ["nor-ih4", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/ISLANDE/CAP_ISLANDE_HIVER/D.jpeg"],
+  ["nor-ih5", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/ISLANDE/CAP_ISLANDE_HIVER/E.jpeg"],
+  ["nor-ih6", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/ISLANDE/CAP_ISLANDE_HIVER/F.jpeg"],
+  ["nor-su1", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/ISLANDE/ISLANDE_DU_SUD_AVEC_LOC_DE_VOITURE/1.jpeg"],
+  ["nor-su2", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/ISLANDE/ISLANDE_DU_SUD_AVEC_LOC_DE_VOITURE/2.jpeg"],
+  ["nor-su3", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/ISLANDE/ISLANDE_DU_SUD_AVEC_LOC_DE_VOITURE/3.jpeg"],
+  ["nor-su4", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/ISLANDE/ISLANDE_DU_SUD_AVEC_LOC_DE_VOITURE/4.jpeg"],
+  ["nor-su5", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/ISLANDE/ISLANDE_DU_SUD_AVEC_LOC_DE_VOITURE/5.jpeg"],
+  ["nor-su6", "https://admin-voyamar.orchestra-platform.com/admin/TS/fckUserFiles/Image/EUROPE/ISLANDE/ISLANDE_DU_SUD_AVEC_LOC_DE_VOITURE/6.jpeg"],
+];
+
+async function main() {
+  const { uploadImageBatch } = await import("./lib/uploadImages");
+  await uploadImageBatch(
+    IMAGES.map(([key, url]) => ({ key: `journeys/${key}.jpg`, url })),
+    "scripts/.manifests/nor-circuits.json"
+  );
+}
+
+main().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});
