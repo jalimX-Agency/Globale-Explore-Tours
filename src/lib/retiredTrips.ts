@@ -103,4 +103,10 @@ export const RETIRED_TRIPS: RetiredTrip[] = [
   { region: "amerique-du-sud", country: "bresil", from: "bresil-amazonie-pantanal", to: "bresil-impressions-du-bresil-ouro-preto-iguacu-paraty-14j" },
   { region: "europe", country: "italie", from: "italie-rome-florence-amalfi", to: "italie-cap-sur-l-italie-du-nord-au-sud-10j" },
   { region: "europe", country: "italie", from: "italie-sicile-eoliennes", to: "italie-cap-sur-les-iles-eoliennes-stromboli-vulcano-8j" },
+  { region: "europe", country: "espagne", from: "espagne-barcelone-seville-grenade", to: "espagne-cap-sur-l-andalousie-grenade-cordoue-seville-8j" },
+  { region: "europe", country: "espagne", from: "espagne-canaries-tenerife-lapalma", to: "espagne-cap-sur-les-canaries-tenerife-gran-canaria-la-gomera-8j" },
+  { region: "europe", country: "turquie", from: "turquie-istanbul-cappadoce", to: "turquie-merveilles-de-la-turquie-cappadoce-pamukkale-ephese-8j" },
+  { region: "europe", country: "turquie", from: "turquie-pamukkale-ephese", to: "turquie-merveilles-de-la-turquie-cappadoce-pamukkale-ephese-8j" },
+  { region: "europe", country: "pologne", from: "pologne-cracovie-wieliczka", to: "pologne-cracovie-en-liberte-noel-nouvel-an-4j" },
+  { region: "europe", country: "pologne", from: "pologne-cracovie-zakopane-tatras", to: "pologne-cap-sur-cracovie-et-les-tatras-5j" },
 ];

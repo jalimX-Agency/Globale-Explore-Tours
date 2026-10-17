@@ -360,6 +360,23 @@ const PRIORITY: Record<string, string[]> = {
     "italie-cap-sur-les-iles-eoliennes-stromboli-vulcano-8j",
     "italie-cap-sur-l-italie-du-nord-au-sud-10j",
   ],
+  espagne: [
+    "espagne-nouvel-an-a-madrid-ou-seville-4j",
+    "espagne-cap-sur-l-andalousie-grenade-cordoue-seville-8j",
+    "espagne-cap-sur-les-canaries-tenerife-gran-canaria-la-gomera-8j",
+    "espagne-cap-sur-madrid-et-la-castille-tolede-salamanque-8j",
+  ],
+  turquie: [
+    "turquie-istanbul-romantique-4j",
+    "turquie-merveilles-de-la-turquie-cappadoce-pamukkale-ephese-8j",
+  ],
+  pologne: [
+    "pologne-cracovie-en-liberte-noel-nouvel-an-4j",
+    "pologne-cap-sur-cracovie-et-les-tatras-5j",
+    "pologne-de-varsovie-a-cracovie-privatif-6j",
+    "pologne-merveilles-de-la-pologne-cracovie-gdansk-varsovie-8j",
+    "pologne-cap-sur-la-pologne-gdansk-torun-wroclaw-cracovie-8j",
+  ],
 };
 
 async function main() {
