@@ -164,6 +164,21 @@ const PRIORITY: Record<string, string[]> = {
   mongolie: [
     "mongolie-pays-des-nomades-gobi-orkhon-15j",
   ],
+  laos: [
+    "laos-passion-luang-prabang-vang-vieng-10j",
+    "laos-experience-nong-khiaw-nam-ou-prive-13j",
+    "laos-grand-tour-indochine-cambodge-vietnam-21j",
+  ],
+  philippines: [
+    "philippines-manille-boracay-11j",
+    "philippines-ile-en-ile-bohol-dumaguete-siquijor-14j",
+    "philippines-bohol-chocolate-hills-prive-11j",
+    "philippines-beaute-visayas-siquijor-bohol-12j",
+    "philippines-passion-palawan-coron-el-nido-11j",
+  ],
+  ouzbekistan: [
+    "ouzbekistan-intimiste-khiva-boukhara-samarcande-12j",
+  ],
 };
 
 async function main() {

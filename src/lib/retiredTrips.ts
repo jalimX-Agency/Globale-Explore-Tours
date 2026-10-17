@@ -54,4 +54,7 @@ export const RETIRED_TRIPS: RetiredTrip[] = [
   { region: "asie", country: "coree-du-sud", from: "coree-du-sud-seoul-gyeongju", to: "coree-du-sud-pays-du-matin-calme-12j" },
   { region: "asie", country: "coree-du-sud", from: "coree-du-sud-jeju", to: "coree-du-sud-panorama-liberte-seoul-busan-12j" },
   { region: "asie", country: "mongolie", from: "mongolie-oulan-bator-gobi", to: "mongolie-pays-des-nomades-gobi-orkhon-15j" },
+  { region: "asie-du-sud-est", country: "laos", from: "laos-luang-prabang-mekong", to: "laos-passion-luang-prabang-vang-vieng-10j" },
+  { region: "asie-du-sud-est", country: "philippines", from: "philippines-palawan-bohol", to: "philippines-passion-palawan-coron-el-nido-11j" },
+  { region: "asie", country: "ouzbekistan", from: "ouzbekistan-samarcande-khiva", to: "ouzbekistan-intimiste-khiva-boukhara-samarcande-12j" },
 ];
