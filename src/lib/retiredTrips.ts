@@ -77,4 +77,13 @@ export const RETIRED_TRIPS: RetiredTrip[] = [
   { region: "amerique-du-nord", country: "canada", from: "canada-quebec-charlevoix", to: "canada-cap-sur-la-belle-province-quebec-saguenay-8j" },
   { region: "amerique-du-nord", country: "mexique", from: "mexique-riviera-maya", to: "mexique-cap-sur-le-yucatan-palenque-chichen-itza-9j" },
   { region: "amerique-du-nord", country: "mexique", from: "mexique-oaxaca", to: "mexique-incontournables-oaxaca-chiapas-yucatan-12j" },
+  { region: "amerique-du-sud", country: "costa-rica", from: "costa-rica-arenal-manuel-antonio", to: "costa-rica-hola-costa-rica-privatif-manuel-antonio-11j" },
+  { region: "amerique-du-sud", country: "costa-rica", from: "costa-rica-tortuguero-guanacaste", to: "costa-rica-magie-du-costa-rica-tortuguero-13j" },
+  { region: "amerique-du-sud", country: "costa-rica", from: "costa-rica-osa", to: "costa-rica-splendeurs-du-costa-rica-corcovado-dota-13j" },
+  { region: "amerique-du-sud", country: "panama", from: "panama-panama-city-san-blas", to: "panama-couleurs-du-panama-coiba-boquete-bocas-14j" },
+  { region: "amerique-du-sud", country: "panama", from: "panama-coiba-embera", to: "panama-couleurs-du-panama-coiba-boquete-bocas-14j" },
+  { region: "amerique-du-sud", country: "panama", from: "panama-boquete", to: "panama-splendeurs-du-panama-boca-chica-boquete-13j" },
+  { region: "amerique-du-sud", country: "guatemala", from: "guatemala-antigua-tikal", to: "guatemala-decouverte-du-guatemala-tikal-atitlan-12j" },
+  { region: "amerique-du-sud", country: "guatemala", from: "guatemala-riodulce-mirador", to: "guatemala-cap-sur-le-guatemala-copan-rio-dulce-12j" },
+  { region: "amerique-du-sud", country: "belize", from: "belize-caye-caulker-xunantunich", to: "belize-guatemala-et-belize-tikal-atitlan-ambergris-16j" },
 ];

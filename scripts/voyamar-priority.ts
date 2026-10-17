@@ -282,6 +282,28 @@ const PRIORITY: Record<string, string[]> = {
     "mexique-hola-mexico-privatif-12j",
     "mexique-couleurs-du-mexique-villes-coloniales-14j",
   ],
+  "costa-rica": [
+    "costa-rica-cap-sur-le-costa-rica-arenal-rincon-monteverde-10j",
+    "costa-rica-incontournables-du-costa-rica-10j",
+    "costa-rica-hola-costa-rica-privatif-manuel-antonio-11j",
+    "costa-rica-tresors-du-costa-rica-tarcoles-manuel-antonio-12j",
+    "costa-rica-magie-du-costa-rica-tortuguero-13j",
+    "costa-rica-essentiel-costa-rica-nicaragua-granada-leon-12j",
+    "costa-rica-splendeurs-du-costa-rica-corcovado-dota-13j",
+  ],
+  panama: [
+    "panama-decouverte-du-panama-canal-embera-portobelo-10j",
+    "panama-splendeurs-du-panama-boca-chica-boquete-13j",
+    "panama-couleurs-du-panama-coiba-boquete-bocas-14j",
+  ],
+  guatemala: [
+    "guatemala-decouverte-du-guatemala-tikal-atitlan-12j",
+    "guatemala-cap-sur-le-guatemala-copan-rio-dulce-12j",
+    "guatemala-couleurs-du-guatemala-et-du-mexique-19j",
+  ],
+  belize: [
+    "belize-guatemala-et-belize-tikal-atitlan-ambergris-16j",
+  ],
 };
 
 async function main() {
