@@ -96,4 +96,9 @@ export const RETIRED_TRIPS: RetiredTrip[] = [
   { region: "amerique-du-sud", country: "chili", from: "chili-santiago-atacama", to: "chili-merveilles-du-chili-atacama-ile-de-paques-12j" },
   { region: "amerique-du-sud", country: "chili", from: "chili-torres-del-paine", to: "chili-merveilles-du-chili-patagonie-ile-de-paques-15j" },
   { region: "amerique-du-sud", country: "chili", from: "chili-pascua-chiloe", to: "chili-couleurs-du-chili-patagonie-atacama-13j" },
+  { region: "amerique-du-sud", country: "argentine", from: "argentine-buenos-aires-calafate", to: "argentine-apercu-d-argentine-pampa-ushuaia-calafate-bariloche-13j" },
+  { region: "amerique-du-sud", country: "argentine", from: "argentine-iguazu-noroeste", to: "argentine-decouverte-de-l-argentine-salta-iguazu-10j" },
+  { region: "amerique-du-sud", country: "bresil", from: "bresil-rio-iguacu", to: "bresil-incontournables-du-bresil-salvador-paraty-iguacu-11j" },
+  { region: "amerique-du-sud", country: "bresil", from: "bresil-salvador-bahia", to: "bresil-merveilles-du-bresil-iguacu-rio-salvador-10j" },
+  { region: "amerique-du-sud", country: "bresil", from: "bresil-amazonie-pantanal", to: "bresil-impressions-du-bresil-ouro-preto-iguacu-paraty-14j" },
 ];

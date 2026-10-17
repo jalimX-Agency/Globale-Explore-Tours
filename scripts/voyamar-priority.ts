@@ -327,6 +327,25 @@ const PRIORITY: Record<string, string[]> = {
     "chili-merveilles-du-chili-atacama-ile-de-paques-12j",
     "chili-merveilles-du-chili-patagonie-ile-de-paques-15j",
   ],
+  argentine: [
+    "argentine-decouverte-de-l-argentine-salta-iguazu-10j",
+    "argentine-du-tango-a-la-samba-buenos-aires-iguazu-rio-10j",
+    "argentine-apercu-d-argentine-pampa-ushuaia-calafate-bariloche-13j",
+    "argentine-au-coeur-de-la-patagonie-ushuaia-torres-del-paine-14j",
+    "argentine-couleurs-andines-atacama-salta-buenos-aires-14j",
+    "argentine-merveilles-d-argentine-patagonie-nord-ouest-15j",
+    "argentine-impressions-d-argentine-ushuaia-jujuy-iguazu-16j",
+    "argentine-decouverte-du-bout-du-monde-cap-horn-16j",
+  ],
+  bresil: [
+    "bresil-echappee-bresilienne-rio-buzios-9j",
+    "bresil-apercu-du-bresil-rio-paraty-9j",
+    "bresil-ola-brasil-privatif-rio-iguacu-salvador-10j",
+    "bresil-merveilles-du-bresil-iguacu-rio-salvador-10j",
+    "bresil-incontournables-du-bresil-salvador-paraty-iguacu-11j",
+    "bresil-bresil-d-emotions-rio-lencois-jericoacoara-12j",
+    "bresil-impressions-du-bresil-ouro-preto-iguacu-paraty-14j",
+  ],
 };
 
 async function main() {
