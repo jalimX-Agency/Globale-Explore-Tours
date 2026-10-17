@@ -346,6 +346,20 @@ const PRIORITY: Record<string, string[]> = {
     "bresil-bresil-d-emotions-rio-lencois-jericoacoara-12j",
     "bresil-impressions-du-bresil-ouro-preto-iguacu-paraty-14j",
   ],
+  italie: [
+    "italie-venise-iles-de-la-lagune-4j",
+    "italie-cap-sur-les-pouilles-matera-alberobello-lecce-8j",
+    "italie-decouverte-de-la-sicile-palerme-etna-syracuse-8j",
+    "italie-cap-sur-milan-et-les-lacs-italiens-8j",
+    "italie-cap-sur-rome-florence-et-venise-8j",
+    "italie-en-etoile-depuis-terracina-rome-naples-capri-8j",
+    "italie-incontournables-de-naples-et-des-pouilles-8j",
+    "italie-cap-sur-la-toscane-et-les-cinque-terre-8j",
+    "italie-cap-sur-rome-naples-et-la-cote-amalfitaine-8j",
+    "italie-cap-sur-la-sardaigne-8j",
+    "italie-cap-sur-les-iles-eoliennes-stromboli-vulcano-8j",
+    "italie-cap-sur-l-italie-du-nord-au-sud-10j",
+  ],
 };
 
 async function main() {

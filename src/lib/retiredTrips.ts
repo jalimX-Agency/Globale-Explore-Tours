@@ -101,4 +101,6 @@ export const RETIRED_TRIPS: RetiredTrip[] = [
   { region: "amerique-du-sud", country: "bresil", from: "bresil-rio-iguacu", to: "bresil-incontournables-du-bresil-salvador-paraty-iguacu-11j" },
   { region: "amerique-du-sud", country: "bresil", from: "bresil-salvador-bahia", to: "bresil-merveilles-du-bresil-iguacu-rio-salvador-10j" },
   { region: "amerique-du-sud", country: "bresil", from: "bresil-amazonie-pantanal", to: "bresil-impressions-du-bresil-ouro-preto-iguacu-paraty-14j" },
+  { region: "europe", country: "italie", from: "italie-rome-florence-amalfi", to: "italie-cap-sur-l-italie-du-nord-au-sud-10j" },
+  { region: "europe", country: "italie", from: "italie-sicile-eoliennes", to: "italie-cap-sur-les-iles-eoliennes-stromboli-vulcano-8j" },
 ];
