@@ -179,6 +179,20 @@ const PRIORITY: Record<string, string[]> = {
   ouzbekistan: [
     "ouzbekistan-intimiste-khiva-boukhara-samarcande-12j",
   ],
+  inde: [
+    "inde-magie-du-rajasthan-12j",
+    "inde-joyaux-inde-du-sud-tamil-nadu-kerala-11j",
+    "inde-rajasthan-intimiste-thar-bundi-ranthambore-15j",
+    "inde-merveilles-du-kerala-munnar-backwaters-14j",
+    "inde-beaute-du-ladakh-prive-14j",
+  ],
+  reunion: [
+    "reunion-joyau-ocean-indien-cirques-volcan-10j",
+    "reunion-autotour-volcans-lagons-11j",
+  ],
+  maldives: [
+    "maldives-sri-lanka-incontournables-adaaran-13j",
+  ],
 };
 
 async function main() {

@@ -57,4 +57,10 @@ export const RETIRED_TRIPS: RetiredTrip[] = [
   { region: "asie-du-sud-est", country: "laos", from: "laos-luang-prabang-mekong", to: "laos-passion-luang-prabang-vang-vieng-10j" },
   { region: "asie-du-sud-est", country: "philippines", from: "philippines-palawan-bohol", to: "philippines-passion-palawan-coron-el-nido-11j" },
   { region: "asie", country: "ouzbekistan", from: "ouzbekistan-samarcande-khiva", to: "ouzbekistan-intimiste-khiva-boukhara-samarcande-12j" },
+  { region: "sous-continent-indien", country: "inde", from: "inde-delhi-agra-jaipur", to: "inde-magie-du-rajasthan-12j" },
+  { region: "sous-continent-indien", country: "inde", from: "inde-kerala-backwaters", to: "inde-merveilles-du-kerala-munnar-backwaters-14j" },
+  { region: "sous-continent-indien", country: "inde", from: "inde-varanasi-thar", to: "inde-rajasthan-intimiste-thar-bundi-ranthambore-15j" },
+  { region: "ocean-indien", country: "reunion", from: "reunion-saint-denis-piton-fournaise", to: "reunion-joyau-ocean-indien-cirques-volcan-10j" },
+  { region: "ocean-indien", country: "reunion", from: "reunion-cilaos", to: "reunion-joyau-ocean-indien-cirques-volcan-10j" },
+  { region: "ocean-indien", country: "reunion", from: "reunion-sud-sauvage-saintleu", to: "reunion-autotour-volcans-lagons-11j" },
 ];
