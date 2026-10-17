@@ -118,6 +118,12 @@ const PRIORITY: Record<string, string[]> = {
     "sri-lanka-sigiriya-kandy-plage-beruwala-10j",
     "sri-lanka-grand-tour-maldives-15j",
   ],
+  vietnam: [
+    "vietnam-incontournables-halong-hoi-an-mekong-12j",
+    "vietnam-magie-halong-hue-delta-mekong-15j",
+    "vietnam-intimiste-pu-luong-lan-ha-17j",
+    "vietnam-cambodge-incontournables-angkor-15j",
+  ],
 };
 
 async function main() {

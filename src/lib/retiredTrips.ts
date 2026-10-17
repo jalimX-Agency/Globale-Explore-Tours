@@ -40,4 +40,7 @@ export const RETIRED_TRIPS: RetiredTrip[] = [
   { region: "asie-du-sud-est", country: "cambodge", from: "cambodge-battambang-campagne", to: "cambodge-intimiste-angkor-koh-sdach-14j" },
   { region: "sous-continent-indien", country: "sri-lanka", from: "sri-lanka-triangle-culturel", to: "sri-lanka-incontournables-sigiriya-kandy-galle-10j" },
   { region: "sous-continent-indien", country: "sri-lanka", from: "sri-lanka-kandy-mirissa", to: "sri-lanka-grand-tour-anuradhapura-udawalawe-12j" },
+  { region: "asie-du-sud-est", country: "vietnam", from: "vietnam-hanoi-halong-bay", to: "vietnam-intimiste-pu-luong-lan-ha-17j" },
+  { region: "asie-du-sud-est", country: "vietnam", from: "vietnam-hoian-cote-centrale", to: "vietnam-incontournables-halong-hoi-an-mekong-12j" },
+  { region: "asie-du-sud-est", country: "vietnam", from: "vietnam-mekong-phuquoc", to: "vietnam-magie-halong-hue-delta-mekong-15j" },
 ];
