@@ -440,6 +440,23 @@ const PRIORITY: Record<string, string[]> = {
   montenegro: [
     "montenegro-essentiel-du-montenegro-kotor-budva-8j",
   ],
+  finlande: [
+    "finlande-laponie-rovaniemi-ou-suomu-5j",
+    "finlande-echappee-lapone-ranua-tornio-5j",
+    "finlande-naya-club-saaga-yllas-5j",
+    "finlande-multi-activites-akaslompolo-7j",
+    "finlande-reveillon-du-nouvel-an-en-laponie-7j",
+    "finlande-levi-hotel-and-spa-multi-activites-8j",
+    "finlande-finlande-en-ete-levi-soleil-de-minuit-8j",
+    "finlande-cap-nord-lofoten-et-les-trois-laponies-8j",
+  ],
+  suede: [
+    "suede-cap-sur-la-suede-stockholm-bohuslan-malmo-8j",
+    "suede-cap-sur-la-baltique-stockholm-helsinki-riga-gdansk-13j",
+  ],
+  "iles-feroe": [
+    "iles-feroe-cap-sur-les-iles-feroe-6j",
+  ],
 };
 
 async function main() {
