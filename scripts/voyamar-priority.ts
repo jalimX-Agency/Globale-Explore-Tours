@@ -457,6 +457,19 @@ const PRIORITY: Record<string, string[]> = {
   "iles-feroe": [
     "iles-feroe-cap-sur-les-iles-feroe-6j",
   ],
+  estonie: [
+    "estonie-marches-de-noel-a-tallinn-4j",
+    "estonie-tresors-des-pays-baltes-tallinn-riga-courlande-vilnius-8j",
+  ],
+  lettonie: [
+    "lettonie-marches-de-noel-a-riga-4j",
+    "lettonie-au-coeur-des-capitales-baltes-riga-tallinn-5j",
+    "lettonie-splendeurs-des-pays-baltes-riga-vilnius-tallinn-8j",
+  ],
+  lituanie: [
+    "lituanie-marches-de-noel-a-vilnius-4j",
+    "lituanie-splendeurs-des-pays-baltes-de-vilnius-a-tallinn-8j",
+  ],
 };
 
 async function main() {
