@@ -71,4 +71,5 @@ export const RETIRED_TRIPS: RetiredTrip[] = [
   { region: "moyen-orient", country: "israel", from: "israel-telaviv-cote", to: "israel-super-bleu-tel-aviv-massada-jerusalem-galilee-8j" },
   { region: "moyen-orient", country: "oman", from: "oman-mascate-wahiba", to: "oman-decouverte-mascate-nizwa-wahiba-sur-8j" },
   { region: "amerique-du-nord", country: "etats-unis", from: "etats-unis-newyork-nouvelle-angleterre", to: "etats-unis-est-intimiste-niagara-cape-cod-12j" },
+  { region: "amerique-du-nord", country: "etats-unis", from: "etats-unis-vegas-grand-canyon", to: "etats-unis-ouest-en-famille-universal-yosemite-15j" },
 ];
