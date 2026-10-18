@@ -1,6 +1,6 @@
 // Puts supplier circuits first everywhere trips are listed. Every list on the site sorts by
 // `featured` desc then `order` asc, so supplier circuits get featured=true with a negative
-// order, and the older trips of the same destination lose `featured` (their own order is kept,
+// interleaved order (see main()), and the older trips of the same destination lose `featured` (their own order is kept,
 // so they stay in their previous sequence, just after the supplier circuits).
 // Add a destination's slugs here when its circuits are published, then run:
 //   npx tsx scripts/voyamar-priority.ts
@@ -499,23 +499,32 @@ async function main() {
   const { PrismaClient } = await import("@prisma/client");
   const db = new PrismaClient();
   try {
-    let base = -100000;
+    // Lists that mix destinations (home, region hubs, experience pages, trip finder) sort by the
+    // global `order`. To avoid one destination's circuits filling them, the order interleaves: the
+    // n-th circuit of every destination sits in "band" n, and inside a band destinations follow
+    // their own `Destination.order`. Within one destination the circuit sequence is unchanged.
+    const BASE = -1_000_000;
+    const BAND = 1000;
+    const dests = await db.destination.findMany({ where: { slug: { in: Object.keys(PRIORITY) } }, select: { id: true, slug: true, order: true } });
+    const rankByDest = new Map(
+      [...dests].sort((x, y) => x.order - y.order).map((d, i) => [d.slug, i] as const)
+    );
     for (const [destinationSlug, slugs] of Object.entries(PRIORITY)) {
-      const destination = await db.destination.findUnique({ where: { slug: destinationSlug }, select: { id: true } });
+      const destination = dests.find((d) => d.slug === destinationSlug);
       if (!destination) throw new Error(`Unknown destination: ${destinationSlug}`);
       const found = await db.tour.findMany({ where: { slug: { in: slugs } }, select: { slug: true } });
       const missing = slugs.filter((s) => !found.some((f) => f.slug === s));
       if (missing.length) throw new Error(`Unknown tour slug(s) for ${destinationSlug}: ${missing.join(", ")}`);
 
+      const rank = rankByDest.get(destinationSlug)!;
       for (const [i, slug] of slugs.entries()) {
-        await db.tour.update({ where: { slug }, data: { featured: true, order: base + i } });
+        await db.tour.update({ where: { slug }, data: { featured: true, order: BASE + i * BAND + rank } });
       }
       const demoted = await db.tour.updateMany({
         where: { destinationId: destination.id, slug: { notIn: slugs }, featured: true },
         data: { featured: false },
       });
       console.log(`${destinationSlug}: ${slugs.length} supplier circuit(s) first, ${demoted.count} older trip(s) un-featured`);
-      base += 1000;
     }
   } finally {
     await db.$disconnect();
