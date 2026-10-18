@@ -484,6 +484,15 @@ const PRIORITY: Record<string, string[]> = {
   roumanie: [
     "roumanie-cap-sur-la-roumanie-transylvanie-bucovine-8j",
   ],
+  guadeloupe: [
+    "guadeloupe-evasion-guadeloupeenne-grande-terre-les-saintes-9j",
+    "guadeloupe-sur-la-route-perles-de-la-guadeloupe-marie-galante-10j",
+    "guadeloupe-croisiere-catamaran-guadeloupe-dominique-les-saintes-9j",
+  ],
+  martinique: [
+    "martinique-antilles-d-ile-en-ile-martinique-guadeloupe-12j",
+    "martinique-evasion-caribeenne-martinique-sainte-lucie-9j",
+  ],
 };
 
 async function main() {
