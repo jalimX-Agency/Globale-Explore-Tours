@@ -157,6 +157,13 @@ const getExperienceTypeRow = cache((slug: string) => {
 // (AND across dimensions) — a sub-page with none of its own set simply falls back to
 // whichever ones its parent has, so e.g. "toddlers" (no filters of its own) shows the same
 // trips as "family-holidays" until someone tightens it from the admin.
+// The safari page can't be expressed as one destination filter any more (the admin field holds a
+// single destination, Kenya) now that every safari country has its own supplier circuits.
+const SAFARI_DESTINATION_SLUGS = [
+  "kenya", "tanzanie", "afrique-du-sud", "namibie", "botswana", "rwanda", "zambie",
+  "ouganda", "zimbabwe", "mozambique", "malawi", "madagascar", "ethiopie",
+];
+
 function tourWhereForRow(row: ExperienceTypeRow) {
   const travelerTypeKey = row.travelerTypeKey || row.parent?.travelerTypeKey;
   const filterTheme = row.filterTheme || row.parent?.filterTheme;
@@ -166,7 +173,8 @@ function tourWhereForRow(row: ExperienceTypeRow) {
   const where: Record<string, unknown> = {};
   if (travelerTypeKey) where.travelerTypes = { contains: travelerTypeKey };
   if (filterTheme) where.theme = filterTheme;
-  if (filterDestinationId) where.destinationId = filterDestinationId;
+  if (row.slug === "safari-holidays") where.destination = { slug: { in: SAFARI_DESTINATION_SLUGS } };
+  else if (filterDestinationId) where.destinationId = filterDestinationId;
   if (filterMonths) {
     const months = filterMonths.split(",").map((m: string) => m.trim()).filter(Boolean);
     where.OR = months.map((m: string) => ({ bestMonths: { contains: m } }));
