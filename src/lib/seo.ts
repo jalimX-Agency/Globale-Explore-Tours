@@ -26,6 +26,7 @@ const WEBSITE_ID = `${SITE_URL}/#website`;
 export const TRIPADVISOR_URL =
   "https://www.tripadvisor.com/Attraction_Review-g293731-d27487904-Reviews-Globale_Explore_Tours-Agadir_Souss_Massa.html";
 const INSTAGRAM_URL = "https://www.instagram.com/globaleexploretours/";
+const FACEBOOK_URL = "https://web.facebook.com/globaleexploretours";
 
 // Keep in sync with the rating shown in <Testimonials> and the trust copy in translations.
 export const TRIPADVISOR_RATING = { value: "4.9", count: 105 };
@@ -72,7 +73,7 @@ export function organizationJsonLd(locale: Locale) {
       reviewCount: String(TRIPADVISOR_RATING.count),
       bestRating: "5",
     },
-    sameAs: [TRIPADVISOR_URL, INSTAGRAM_URL],
+    sameAs: [TRIPADVISOR_URL, INSTAGRAM_URL, FACEBOOK_URL],
   });
 }
 

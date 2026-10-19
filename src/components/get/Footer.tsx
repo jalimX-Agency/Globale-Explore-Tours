@@ -87,7 +87,7 @@ export function Footer({
                 <InstagramIcon />
                 <span className="sr-only">Instagram</span>
               </a>
-              <a href="#" aria-label="Facebook" className="text-white/70 hover:text-white">
+              <a href="https://web.facebook.com/globaleexploretours" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="text-white/70 hover:text-white">
                 <FacebookIcon />
                 <span className="sr-only">Facebook</span>
               </a>
