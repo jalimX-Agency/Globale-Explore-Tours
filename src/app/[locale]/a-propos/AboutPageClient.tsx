@@ -3,41 +3,9 @@
 import { useLanguage } from "@/lib/i18n/context";
 import { LocaleLink } from "@/components/get/LocaleLink";
 import { Breadcrumb } from "@/components/get/Breadcrumb";
-import { TeamGrid, type TeamMemberData } from "@/components/get/TeamGrid";
+import { TeamGrid } from "@/components/get/TeamGrid";
+import { AGENCY_TEAM } from "@/lib/agencyTeam";
 import { CheckCircle2, Users, Headset, Car } from "lucide-react";
-
-// The agency's own team (as opposed to TeamGrid's other use — per-destination local guides on
-// region/country pages).
-const TEAM: TeamMemberData[] = [
-  {
-    name: "Mourad",
-    role: "Fondateur & CEO",
-    roleEn: "Founder & CEO",
-    roleEs: "Fundador y CEO",
-    photo: "https://cdn.globaleexploretours.com/team/mourad.jpg",
-  },
-  {
-    name: "Anaïs",
-    role: "Experte voyage partenaire",
-    roleEn: "Travel Expert Partner",
-    roleEs: "Experta de viajes socia",
-    photo: "https://cdn.globaleexploretours.com/team/anais.jpg",
-  },
-  {
-    name: "Marjorie",
-    role: "Experte voyage partenaire",
-    roleEn: "Travel Expert Partner",
-    roleEs: "Experta de viajes socia",
-    photo: "https://cdn.globaleexploretours.com/team/marjorie.jpg",
-  },
-  {
-    name: "Mohamed",
-    role: "Développeur",
-    roleEn: "Developer",
-    roleEs: "Desarrollador",
-    photo: "https://cdn.globaleexploretours.com/team/mohamed.jpg",
-  },
-];
 
 const PILLARS = [
   { icon: CheckCircle2, titleKey: "trust.noHiddenFees", bodyKey: "trust.noHiddenFeesDesc" },
@@ -68,7 +36,7 @@ export function AboutPageClient() {
       </div>
 
       <div className="mt-16">
-        <TeamGrid title={t("aboutPage.teamTitle")} subtitle={t("aboutPage.teamSubtitle")} members={TEAM} />
+        <TeamGrid title={t("aboutPage.teamTitle")} subtitle={t("aboutPage.teamSubtitle")} members={AGENCY_TEAM} />
       </div>
 
       <div className="mt-16">

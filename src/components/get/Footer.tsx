@@ -22,6 +22,10 @@ const EXPLORE: FooterLink[] = [
 const COMPANY: FooterLink[] = [
   { labelKey: "nav.about", href: "/a-propos" },
   { labelKey: "nav.contact", href: "/contact" },
+  {
+    label: { fr: "Agence de voyage à Valenciennes", en: "Travel agency in Valenciennes", es: "Agencia de viajes en Valenciennes" },
+    href: "/agence-de-voyage-valenciennes",
+  },
   { label: { fr: "Mentions légales", en: "Legal notice", es: "Aviso legal" }, href: "/mentions-legales" },
   {
     label: { fr: "Politique de confidentialité", en: "Privacy policy", es: "Política de privacidad" },

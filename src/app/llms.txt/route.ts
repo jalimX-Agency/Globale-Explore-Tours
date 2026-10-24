@@ -68,6 +68,7 @@ export async function GET() {
     `- [Travel experiences](${en}/experience-types): trips by type of traveller and by activity`,
     `- [Make a request](${en}/faire-une-demande): request a tailor-made proposal`,
     `- [About us](${en}/a-propos): the team and how the agency works`,
+    `- [Travel agency in Valenciennes](${en}/agence-de-voyage-valenciennes): the agency's office in Valenciennes, France, and how to visit`,
     `- [Contact](${en}/contact)`,
     `- [Booking terms](${en}/conditions-de-reservation)`,
     "",

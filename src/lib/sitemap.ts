@@ -41,6 +41,7 @@ export async function sitemapEntries(): Promise<MetadataRoute.Sitemap> {
     { path: "/experience-types", priority: 0.8 },
     { path: "/a-propos", priority: 0.7 },
     { path: "/blog", priority: 0.7 },
+    { path: "/agence-de-voyage-valenciennes", priority: 0.7 },
     { path: "/contact", priority: 0.6 },
     { path: "/faire-une-demande", priority: 0.6 },
     { path: "/politique-de-confidentialite", priority: 0.2 },
