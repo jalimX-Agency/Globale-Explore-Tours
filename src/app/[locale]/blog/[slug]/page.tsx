@@ -8,6 +8,8 @@ import { LocaleLink } from "@/components/get/LocaleLink";
 import { Breadcrumb } from "@/components/get/Breadcrumb";
 import { ArrowLeft } from "lucide-react";
 import { pageMetadata, breadcrumbJsonLd, articleJsonLd } from "@/lib/seo";
+import { BLOG_DESTINATIONS } from "@/lib/blogDestinations";
+import { TripsShowcase } from "@/components/get/TripsShowcase";
 
 // Cached per-request so generateMetadata and the page body share one query instead of two.
 const getPost = cache((slug: string) => db.blogPost.findUnique({ where: { slug } }));
@@ -68,62 +70,91 @@ export default async function BlogPostPage({
   // weigh when picking which source to cite.
   const updatedOn = post.updatedAt.toLocaleDateString(locale, { day: "numeric", month: "long", year: "numeric" });
 
+  // Trips for the destination(s) this guide covers, so readers planning a trip land on circuits
+  // they can enquire about (and the trip pages get links from the site's most-seen pages).
+  const destinationSlugs = BLOG_DESTINATIONS[slug] ?? [];
+  const relatedTours = destinationSlugs.length
+    ? await db.tour.findMany({
+        where: { destination: { slug: { in: destinationSlugs } } },
+        orderBy: [{ featured: "desc" }, { order: "asc" }],
+        take: 6,
+        select: {
+          slug: true, name: true, nameEn: true, nameEs: true, tagline: true, taglineEn: true, taglineEs: true,
+          price: true, originalPrice: true, currency: true, duration: true, durationEn: true, durationEs: true,
+          theme: true, image: true, format: true,
+          destination: { select: { slug: true, regionSlug: true } },
+        },
+      })
+    : [];
+  const relatedTripsHeading =
+    locale === "en" ? "Our trips for this destination" : locale === "es" ? "Nuestros circuitos para este destino" : "Nos circuits pour cette destination";
+
   return (
-    <main className="mx-auto max-w-3xl px-6 py-16 sm:py-24">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: breadcrumbJsonLd(locale, breadcrumb, `/blog/${slug}`) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: articleJsonLd({
-            headline: title,
-            description: excerpt || undefined,
-            image: post.image || undefined,
-            url: `https://www.globaleexploretours.com/${locale}/blog/${slug}`,
-            datePublished: post.createdAt,
-            dateModified: post.updatedAt,
-            author: post.author || undefined,
-            locale,
-          }),
-        }}
-      />
-      <Breadcrumb items={breadcrumb} />
+    <>
+      <main className="mx-auto max-w-3xl px-6 py-16 sm:py-24">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: breadcrumbJsonLd(locale, breadcrumb, `/blog/${slug}`) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: articleJsonLd({
+              headline: title,
+              description: excerpt || undefined,
+              image: post.image || undefined,
+              url: `https://www.globaleexploretours.com/${locale}/blog/${slug}`,
+              datePublished: post.createdAt,
+              dateModified: post.updatedAt,
+              author: post.author || undefined,
+              locale,
+            }),
+          }}
+        />
+        <Breadcrumb items={breadcrumb} />
 
-      <LocaleLink
-        href="/blog"
-        className="mt-6 inline-flex items-center gap-1.5 text-sm text-neutral-500 transition-colors hover:text-neutral-900"
-      >
-        <ArrowLeft className="size-3.5" />
-        {journalLabel}
-      </LocaleLink>
+        <LocaleLink
+          href="/blog"
+          className="mt-6 inline-flex items-center gap-1.5 text-sm text-neutral-500 transition-colors hover:text-neutral-900"
+        >
+          <ArrowLeft className="size-3.5" />
+          {journalLabel}
+        </LocaleLink>
 
-      <div className="mt-6 mb-8">
-        {post.category && <p className="label-eyebrow text-neutral-400">{post.category}</p>}
-        <h1 className="font-display mt-2 text-3xl sm:text-4xl">{title}</h1>
-        <p className="mt-3 text-sm text-neutral-500">
-          {post.author && (
-            <>
-              {byLabel} {post.author} ·{" "}
-            </>
-          )}
-          {updatedLabel} <time dateTime={post.updatedAt.toISOString()}>{updatedOn}</time>
-        </p>
-      </div>
+        <div className="mt-6 mb-8">
+          {post.category && <p className="label-eyebrow text-neutral-400">{post.category}</p>}
+          <h1 className="font-display mt-2 text-3xl sm:text-4xl">{title}</h1>
+          <p className="mt-3 text-sm text-neutral-500">
+            {post.author && (
+              <>
+                {byLabel} {post.author} ·{" "}
+              </>
+            )}
+            {updatedLabel} <time dateTime={post.updatedAt.toISOString()}>{updatedOn}</time>
+          </p>
+        </div>
 
-      {post.image && (
-        <div className="relative mb-10 aspect-[16/9] w-full overflow-hidden rounded-sm bg-neutral-100">
-          <Image src={post.image} alt={title} fill className="object-cover" priority />
+        {post.image && (
+          <div className="relative mb-10 aspect-[16/9] w-full overflow-hidden rounded-sm bg-neutral-100">
+            <Image src={post.image} alt={title} fill className="object-cover" priority />
+          </div>
+        )}
+
+        {/* `content` is authored HTML entered by an admin (see /admin/blog), never raw
+            visitor input, so there is no XSS risk from rendering it directly. */}
+        <div
+          className="blog-content prose prose-neutral max-w-none prose-headings:font-display prose-img:rounded-sm"
+          dangerouslySetInnerHTML={{ __html: content }}
+        />
+      </main>
+      {relatedTours.length > 0 && (
+        <div className="mx-auto max-w-7xl px-6 pb-16 lg:px-10">
+          <TripsShowcase
+            heading={relatedTripsHeading}
+            tours={relatedTours.map(({ destination, ...t }) => ({ ...t, destinationSlug: destination.slug, regionSlug: destination.regionSlug }))}
+          />
         </div>
       )}
-
-      {/* `content` is authored HTML entered by an admin (see /admin/blog), never raw
-          visitor input, so there is no XSS risk from rendering it directly. */}
-      <div
-        className="blog-content prose prose-neutral max-w-none prose-headings:font-display prose-img:rounded-sm"
-        dangerouslySetInnerHTML={{ __html: content }}
-      />
-    </main>
+    </>
   );
 }

@@ -142,6 +142,7 @@ export const en = {
     bestOfPrefix: "The best of",
     clientLoved: "Experiences our clients loved",
     team: "Meet the team",
+    travelGuides: "Planning your trip: {place}",
     faq: "Frequently asked questions",
     otherRegions: "Other destinations",
     otherCountries: "Other destinations in the region",

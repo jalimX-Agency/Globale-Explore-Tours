@@ -13,6 +13,7 @@ import { TripsShowcase } from "@/components/get/TripsShowcase";
 import { FaqAccordion } from "@/components/get/FaqAccordion";
 import { OtherDestinationsCarousel, type OtherDestinationItem } from "@/components/get/OtherDestinationsCarousel";
 import type { TourCardData } from "@/components/get/TourCard";
+import { TravelGuides, type TravelGuideItem } from "@/components/get/TravelGuides";
 
 type Destination = {
   slug: string;
@@ -77,6 +78,7 @@ export function CountryPageClient({
   faqs,
   tours,
   otherDestinations,
+  guides,
 }: {
   destination: Destination;
   countryLabel: string;
@@ -85,6 +87,7 @@ export function CountryPageClient({
   faqs: Faq[];
   tours: TourCardData[];
   otherDestinations: OtherDestinationItem[];
+  guides: TravelGuideItem[];
 }) {
   const { language, t } = useLanguage();
   const overviewHeading = localized(language, destination.overviewHeading, destination.overviewHeadingEn, destination.overviewHeadingEs);
@@ -135,6 +138,8 @@ export function CountryPageClient({
 
           <PhoneCtaBar />
         </div>
+
+        <TravelGuides title={t("destinationsPage.travelGuides").replace("{place}", countryLabel)} guides={guides} />
 
         <div id="faq" className="scroll-mt-40">
           <FaqAccordion faqs={faqs} />

@@ -8,6 +8,7 @@ import { en } from "@/lib/i18n/translations/en";
 import { es } from "@/lib/i18n/translations/es";
 import { CountryPageClient } from "./CountryPageClient";
 import { pageMetadata, breadcrumbJsonLd, faqJsonLd } from "@/lib/seo";
+import { blogSlugsForDestination } from "@/lib/blogDestinations";
 
 const NAV_DESTINATIONS = { fr: fr.nav.destinations, en: en.nav.destinations, es: es.nav.destinations };
 
@@ -100,7 +101,8 @@ export default async function CountryPage({
   const destination = await getDestination(country);
   if (!destination || destination.regionSlug !== regionSlug) notFound();
 
-  const [blocks, faqs, tours, siblingDestinations] = await Promise.all([
+  const guideSlugs = blogSlugsForDestination(destination.slug);
+  const [blocks, faqs, tours, siblingDestinations, guides] = await Promise.all([
     db.contentBlock.findMany({ where: { destinationId: destination.id }, orderBy: [{ section: "asc" }, { order: "asc" }] }),
     db.faq.findMany({ where: { destinationId: destination.id }, orderBy: { order: "asc" } }),
     db.tour.findMany({
@@ -114,6 +116,13 @@ export default async function CountryPage({
       take: 8,
       select: { slug: true, name: true, nameEn: true, nameEs: true, regionSlug: true, heroImage: true },
     }),
+    guideSlugs.length
+      ? db.blogPost.findMany({
+          where: { slug: { in: guideSlugs } },
+          orderBy: { order: "asc" },
+          select: { slug: true, title: true, titleEn: true, titleEs: true, excerpt: true, excerptEn: true, excerptEs: true, image: true },
+        })
+      : Promise.resolve([]),
   ]);
 
   const regionLabel = pick(locale, destination.region, destination.regionEn, destination.regionEs);
@@ -163,6 +172,7 @@ export default async function CountryPage({
         faqs={faqs}
         tours={toursWithHref}
         otherDestinations={otherDestinations}
+        guides={guides}
       />
     </>
   );
