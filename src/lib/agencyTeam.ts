@@ -25,6 +25,13 @@ export const AGENCY_TEAM: TeamMemberData[] = [
     photo: "https://cdn.globaleexploretours.com/team/marjorie.jpg",
   },
   {
+    name: "Laura",
+    role: "Gestionnaire administrative",
+    roleEn: "Administrative Manager",
+    roleEs: "Gestora administrativa",
+    photo: "https://cdn.globaleexploretours.com/team/laura.jpg",
+  },
+  {
     name: "Mohamed",
     role: "Développeur",
     roleEn: "Developer",
