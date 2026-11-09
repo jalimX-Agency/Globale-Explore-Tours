@@ -3,6 +3,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { db } from "@/lib/db";
 import { requireBlogApiKey } from "@/lib/blog-api-auth";
+import { revalidateBlogPost } from "@/lib/revalidateSite";
 
 // Publishes a blog post with a secret key instead of an admin session — for scripts and
 // automation that have no access to the production database (e.g. a cloud coding session).
@@ -94,11 +95,8 @@ export async function POST(request: NextRequest) {
 
   revalidatePath("/admin/blog");
   revalidatePath("/admin/blog/planning");
-  revalidatePath("/[locale]/blog", "page");
-  // A visit to this slug before it existed may have cached the 404.
-  revalidatePath("/[locale]/blog/[slug]", "page");
-  revalidatePath("/sitemap.xml");
-  revalidatePath("/llms.txt");
+  // Blog pages, sitemap/llms.txt and the destination page that lists this guide.
+  await revalidateBlogPost({ slug: post.slug, category: post.category });
 
   return NextResponse.json(
     { id: post.id, slug: post.slug, url: `https://www.globaleexploretours.com/fr/blog/${post.slug}` },

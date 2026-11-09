@@ -40,7 +40,7 @@ const TOUR_CARD_SELECT = {
 // Cached per-request so generateMetadata and the page body share one query instead of two.
 const getDestination = cache((slug: string) => db.destination.findUnique({ where: { slug } }));
 
-export const revalidate = 3600;
+export const revalidate = 604800; // 7 days: edits revalidate on demand (see src/lib/revalidateSite.ts)
 
 // Pre-renders every country at build time (111 today) instead of relying on on-demand ISR —
 // same rationale as the region page above. Generates the full {region, country} pair itself
@@ -116,13 +116,12 @@ export default async function CountryPage({
       take: 8,
       select: { slug: true, name: true, nameEn: true, nameEs: true, regionSlug: true, heroImage: true },
     }),
-    guideSlugs.length
-      ? db.blogPost.findMany({
-          where: { slug: { in: guideSlugs } },
-          orderBy: { order: "asc" },
+    db.blogPost.findMany({
+          where: { OR: [{ slug: { in: guideSlugs } }, { category: destination.name }] },
+          orderBy: { createdAt: "desc" },
+          take: 6,
           select: { slug: true, title: true, titleEn: true, titleEs: true, excerpt: true, excerptEn: true, excerptEs: true, image: true },
-        })
-      : Promise.resolve([]),
+        }),
   ]);
 
   const regionLabel = pick(locale, destination.region, destination.regionEn, destination.regionEs);

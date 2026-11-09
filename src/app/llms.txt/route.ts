@@ -6,7 +6,7 @@ import { SITE_URL, SITE_NAME, TRIPADVISOR_RATING } from "@/lib/seo";
 // trip with its canonical URL. Built from the DB, so it tracks the catalogue on its own; English
 // URLs are listed since that's what these engines mostly query in, with the FR/ES equivalents
 // following the same paths under /fr and /es.
-export const revalidate = 3600;
+export const revalidate = 86400;
 
 function line(text: string) {
   return text.replace(/\s+/g, " ").trim();

@@ -5,7 +5,7 @@ import { isLocale, DEFAULT_LOCALE } from "@/lib/i18n/locales";
 // Legacy flat URL — every trip now lives at its canonical nested destination URL
 // (/destinations/[region]/[country]/[slug]). This route only exists so old links
 // (bookmarks, external references, the sitemap before it was updated) keep working.
-export const revalidate = 3600;
+export const revalidate = 604800; // 7 days: edits revalidate on demand (see src/lib/revalidateSite.ts)
 
 export default async function LegacyExcursionRedirect({
   params,

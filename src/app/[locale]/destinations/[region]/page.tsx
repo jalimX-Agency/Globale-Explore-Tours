@@ -36,7 +36,7 @@ const TOUR_CARD_SELECT = {
   destination: { select: { slug: true, regionSlug: true } },
 } as const;
 
-export const revalidate = 3600;
+export const revalidate = 604800; // 7 days: edits revalidate on demand (see src/lib/revalidateSite.ts)
 
 // Pre-renders every region at build time (11 today) instead of relying on on-demand ISR —
 // ahrefs found every /destinations/* page returning Vercel `x-vercel-cache: MISS` and 1-4s

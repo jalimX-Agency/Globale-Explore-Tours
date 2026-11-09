@@ -16,7 +16,7 @@ import { FaqAccordion } from "@/components/get/FaqAccordion";
 // Content only changes when an admin publishes — see the revalidatePath("/[locale]", "layout")
 // calls in every admin action. Without this, Prisma calls below aren't cached at all (unlike
 // fetch(), Next.js doesn't cache raw DB queries), so every visit would hit Postgres directly.
-export const revalidate = 3600;
+export const revalidate = 604800; // 7 days: edits revalidate on demand (see src/lib/revalidateSite.ts)
 
 function pick(locale: Locale, frText: string, enText: string, esText: string) {
   if (locale === "en") return enText || frText;

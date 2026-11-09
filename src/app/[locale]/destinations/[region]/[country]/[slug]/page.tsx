@@ -42,7 +42,7 @@ const TOUR_CARD_SELECT = {
 // call site for why.
 const MIN_SIMILAR_TOURS = 3;
 
-export const revalidate = 3600;
+export const revalidate = 604800; // 7 days: edits revalidate on demand (see src/lib/revalidateSite.ts)
 
 // Pre-renders every trip at build time (337 today) instead of relying on on-demand ISR — same
 // rationale as the region/country pages above. Generates the full {region, country, slug}

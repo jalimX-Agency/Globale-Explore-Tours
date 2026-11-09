@@ -14,7 +14,7 @@ import { TripsShowcase } from "@/components/get/TripsShowcase";
 // Cached per-request so generateMetadata and the page body share one query instead of two.
 const getPost = cache((slug: string) => db.blogPost.findUnique({ where: { slug } }));
 
-export const revalidate = 3600;
+export const revalidate = 604800; // 7 days: edits revalidate on demand (see src/lib/revalidateSite.ts)
 
 // Without generateStaticParams (even an empty one) Next renders a dynamic route on every
 // request and ignores `revalidate`: each post view hit the database uncached, and a burst of
@@ -73,9 +73,10 @@ export default async function BlogPostPage({
   // Trips for the destination(s) this guide covers, so readers planning a trip land on circuits
   // they can enquire about (and the trip pages get links from the site's most-seen pages).
   const destinationSlugs = BLOG_DESTINATIONS[slug] ?? [];
-  const relatedTours = destinationSlugs.length
+  const relatedTours =
+    destinationSlugs.length || post.category
     ? await db.tour.findMany({
-        where: { destination: { slug: { in: destinationSlugs } } },
+        where: { destination: { OR: [{ slug: { in: destinationSlugs } }, ...(post.category ? [{ name: post.category }] : [])] } },
         orderBy: [{ featured: "desc" }, { order: "asc" }],
         take: 6,
         select: {

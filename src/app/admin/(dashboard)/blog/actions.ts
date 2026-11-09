@@ -22,6 +22,7 @@ export async function createBlogPost(raw: BlogPostFormValues) {
   revalidatePath("/[locale]/blog/[slug]", "page");
   revalidatePath("/sitemap.xml");
   revalidatePath("/llms.txt");
+  revalidatePath("/[locale]/destinations/[region]/[country]", "page"); // destination pages list their guides
   redirect(`/admin/blog/${post.id}`);
 }
 
@@ -40,6 +41,7 @@ export async function updateBlogPost(id: string, raw: BlogPostFormValues) {
   revalidatePath("/[locale]/blog/[slug]", "page");
   revalidatePath("/sitemap.xml");
   revalidatePath("/llms.txt");
+  revalidatePath("/[locale]/destinations/[region]/[country]", "page"); // destination pages list their guides
 }
 
 export async function deleteBlogPost(id: string) {
@@ -55,4 +57,5 @@ export async function deleteBlogPost(id: string) {
   revalidatePath("/[locale]/blog/[slug]", "page");
   revalidatePath("/sitemap.xml");
   revalidatePath("/llms.txt");
+  revalidatePath("/[locale]/destinations/[region]/[country]", "page"); // destination pages list their guides
 }

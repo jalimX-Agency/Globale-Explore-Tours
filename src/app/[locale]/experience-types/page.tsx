@@ -11,7 +11,7 @@ const META = {
   es: { title: "Nuestras experiencias de viaje", description: "Encuentre el viaje que se le parece — por quién viaja, qué desea hacer, o cómo desea viajar por el mundo." },
 } as const satisfies Record<Locale, { title: string; description: string }>;
 
-export const revalidate = 3600;
+export const revalidate = 604800; // 7 days: edits revalidate on demand (see src/lib/revalidateSite.ts)
 
 export async function generateMetadata({
   params,

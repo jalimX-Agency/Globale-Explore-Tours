@@ -182,7 +182,7 @@ function tourWhereForRow(row: ExperienceTypeRow) {
   return where;
 }
 
-export const revalidate = 3600;
+export const revalidate = 604800; // 7 days: edits revalidate on demand (see src/lib/revalidateSite.ts)
 
 export async function generateStaticParams() {
   const rows = await db.experienceType.findMany({ select: { slug: true } });

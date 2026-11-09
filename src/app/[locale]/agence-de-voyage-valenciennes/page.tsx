@@ -14,7 +14,7 @@ import { AGENCY_TEAM } from "@/lib/agencyTeam";
 // Valenciennes, but until this page nothing on the site said so beyond the contact details, and
 // the site did not rank for the city's travel-agency searches at all.
 
-export const revalidate = 3600;
+export const revalidate = 604800; // 7 days: edits revalidate on demand (see src/lib/revalidateSite.ts)
 
 const PATH = "/agence-de-voyage-valenciennes";
 

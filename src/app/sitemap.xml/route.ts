@@ -6,10 +6,10 @@ import { sitemapEntries } from "@/lib/sitemap";
 // deploy still served (x-vercel-cache HIT) without any post published since. Daily posts from
 // /api/blog-posts never reached it, while llms.txt with the same setup did refresh. A CDN cache
 // with a plain max-age has no regeneration step to get stuck in: a new post shows up within
-// ~15 min (plus up to an hour of stale-while-revalidate), and the 5 queries behind it are cheap.
+// ~6 h (plus up to a day of stale-while-revalidate). It was 15 min until Nov 2026, when the Neon bill showed the database was never allowed to sleep: every request that reaches the database postpones its 5-minute scale-to-zero.
 export const dynamic = "force-dynamic";
 
-const CACHE_CONTROL = "public, max-age=0, s-maxage=900, stale-while-revalidate=3600";
+const CACHE_CONTROL = "public, max-age=0, s-maxage=21600, stale-while-revalidate=86400";
 
 function escapeXml(value: string) {
   return value
