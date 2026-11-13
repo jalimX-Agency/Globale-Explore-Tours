@@ -59,6 +59,9 @@ const nextConfig: NextConfig = {
       // closest match; English because those pages were written in English.
       { source: "/trip/:path*", destination: "/en/destinations/afrique/maroc", permanent: true },
       { source: "/:locale(fr|en|es)/trip/:path*", destination: "/en/destinations/afrique/maroc", permanent: true },
+      // The old site also used /francais/... language folders (Search Console still reported one).
+      { source: "/francais/trip/:path*", destination: "/fr/destinations/afrique/maroc", permanent: true },
+      { source: "/francais/:path*", destination: "/fr", permanent: true },
       // Trips replaced by a supplier circuit keep their old URL as a redirect to the replacement.
       ...RETIRED_TRIPS.flatMap(({ region, country, from, to }) => [
         {

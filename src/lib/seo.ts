@@ -113,11 +113,18 @@ const MAX_DESCRIPTION_LENGTH = 155;
 // 69-char experience-type subtitle) — see composeDescription.
 const MIN_DESCRIPTION_LENGTH = 120;
 
+// A cut that ends a sentence reads as complete in results, so prefer the last sentence end
+// past this point over a mid-sentence cut with an ellipsis (2,126 descriptions ended in "…").
+const MIN_SENTENCE_CUT = 90;
+
 function truncateDescription(description: string): string {
   if (description.length <= MAX_DESCRIPTION_LENGTH) return description;
-  const cut = description.slice(0, MAX_DESCRIPTION_LENGTH);
-  const lastSpace = cut.lastIndexOf(" ");
-  return `${cut.slice(0, lastSpace > 0 ? lastSpace : MAX_DESCRIPTION_LENGTH)}…`;
+  const cut = description.slice(0, MAX_DESCRIPTION_LENGTH + 1);
+  const sentenceEnd = Math.max(cut.lastIndexOf(". "), cut.lastIndexOf("! "), cut.lastIndexOf("? "), cut.endsWith(".") ? cut.length - 1 : -1);
+  if (sentenceEnd >= MIN_SENTENCE_CUT) return cut.slice(0, sentenceEnd + 1);
+  const words = cut.slice(0, MAX_DESCRIPTION_LENGTH);
+  const lastSpace = words.lastIndexOf(" ");
+  return `${words.slice(0, lastSpace > 0 ? lastSpace : MAX_DESCRIPTION_LENGTH).replace(/[\s,;:–-]+$/, "")}…`;
 }
 
 /**
@@ -147,11 +154,21 @@ const MAX_BRANDED_TITLE_LENGTH = 60;
 // descriptive phrases, and cutting them at 60 would lose the part that makes them distinct.
 const MAX_TITLE_LENGTH = 70;
 
+// Trip names are lists ("Légendes de Jordanie en privé : Amman, Jerash, Pétra, Wadi Rum et la mer
+// Morte"), so a long one is cut after its last complete list item instead of mid-phrase with an
+// ellipsis (522 titles ended in "…"). Below this length a clause cut would lose too much.
+const MIN_CLAUSE_CUT = 30;
+
 function truncateTitle(title: string): string {
   if (title.length <= MAX_TITLE_LENGTH) return title;
-  const cut = title.slice(0, MAX_TITLE_LENGTH);
-  const lastSpace = cut.lastIndexOf(" ");
-  return `${cut.slice(0, lastSpace > 0 ? lastSpace : MAX_TITLE_LENGTH)}…`;
+  const cut = title.slice(0, MAX_TITLE_LENGTH + 1);
+  const clauseEnd = Math.max(
+    ...[", ", " : ", " – ", " et ", " and ", " y ", " e "].map((sep) => cut.lastIndexOf(sep))
+  );
+  if (clauseEnd >= MIN_CLAUSE_CUT) return cut.slice(0, clauseEnd).trim();
+  const words = cut.slice(0, MAX_TITLE_LENGTH);
+  const lastSpace = words.lastIndexOf(" ");
+  return `${words.slice(0, lastSpace > 0 ? lastSpace : MAX_TITLE_LENGTH)}…`;
 }
 
 export function pageMetadata({

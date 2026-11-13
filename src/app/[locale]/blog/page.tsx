@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { isLocale, DEFAULT_LOCALE, type Locale } from "@/lib/i18n/locales";
 import { LocaleLink } from "@/components/get/LocaleLink";
 import { notFound } from "next/navigation";
+import { unstable_cache } from "next/cache";
 import { pageMetadata } from "@/lib/seo";
 
 const META = {
@@ -36,6 +37,27 @@ function pick(locale: Locale, frText: string, enText: string, esText: string) {
 
 const PAGE_SIZE = 10;
 
+// `searchParams` makes this page render on every request, so the query is cached instead (tag
+// "blog", refreshed when a post is published or edited, see src/lib/revalidateSite.ts):
+// otherwise every crawler visit to the journal woke the Neon database. Newest first, so new
+// guides are linked from page 1 instead of the last page.
+const getBlogPage = unstable_cache(
+  async (page: number) => {
+    const [posts, totalCount] = await Promise.all([
+      db.blogPost.findMany({
+        orderBy: [{ featured: "desc" }, { createdAt: "desc" }],
+        skip: (page - 1) * PAGE_SIZE,
+        take: PAGE_SIZE,
+        select: { id: true, slug: true, title: true, titleEn: true, titleEs: true, excerpt: true, excerptEn: true, excerptEs: true, image: true, category: true },
+      }),
+      db.blogPost.count(),
+    ]);
+    return { posts, totalCount };
+  },
+  ["blog-index"],
+  { tags: ["blog"], revalidate: 604800 }
+);
+
 export default async function BlogIndexPage({
   params,
   searchParams,
@@ -48,14 +70,7 @@ export default async function BlogIndexPage({
   const { page: pageParam } = await searchParams;
   const page = Math.max(1, Number(pageParam) || 1);
 
-  const [posts, totalCount] = await Promise.all([
-    db.blogPost.findMany({
-      orderBy: [{ featured: "desc" }, { order: "asc" }],
-      skip: (page - 1) * PAGE_SIZE,
-      take: PAGE_SIZE,
-    }),
-    db.blogPost.count(),
-  ]);
+  const { posts, totalCount } = await getBlogPage(page);
   const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
   // Without this, every ?page=N past the end still returned 200 with a "Next" link to N+1 —
   // an endless chain of empty pages for crawlers to follow.

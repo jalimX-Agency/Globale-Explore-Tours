@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
@@ -18,6 +18,7 @@ export async function createBlogPost(raw: BlogPostFormValues) {
   const values = blogPostFormSchema.parse(raw);
   const post = await db.blogPost.create({ data: values });
   revalidatePath("/admin/blog");
+  revalidateTag("blog", { expire: 0 }); // cached journal listing
   revalidatePath("/[locale]/blog", "page");
   revalidatePath("/[locale]/blog/[slug]", "page");
   revalidatePath("/sitemap.xml");
@@ -38,6 +39,7 @@ export async function updateBlogPost(id: string, raw: BlogPostFormValues) {
   if (before) await cleanupOrphanedR2Urls(extractR2Urls(before), extractR2Urls(values));
 
   revalidatePath("/admin/blog");
+  revalidateTag("blog", { expire: 0 }); // cached journal listing
   revalidatePath("/[locale]/blog", "page");
   revalidatePath("/[locale]/blog/[slug]", "page");
   revalidatePath("/sitemap.xml");
@@ -55,6 +57,7 @@ export async function deleteBlogPost(id: string) {
   if (before) await cleanupOrphanedR2Urls(extractR2Urls(before), new Set());
 
   revalidatePath("/admin/blog");
+  revalidateTag("blog", { expire: 0 }); // cached journal listing
   revalidatePath("/[locale]/blog", "page");
   revalidatePath("/[locale]/blog/[slug]", "page");
   revalidatePath("/sitemap.xml");

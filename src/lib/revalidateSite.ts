@@ -1,4 +1,4 @@
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { db } from "@/lib/db";
 import { BLOG_DESTINATIONS } from "@/lib/blogDestinations";
 import { LOCALES } from "@/lib/i18n/locales";
@@ -11,12 +11,14 @@ import { LOCALES } from "@/lib/i18n/locales";
 /** Every public page. For changes that touch many pages (trips, destinations, menus). */
 export function revalidateAllPages() {
   revalidatePath("/[locale]", "layout");
+  revalidateTag("blog", { expire: 0 });
   revalidatePath("/sitemap.xml");
   revalidatePath("/llms.txt");
 }
 
 /** After a blog post is published: the blog pages plus the destination and trip pages that list it. */
 export async function revalidateBlogPost(post: { slug: string; category: string }) {
+  revalidateTag("blog", { expire: 0 }); // the cached journal listing
   revalidatePath("/[locale]/blog", "page");
   revalidatePath("/[locale]/blog/[slug]", "page"); // a visit before it existed may have cached the 404
   revalidatePath("/sitemap.xml");
