@@ -23,6 +23,7 @@ export async function createBlogPost(raw: BlogPostFormValues) {
   revalidatePath("/sitemap.xml");
   revalidatePath("/llms.txt");
   revalidatePath("/[locale]/destinations/[region]/[country]", "page"); // destination pages list their guides
+  revalidatePath("/[locale]/destinations/[region]/[country]/[slug]", "page"); // and so do trip pages
   redirect(`/admin/blog/${post.id}`);
 }
 
@@ -42,6 +43,7 @@ export async function updateBlogPost(id: string, raw: BlogPostFormValues) {
   revalidatePath("/sitemap.xml");
   revalidatePath("/llms.txt");
   revalidatePath("/[locale]/destinations/[region]/[country]", "page"); // destination pages list their guides
+  revalidatePath("/[locale]/destinations/[region]/[country]/[slug]", "page"); // and so do trip pages
 }
 
 export async function deleteBlogPost(id: string) {
@@ -58,4 +60,5 @@ export async function deleteBlogPost(id: string) {
   revalidatePath("/sitemap.xml");
   revalidatePath("/llms.txt");
   revalidatePath("/[locale]/destinations/[region]/[country]", "page"); // destination pages list their guides
+  revalidatePath("/[locale]/destinations/[region]/[country]/[slug]", "page"); // and so do trip pages
 }

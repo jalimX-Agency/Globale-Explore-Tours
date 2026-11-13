@@ -15,7 +15,7 @@ export function revalidateAllPages() {
   revalidatePath("/llms.txt");
 }
 
-/** After a blog post is published: the blog pages plus the destination page(s) that list it. */
+/** After a blog post is published: the blog pages plus the destination and trip pages that list it. */
 export async function revalidateBlogPost(post: { slug: string; category: string }) {
   revalidatePath("/[locale]/blog", "page");
   revalidatePath("/[locale]/blog/[slug]", "page"); // a visit before it existed may have cached the 404
@@ -25,9 +25,13 @@ export async function revalidateBlogPost(post: { slug: string; category: string 
   const mapped = BLOG_DESTINATIONS[post.slug] ?? [];
   const destinations = await db.destination.findMany({
     where: { OR: [{ slug: { in: mapped } }, ...(post.category ? [{ name: post.category }] : [])] },
-    select: { slug: true, regionSlug: true },
+    select: { slug: true, regionSlug: true, tours: { select: { slug: true } } },
   });
+  // The destination page and each of its trip pages list the destination's guides.
   for (const d of destinations) {
-    for (const locale of LOCALES) revalidatePath(`/${locale}/destinations/${d.regionSlug}/${d.slug}`);
+    for (const locale of LOCALES) {
+      revalidatePath(`/${locale}/destinations/${d.regionSlug}/${d.slug}`);
+      for (const t of d.tours) revalidatePath(`/${locale}/destinations/${d.regionSlug}/${d.slug}/${t.slug}`);
+    }
   }
 }

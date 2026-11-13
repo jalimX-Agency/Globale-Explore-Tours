@@ -9,6 +9,8 @@ import { es } from "@/lib/i18n/translations/es";
 import { JourneyTripPageClient } from "./JourneyTripPageClient";
 import { StandardTripPageClient } from "@/components/get/StandardTripPageClient";
 import { pageMetadata, breadcrumbJsonLd, touristTripJsonLd, SITE_URL } from "@/lib/seo";
+import { blogSlugsForDestination } from "@/lib/blogDestinations";
+import { TravelGuides } from "@/components/get/TravelGuides";
 
 const NAV_DESTINATIONS = { fr: fr.nav.destinations, en: en.nav.destinations, es: es.nav.destinations };
 
@@ -134,6 +136,15 @@ export default async function TripPage({
           })),
         ];
 
+  // The destination's travel guides: the blog posts link to the trips, and this links back, so
+  // a visitor (or crawler) landing on a trip reaches the guides that help them decide.
+  const guides = await db.blogPost.findMany({
+    where: { OR: [{ slug: { in: blogSlugsForDestination(tour.destination.slug) } }, { category: tour.destination.name }] },
+    orderBy: { createdAt: "desc" },
+    take: 6,
+    select: { slug: true, title: true, titleEn: true, titleEs: true, excerpt: true, excerptEn: true, excerptEs: true, image: true },
+  });
+
   const regionLabel = pick(locale, tour.destination.region, tour.destination.regionEn, tour.destination.regionEs);
   const countryLabel = pick(locale, tour.destination.name, tour.destination.nameEn, tour.destination.nameEs);
   const tripLabel = pick(locale, tour.name, tour.nameEn, tour.nameEs);
@@ -173,6 +184,15 @@ export default async function TripPage({
     destinationName: countryLabel,
   });
 
+  const guidesSection = (
+    <div className="mx-auto max-w-7xl px-6 pb-16 lg:px-10">
+      <TravelGuides
+        title={pick(locale, fr.destinationsPage.travelGuides, en.destinationsPage.travelGuides, es.destinationsPage.travelGuides).replace("{place}", countryLabel)}
+        guides={guides}
+      />
+    </div>
+  );
+
   const schemas = (
     <>
       <script
@@ -194,6 +214,7 @@ export default async function TripPage({
           similarTours={similarToursWithHref}
           breadcrumb={breadcrumb}
         />
+        {guidesSection}
       </>
     );
   }
@@ -209,6 +230,7 @@ export default async function TripPage({
         similarTours={similarToursWithHref}
         breadcrumb={breadcrumb}
       />
+      {guidesSection}
     </>
   );
 }

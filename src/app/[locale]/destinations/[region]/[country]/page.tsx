@@ -119,7 +119,7 @@ export default async function CountryPage({
     db.blogPost.findMany({
           where: { OR: [{ slug: { in: guideSlugs } }, { category: destination.name }] },
           orderBy: { createdAt: "desc" },
-          take: 6,
+          take: 9,
           select: { slug: true, title: true, titleEn: true, titleEs: true, excerpt: true, excerptEn: true, excerptEs: true, image: true },
         }),
   ]);
