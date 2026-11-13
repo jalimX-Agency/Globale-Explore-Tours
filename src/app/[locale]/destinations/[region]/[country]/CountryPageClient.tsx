@@ -14,6 +14,8 @@ import { FaqAccordion } from "@/components/get/FaqAccordion";
 import { OtherDestinationsCarousel, type OtherDestinationItem } from "@/components/get/OtherDestinationsCarousel";
 import type { TourCardData } from "@/components/get/TourCard";
 import { TravelGuides, type TravelGuideItem } from "@/components/get/TravelGuides";
+import { TripComparison } from "@/components/get/TripComparison";
+import { DESTINATION_COMPARISONS } from "@/lib/destinationComparisons";
 
 type Destination = {
   slug: string;
@@ -119,6 +121,14 @@ export function CountryPageClient({
         <div id="trips" className="scroll-mt-40">
           <TripsShowcase heading={t("destinationsPage.topTripsIn").replace("{place}", countryLabel)} blurb={t("destinationsPage.topTripsBlurb")} tours={tours} />
         </div>
+
+        {DESTINATION_COMPARISONS[destination.slug] && (
+          <TripComparison
+            title={t("destinationsPage.compareTrips").replace("{place}", countryLabel)}
+            rows={DESTINATION_COMPARISONS[destination.slug]}
+            tours={tours}
+          />
+        )}
 
         <div id="see-and-do" className="scroll-mt-40 space-y-16">
           <ContentBlockSection

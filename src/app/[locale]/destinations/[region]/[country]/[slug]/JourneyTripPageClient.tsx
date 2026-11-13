@@ -1,5 +1,6 @@
 "use client";
 
+import type { ReactNode } from "react";
 import { useLanguage } from "@/lib/i18n/context";
 import { Breadcrumb, type BreadcrumbItem } from "@/components/get/Breadcrumb";
 import { JourneyHero } from "@/components/get/JourneyHero";
@@ -44,12 +45,15 @@ export function JourneyTripPageClient({
   chapters,
   similarTours,
   breadcrumb,
+  beforeSimilar,
 }: {
   tour: Tour;
   countryLabel: string;
   chapters: JourneyChapterData[];
   similarTours: TourCardData[];
   breadcrumb: BreadcrumbItem[];
+  // Server-rendered blocks (what's included, FAQ, travel guides) shown above the similar trips.
+  beforeSimilar?: ReactNode;
 }) {
   const { language, t } = useLanguage();
   const title = localized(language, tour.name, tour.nameEn, tour.nameEs);
@@ -106,6 +110,7 @@ export function JourneyTripPageClient({
       </div>
 
       <div className="mx-auto flex max-w-7xl flex-col gap-16 px-6 py-16 lg:px-10">
+        {beforeSimilar}
         <div id="similar" className="scroll-mt-40">
           <TripsShowcase
             heading={t("tripDetailPage.similarExperiences")}

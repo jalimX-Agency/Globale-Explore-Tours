@@ -8,9 +8,12 @@ import { en } from "@/lib/i18n/translations/en";
 import { es } from "@/lib/i18n/translations/es";
 import { JourneyTripPageClient } from "./JourneyTripPageClient";
 import { StandardTripPageClient } from "@/components/get/StandardTripPageClient";
-import { pageMetadata, breadcrumbJsonLd, touristTripJsonLd, SITE_URL } from "@/lib/seo";
+import { pageMetadata, breadcrumbJsonLd, touristTripJsonLd, faqJsonLd, SITE_URL } from "@/lib/seo";
 import { blogSlugsForDestination } from "@/lib/blogDestinations";
 import { TravelGuides } from "@/components/get/TravelGuides";
+import { TripIncludes } from "@/components/get/TripIncludes";
+import { FaqAccordion } from "@/components/get/FaqAccordion";
+import { TRIP_FAQS } from "@/lib/tripFaqs";
 
 const NAV_DESTINATIONS = { fr: fr.nav.destinations, en: en.nav.destinations, es: es.nav.destinations };
 
@@ -184,13 +187,21 @@ export default async function TripPage({
     destinationName: countryLabel,
   });
 
-  const guidesSection = (
-    <div className="mx-auto max-w-7xl px-6 pb-16 lg:px-10">
+  const tripFaqs = TRIP_FAQS[tour.slug] ?? [];
+  const faqSchema = faqJsonLd(
+    tripFaqs.map((f) => ({ question: pick(locale, f.question, f.questionEn, f.questionEs), answer: pick(locale, f.answer, f.answerEn, f.answerEs) }))
+  );
+
+  // Shown inside the trip template, above the similar trips.
+  const beforeSimilar = (
+    <>
+      <TripIncludes includes={tour.includes} includesEn={tour.includesEn} includesEs={tour.includesEs} />
+      <FaqAccordion faqs={tripFaqs} />
       <TravelGuides
         title={pick(locale, fr.destinationsPage.travelGuides, en.destinationsPage.travelGuides, es.destinationsPage.travelGuides).replace("{place}", countryLabel)}
         guides={guides}
       />
-    </div>
+    </>
   );
 
   const schemas = (
@@ -200,6 +211,7 @@ export default async function TripPage({
         dangerouslySetInnerHTML={{ __html: breadcrumbJsonLd(locale, breadcrumb, `/destinations/${regionSlug}/${country}/${slug}`) }}
       />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: tripSchema }} />
+      {faqSchema && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: faqSchema }} />}
     </>
   );
 
@@ -213,8 +225,8 @@ export default async function TripPage({
           chapters={tour.chapters}
           similarTours={similarToursWithHref}
           breadcrumb={breadcrumb}
+          beforeSimilar={beforeSimilar}
         />
-        {guidesSection}
       </>
     );
   }
@@ -229,8 +241,8 @@ export default async function TripPage({
         hotels={tour.hotels}
         similarTours={similarToursWithHref}
         breadcrumb={breadcrumb}
+        beforeSimilar={beforeSimilar}
       />
-      {guidesSection}
     </>
   );
 }

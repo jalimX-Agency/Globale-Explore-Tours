@@ -1,5 +1,6 @@
 "use client";
 
+import type { ReactNode } from "react";
 import { useLanguage } from "@/lib/i18n/context";
 import { Breadcrumb, type BreadcrumbItem } from "@/components/get/Breadcrumb";
 import { JourneyStatsRow } from "@/components/get/JourneyStatsRow";
@@ -53,6 +54,7 @@ export function StandardTripPageClient({
   hotels,
   similarTours,
   breadcrumb,
+  beforeSimilar,
 }: {
   tour: Tour;
   countryLabel: string;
@@ -60,6 +62,8 @@ export function StandardTripPageClient({
   hotels: TourHotelData[];
   similarTours: TourCardData[];
   breadcrumb: BreadcrumbItem[];
+  // Server-rendered blocks (what's included, FAQ, travel guides) shown above the similar trips.
+  beforeSimilar?: ReactNode;
 }) {
   const { language, t } = useLanguage();
   const title = localized(language, tour.name, tour.nameEn, tour.nameEs);
@@ -147,6 +151,8 @@ export function StandardTripPageClient({
         </div>
 
         <TourHotelGrid hotels={hotels} />
+
+        {beforeSimilar && <div className="mt-16 flex flex-col gap-16">{beforeSimilar}</div>}
 
         <div className="mt-16">
           <TripsShowcase
